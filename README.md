@@ -1,78 +1,547 @@
-<p align="center"><img src="https://res.cloudinary.com/dtfbvvkyp/image/upload/v1566331377/laravel-logolockup-cmyk-red.svg" width="400"></p>
+# Size Limit [![Cult Of Martians][cult-img]][cult]
+
+<img src="https://ai.github.io/size-limit/logo.svg" align="right"
+     alt="Size Limit logo by Anton Lovchikov" width="120" height="178">
+
+Size Limit is a performance budget tool for JavaScript. It checks every commit
+on CI, calculates the real cost of your JS for end-users and throws an error
+if the cost exceeds the limit.
+
+* **ES modules** and **tree-shaking** support.
+* Add Size Limit to **Travis CI**, **Circle CI**, **GitHub Actions**
+  or another CI system to know if a pull request adds a massive dependency.
+* **Modular** to fit different use cases: big JS applications
+  that use their own bundler or small npm libraries with many files.
+* Can calculate **the time** it would take a browser
+  to download and **execute** your JS. Time is a much more accurate
+  and understandable metric compared to the size in bytes.
+* Calculations include **all dependencies and polyfills**
+  used in your JS.
 
 <p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/d/total.svg" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
+  <img src="./img/example.png" alt="Size Limit CLI" width="738">
 </p>
 
-## About Laravel
+With **[GitHub action]** Size Limit will post bundle size changes as a comment
+in pull request discussion.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+<p align="center">
+<img src="https://raw.githubusercontent.com/andresz1/size-limit-action/master/assets/pr.png"
+  alt="Size Limit comment in pull request about bundle size changes"
+  width="686" height="289">
+</p>
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+With `--why`, Size Limit can tell you *why* your library is of this size
+and show the real cost of all your internal dependencies.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+<p align="center">
+  <img src="./img/why.png" alt="Bundle Analyzer example" width="650">
+</p>
 
-## Learning Laravel
+<p align="center">
+  <a href="https://evilmartians.com/?utm_source=size-limit">
+    <img src="https://evilmartians.com/badges/sponsored-by-evil-martians.svg"
+         alt="Sponsored by Evil Martians" width="236" height="54">
+  </a>
+</p>
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+[GitHub action]: https://github.com/andresz1/size-limit-action
+[cult-img]:      http://cultofmartians.com/assets/badges/badge.svg
+[cult]:          http://cultofmartians.com/tasks/size-limit-config.html
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Who Uses Size Limit
 
-## Laravel Sponsors
+* [MobX](https://github.com/mobxjs/mobx)
+* [Material-UI](https://github.com/callemall/material-ui)
+* [Autoprefixer](https://github.com/postcss/autoprefixer)
+* [PostCSS](https://github.com/postcss/postcss) reduced
+  [25% of the size](https://github.com/postcss/postcss/commit/150edaa42f6d7ede73d8c72be9909f0a0f87a70f).
+* [Browserslist](https://github.com/ai/browserslist) reduced
+  [25% of the size](https://github.com/ai/browserslist/commit/640b62fa83a20897cae75298a9f2715642531623).
+* [EmojiMart](https://github.com/missive/emoji-mart) reduced
+  [20% of the size](https://github.com/missive/emoji-mart/pull/111)
+* [nanoid](https://github.com/ai/nanoid) reduced
+  [33% of the size](https://github.com/ai/nanoid/commit/036612e7d6cc5760313a8850a2751a5e95184eab).
+* [React Focus Lock](https://github.com/theKashey/react-focus-lock) reduced
+  [32% of the size](https://github.com/theKashey/react-focus-lock/pull/48).
+* [Logux](https://github.com/logux) reduced
+  [90% of the size](https://github.com/logux/logux-client/commit/62b258e20e1818b23ae39b9c4cd49e2495781e91).
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[British Software Development](https://www.britishsoftware.co)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- [UserInsights](https://userinsights.com)
-- [Fragrantica](https://www.fragrantica.com)
-- [SOFTonSOFA](https://softonsofa.com/)
-- [User10](https://user10.com)
-- [Soumettre.fr](https://soumettre.fr/)
-- [CodeBrisk](https://codebrisk.com)
-- [1Forge](https://1forge.com)
-- [TECPRESSO](https://tecpresso.co.jp/)
-- [Runtime Converter](http://runtimeconverter.com/)
-- [WebL'Agence](https://weblagence.com/)
-- [Invoice Ninja](https://www.invoiceninja.com)
-- [iMi digital](https://www.imi-digital.de/)
-- [Earthlink](https://www.earthlink.ro/)
-- [Steadfast Collective](https://steadfastcollective.com/)
-- [We Are The Robots Inc.](https://watr.mx/)
-- [Understand.io](https://www.understand.io/)
-- [Abdel Elrafa](https://abdelelrafa.com)
-- [Hyper Host](https://hyper.host)
-- [Appoly](https://www.appoly.co.uk)
-- [OP.GG](https://op.gg)
+## How It Works
 
-## Contributing
+1. Size Limit contains a CLI tool, 3 plugins (`file`, `webpack`, `time`)
+   and 3 plugin presets for popular use cases (`app`, `big-lib`, `small-lib`).
+   A CLI tool finds plugins in `package.json` and loads the config.
+2. If you use the `webpack` plugin, Size Limit will bundle your JS files into
+   a single file. It is important to track dependencies and webpack polyfills.
+   It is also useful for small libraries with many small files and without
+   a bundler.
+3. The `webpack` plugin creates an empty webpack project, adds your library
+   and looks for the bundle size difference.
+4. The `time` plugin compares the current machine performance with that of
+   a low-priced Android devices to calculate the CPU throttling rate.
+5. Then the `time` plugin runs headless Chrome (or desktop Chrome if it’s
+   available) to track the time a browser takes to compile and execute your JS.
+   Note that these measurements depend on available resources and might
+   be unstable. [See here](https://github.com/mbalabash/estimo/issues/5)
+   for more details.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
 
-## Code of Conduct
+## Usage
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### JS Applications
 
-## Security Vulnerabilities
+Suitable for applications that have their own bundler and send the JS bundle
+directly to a client (without publishing it to npm). Think of a user-facing app
+or website, like an email client, a CRM, a landing page or a blog with
+interactive elements, using React/Vue/Svelte lib or vanilla JS.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+<details><summary><b>Show instructions</b></summary>
 
-## License
+1. Install the preset:
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+    ```sh
+    $ npm install --save-dev size-limit @size-limit/file
+    ```
+
+2. Add the `size-limit` section and the `size` script to your `package.json`:
+
+    ```diff
+    + "size-limit": [
+    +   {
+    +     "path": "dist/app-*.js"
+    +   }
+    + ],
+      "scripts": {
+        "build": "webpack ./webpack.config.js",
+    +   "size": "npm run build && size-limit",
+        "test": "jest && eslint ."
+      }
+    ```
+
+3. Here’s how you can get the size for your current project:
+
+    ```sh
+    $ npm run size
+
+      Package size: 30.08 KB with all dependencies, minified and gzipped
+    ```
+
+4. Now, let’s set the limit. Add 25% to the current total time and use that as
+   the limit in your `package.json`:
+
+    ```diff
+      "size-limit": [
+        {
+    +     "limit": "35 KB",
+          "path": "dist/app-*.js"
+        }
+      ],
+    ```
+
+5. Add the `size` script to your test suite:
+
+    ```diff
+      "scripts": {
+        "build": "webpack ./webpack.config.js",
+        "size": "npm run build && size-limit",
+    -   "test": "jest && eslint ."
+    +   "test": "jest && eslint . && npm run size"
+      }
+    ```
+
+6. If you don’t have a continuous integration service running, don’t forget
+   to add one — start with [Travis CI].
+
+</details>
+
+
+### JS Application and Time-based Limit
+
+File size limit (in KB) is not the best way to describe your JS application
+cost for developers. Developers will compare the size of the JS bundle
+with the size of images. But browsers need much more time to parse 100 KB
+of JS than 100 KB of an image since JS compilers are very complex.
+
+This is why Size Limit support time-based limit. It runs headless Chrome
+to track the time a browser takes to compile and execute your JS.
+
+<details><summary><b>Show instructions</b></summary>
+
+1. Install the preset:
+
+    ```sh
+    $ npm install --save-dev size-limit @size-limit/preset-app
+    ```
+
+2. Add the `size-limit` section and the `size` script to your `package.json`:
+
+    ```diff
+    + "size-limit": [
+    +   {
+    +     "path": "dist/app-*.js"
+    +   }
+    + ],
+      "scripts": {
+        "build": "webpack ./webpack.config.js",
+    +   "size": "npm run build && size-limit",
+        "test": "jest && eslint ."
+      }
+    ```
+
+3. Here’s how you can get the size for your current project:
+
+    ```sh
+    $ npm run size
+
+      Package size: 30.08 KB with all dependencies, minified and gzipped
+      Loading time: 602 ms   on slow 3G
+      Running time: 214 ms   on Snapdragon 410
+      Total time:   815 ms
+    ```
+
+4. Now, let’s set the limit. Add 25% to the current total time and use that as
+   the limit in your `package.json`:
+
+    ```diff
+      "size-limit": [
+        {
+    +     "limit": "1 s",
+          "path": "dist/app-*.js"
+        }
+      ],
+    ```
+
+5. Add the `size` script to your test suite:
+
+    ```diff
+      "scripts": {
+        "build": "webpack ./webpack.config.js",
+        "size": "npm run build && size-limit",
+    -   "test": "jest && eslint ."
+    +   "test": "jest && eslint . && npm run size"
+      }
+    ```
+
+6. If you don’t have a continuous integration service running, don’t forget
+   to add one — start with [Travis CI].
+
+</details>
+
+
+### Big Libraries
+
+JS libraries > 10 KB in size.
+
+This preset includes headless Chrome, and will measure your lib’s execution
+time. You likely don’t need this overhead for a small 2 KB lib, but for larger
+ones the execution time is a more accurate and understandable metric that
+the size in bytes. Library like [React] is a good example for this preset.
+
+<details><summary><b>Show instructions</b></summary>
+
+1. Install preset:
+
+    ```sh
+    $ npm install --save-dev size-limit @size-limit/preset-big-lib
+    ```
+
+2. Add the `size-limit` section and the `size` script to your `package.json`:
+
+    ```diff
+    + "size-limit": [
+    +   {
+    +     "path": "dist/react.production-*.js"
+    +   }
+    + ],
+      "scripts": {
+        "build": "webpack ./scripts/rollup/build.js",
+    +   "size": "npm run build && size-limit",
+        "test": "jest && eslint ."
+      }
+    ```
+
+3. If you use ES modules you can test the size after tree-shaking with `import`
+   option:
+
+    ```diff
+      "size-limit": [
+        {
+          "path": "dist/react.production-*.js",
+    +     "import": "{ createComponent }"
+        }
+      ],
+    ```
+
+4. Here’s how you can get the size for your current project:
+
+    ```sh
+    $ npm run size
+
+      Package size: 30.08 KB with all dependencies, minified and gzipped
+      Loading time: 602 ms   on slow 3G
+      Running time: 214 ms   on Snapdragon 410
+      Total time:   815 ms
+    ```
+
+5. Now, let’s set the limit. Add 25% to the current total time and use that
+   as the limit in your `package.json`:
+
+    ```diff
+      "size-limit": [
+        {
+    +     "limit": "1 s",
+          "path": "dist/react.production-*.js"
+        }
+      ],
+    ```
+
+6. Add a `size` script to your test suite:
+
+    ```diff
+      "scripts": {
+        "build": "rollup ./scripts/rollup/build.js",
+        "size": "npm run build && size-limit",
+    -   "test": "jest && eslint ."
+    +   "test": "jest && eslint . && npm run size"
+      }
+    ```
+
+7. If you don’t have a continuous integration service running, don’t forget
+   to add one — start with [Travis CI].
+8. Add the library size to docs, it will help users to choose your project:
+
+    ```diff
+      # Project Name
+
+      Short project description
+
+      * **Fast.** 10% faster than competitor.
+    + * **Small.** 15 KB (minified and gzipped).
+    +   [Size Limit](https://github.com/ai/size-limit) controls the size.
+    ```
+
+</details>
+
+
+### Small Libraries
+
+JS libraries < 10 KB in size.
+
+This preset will only measure the size, without the execution time, so it’s
+suitable for small libraries. If your library is larger, you likely want
+the Big Libraries preset above. [Nano ID] or [Storeon] are good examples
+for this preset.
+
+<details><summary><b>Show instructions</b></summary>
+
+1. First, install `size-limit`:
+
+    ```sh
+    $ npm install --save-dev size-limit @size-limit/preset-small-lib
+    ```
+
+2. Add the `size-limit` section and the `size` script to your `package.json`:
+
+    ```diff
+    + "size-limit": [
+    +   {
+    +     "path": "index.js"
+    +   }
+    + ],
+      "scripts": {
+    +   "size": "size-limit",
+        "test": "jest && eslint ."
+      }
+    ```
+
+3. Here’s how you can get the size for your current project:
+
+    ```sh
+    $ npm run size
+
+      Package size: 177 B with all dependencies, minified and gzipped
+    ```
+
+4. If your project size starts to look bloated, run `--why` for analysis:
+
+    ```sh
+    $ npm run size -- --why
+    ```
+
+5. Now, let’s set the limit. Determine the current size of your library,
+   add just a little bit (a kilobyte, maybe) and use that as the limit
+   in your `package.json`:
+
+    ```diff
+     "size-limit": [
+        {
+    +     "limit": "9 KB",
+          "path": "index.js"
+        }
+     ],
+    ```
+
+6. Add the `size` script to your test suite:
+
+    ```diff
+      "scripts": {
+        "size": "size-limit",
+    -   "test": "jest && eslint ."
+    +   "test": "jest && eslint . && npm run size"
+      }
+    ```
+
+7. If you don’t have a continuous integration service running, don’t forget
+   to add one — start with [Travis CI].
+8. Add the library size to docs, it will help users to choose your project:
+
+    ```diff
+      # Project Name
+
+      Short project description
+
+      * **Fast.** 10% faster than competitor.
+    + * **Small.** 500 bytes (minified and gzipped). No dependencies.
+    +   [Size Limit](https://github.com/ai/size-limit) controls the size.
+    ```
+
+</details>
+
+[Travis CI]: https://github.com/dwyl/learn-travis
+[Storeon]: https://github.com/ai/storeon/
+[Nano ID]: https://github.com/ai/nanoid/
+[React]: https://github.com/facebook/react/
+
+
+## Reports
+
+Size Limit has a [GitHub action] that comments and rejects pull requests based
+on Size Limit output.
+
+1. Install and configure Size Limit as shown above.
+2. Add the following action inside `.github/workflows/size-limit.yml`
+
+```yaml
+name: "size"
+on:
+  pull_request:
+    branches:
+      - master
+jobs:
+  size:
+    runs-on: ubuntu-latest
+    env:
+      CI_JOB_NUMBER: 1
+    steps:
+      - uses: actions/checkout@v1
+      - uses: andresz1/size-limit-action@v1.0.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+```
+
+
+## Config
+
+Size Limits supports three ways to define config.
+
+1. `size-limit` section in `package.json`:
+
+   ```json
+     "size-limit": [
+       {
+         "path": "index.js",
+         "import": "{ createStore }",
+         "limit": "500 ms"
+       }
+     ]
+   ```
+
+2. or a separate `.size-limit.json` config file:
+
+   ```js
+   [
+     {
+       "path": "index.js",
+       "import": "{ createStore }",
+       "limit": "500 ms"
+     }
+   ]
+   ```
+
+3. or a more flexible `.size-limit.js` config file:
+
+   ```js
+   module.exports = [
+     {
+       path: "index.js",
+       import: "{ createStore }",
+       limit: "500 ms"
+     }
+   ]
+   ```
+
+Each section in the config can have these options:
+
+* **path**: relative paths to files. The only mandatory option.
+  It could be a path `"index.js"`, a [pattern] `"dist/app-*.js"`
+  or an array `["index.js", "dist/app-*.js", "!dist/app-exclude.js"]`.
+* **import**: partial import to test tree-shaking. It could be `"{ lib }"`
+  to test `import { lib } from 'lib'` or `{ "a.js": "{ a }", "b.js": "{ b }" }`
+  to test multiple files.
+* **limit**: size or time limit for files from the `path` option. It should be
+  a string with a number and unit, separated by a space.
+  Format: `100 B`, `10 KB`, `500 ms`, `1 s`.
+* **name**: the name of the current section. It will only be useful
+  if you have multiple sections.
+* **entry**: when using a custom webpack config, a webpack entry could be given.
+  It could be a string or an array of strings.
+  By default, the total size of all entry points will be checked.
+* **webpack**: with `false` it will disable webpack.
+* **running**: with `false` it will disable calculating running time.
+* **gzip**: with `false` it will disable gzip compression.
+* **brotli**: with `true` it will use brotli compression and disable gzip compression.
+* **config**: a path to a custom webpack config.
+* **ignore**: an array of files and dependencies to exclude from
+  the project size calculation.
+
+If you use Size Limit to track the size of CSS files, make sure to set
+`webpack: false`. Otherwise, you will get wrong numbers, because webpack
+inserts `style-loader` runtime (≈2 KB) into the bundle.
+
+[pattern]: https://github.com/sindresorhus/globby#globbing-patterns
+
+
+## Plugins and Presets
+
+Plugins:
+
+* `@size-limit/file` checks the size of files with Gzip, Brotli
+  or without compression.
+* `@size-limit/webpack` adds your library to empty webpack project
+  and prepares bundle file for `file` plugin.
+* `@size-limit/time` uses headless Chrome to track time to execute JS.
+* `@size-limit/dual-publish` compiles files to ES modules with [`dual-publish`]
+  to check size after tree-shaking.
+
+Plugin presets:
+
+* `@size-limit/preset-app` contains `file` and `time` plugins.
+* `@size-limit/preset-big-lib` contains `webpack`, `file`, and `time` plugins.
+* `@size-limit/preset-small-lib` contains `webpack` and `file` plugins.
+
+[`dual-publish`]: https://github.com/ai/dual-publish
+
+
+## JS API
+
+```js
+const sizeLimit = require('size-limit')
+const filePlugin = require('@size-limit/file')
+const webpackPlugin = require('@size-limit/webpack')
+
+sizeLimit([filePlugin, webpackPlugin], [filePath]).then(result => {
+  result //=> { size: 12480 }
+})
+```
