@@ -1,19 +1,21 @@
 <h1 align="center">
   <br>
-  <a href="http://www.amitmerchant.com/electron-markdownify"><img src="https://raw.githubusercontent.com/amitmerchant1990/electron-markdownify/master/app/img/markdownify.png" alt="Markdownify" width="200"></a>
+  <img src="unidocs.jpg" alt="Unidocs" width="200" ></a>
   <br>
-  Markdownify
+  Unidocs
   <br>
 </h1>
 
-<h4 align="center">A minimal Markdown Editor desktop app built on top of <a href="http://electron.atom.io" target="_blank">Electron</a>.</h4>
+<h4 align="center">A web application for  <a href="https://www.unitins.br/nPortal/" target="_blank">Unitins</a>.</h4><br>
 
 <p align="center">
   <a href="https://badge.fury.io/js/electron-markdownify">
     <img src="https://badge.fury.io/js/electron-markdownify.svg"
          alt="Gitter">
   </a>
-  <a href="https://gitter.im/amitmerchant1990/electron-markdownify"><img src="https://badges.gitter.im/amitmerchant1990/electron-markdownify.svg"></a>
+  <a href="https://discord.gg/943jdWqRNC">
+        <img src="https://img.shields.io/discord/308323056592486420?logo=discord"
+            alt="chat on Discord"></a>
   <a href="https://saythanks.io/to/amitmerchant1990">
       <img src="https://img.shields.io/badge/SayThanks.io-%E2%98%BC-1EAEDB.svg">
   </a>
@@ -23,8 +25,8 @@
 </p>
 
 <p align="center">
-  <a href="#key-features">Key Features</a> •
-  <a href="#how-to-use">How To Use</a> •
+  <a href="#key-features">Overview</a> •
+  <a href="#how-to-use">How To Run</a> •
   <a href="#download">Download</a> •
   <a href="#credits">Credits</a> •
   <a href="#related">Related</a> •
@@ -33,7 +35,7 @@
 
 ![screenshot](https://raw.githubusercontent.com/amitmerchant1990/electron-markdownify/master/app/img/markdownify.gif)
 
-## Key Features
+## Overview
 
 * LivePreview - Make changes, See changes
   - Instantly see what your Markdown documents look like in HTML as you create them.
@@ -53,9 +55,9 @@
 * Cross platform
   - Windows, macOS and Linux ready.
 
-## How To Use
+## How To Run
 
-To clone and run this application, you'll need [Git](https://git-scm.com) and [Node.js](https://nodejs.org/en/download/) (which comes with [npm](http://npmjs.com)) installed on your computer. From your command line:
+To clone and run this application, you'll need [Git](https://git-scm.com) and [Laravel](https://laravel.com/) installed on your computer. From your command line:
 
 ```bash
 # Clone this repository
@@ -86,13 +88,19 @@ Markdownify is an [emailware](https://en.wiktionary.org/wiki/emailware). Meaning
 
 This software uses the following open source packages:
 
-- [Electron](http://electron.atom.io/)
+- [Laravel](https://laravel.com/)
 - [Node.js](https://nodejs.org/)
 - [Marked - a markdown parser](https://github.com/chjj/marked)
 - [showdown](http://showdownjs.github.io/showdown/)
 - [CodeMirror](http://codemirror.net/)
 - Emojis are taken from [here](https://github.com/arvida/emoji-cheat-sheet.com)
 - [highlight.js](https://highlightjs.org/)
+
+It was developed by classmates from [Unitins](https://www.unitins.br/nPortal/) for the subject of Integrated Project II.
+
+The following developers has contributed:
+
+- [Yhan](Yhan17)
 
 ## Related
 
