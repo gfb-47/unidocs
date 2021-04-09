@@ -18,6 +18,6 @@ class UserSeed extends Seeder
             'password' => bcrypt('unitins2021')
         ]);
 
-        $this->command->info('User '.$user->name.' created');
+        $this->command->info(("User {$user->name} created"));
     }
 }

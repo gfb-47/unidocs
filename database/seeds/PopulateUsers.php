@@ -15,14 +15,14 @@ class PopulateUsers extends Seeder
      */
     public function run()
     {
-        $users = factory(User::class, 50)->make()->toArray();
+        $users = factory(User::class, 100)->make()->toArray();
 
         foreach ($users as $key => $user) {
             try {
                 DB::beginTransaction();
                 $user['password'] = bcrypt('12345678');
                 $createdUser = User::create($user);
-                if ($key < 24) {
+                if ($key < 49) {
                     Professor::create(['user_id' => $createdUser->id]);
                 } else {
                     $student = factory(Student::class)->make()->toArray();

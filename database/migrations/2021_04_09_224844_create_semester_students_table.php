@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSemesterProfessorsTable extends Migration
+class CreateSemesterStudentsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,10 @@ class CreateSemesterProfessorsTable extends Migration
      */
     public function up()
     {
-        Schema::create('semester_professors', function (Blueprint $table) {
+        Schema::create('semester_students', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('professor_id')->unsigned();
-            $table->foreign('professor_id')->references('id')->on('professors')->onDelete('cascade');
+            $table->bigInteger('student_id')->unsigned();
+            $table->foreign('student_id')->references('id')->on('students')->onDelete('cascade');
             $table->bigInteger('semester_id')->unsigned();
             $table->foreign('semester_id')->references('id')->on('semesters')->onDelete('cascade');
             $table->timestamps();
@@ -30,6 +30,6 @@ class CreateSemesterProfessorsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('semester_professors');
+        Schema::dropIfExists('semester_students');
     }
 }
