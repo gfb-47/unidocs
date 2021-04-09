@@ -21,6 +21,8 @@ class CreateSemestersTable extends Migration
             $table->foreign('subject_id')->references('id')->on('subjects')->onDelete('cascade');
             $table->bigInteger('course_id')->unsigned();
             $table->foreign('course_id')->references('id')->on('courses')->onDelete('cascade');
+            $table->bigInteger('professor_id')->unsigned();
+            $table->foreign('professor_id')->references('id')->on('professors')->onDelete('cascade');
             $table->timestamps();
         });
     }
