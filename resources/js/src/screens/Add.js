@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import AppContainer from '../components/AppContainer';
+import AppContainer from '../components/Layout';
 import api from '../api/api';
 
 const Add = () => {
