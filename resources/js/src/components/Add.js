@@ -13,7 +13,7 @@ const Add = () => {
         setLoading(true);
         try {
             await api.addPost({title,description});
-            history.push('/');
+            history.push('/home');
         }catch(e) {
           console.log('error');  
         }

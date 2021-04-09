@@ -41,7 +41,7 @@ const Home = () => {
                 <td>{post.title}</td>
                 <td>{post.description}</td>
                 <td>
-                    <Link to={`/edit/${post.id}`} className="btn btn-warning">EDIT</Link>
+                    <Link to={`/home/edit/${post.id}`} className="btn btn-warning">EDIT</Link>
                     <button onClick={() => {
                         api.deletePost(post.id).then(
                             fetchPosts()
@@ -57,7 +57,7 @@ const Home = () => {
         <AppContainer
             title="Teste"
         >
-            <Link to="/add" className="btn btn-primary float-right">Add New</Link>
+            <Link to="/home/add" className="btn btn-primary float-right">Add New</Link>
             <div className="table-responsive">
                 <table className="table table-striped">
                     <thead>

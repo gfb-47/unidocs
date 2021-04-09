@@ -26,21 +26,20 @@
                     <div class="float-right ml-5">
                         <ul class="intranet-area">
                             <li>
-                                <a target="_blank"
-                                    href="https://www.unitins.br/PortalAluno/Account/Login?ReturnUrl=%2fportalaluno"
-                                    data-toggle="tooltip" data-placement="auto" title="Portal do Aluno">
+                                <a href="{{ route('login') }}" data-toggle="tooltip" data-placement="auto"
+                                    title="Portal do Aluno">
                                     <span class="badge badge-primary mr-2"><i class="fas fa-user-graduate"></i></span>
                                 </a>
                             </li>
                             <li>
-                                <a target="_blank" href="https://www.unitins.br/apps/portaldoprofessor"
-                                    data-toggle="tooltip" data-placement="auto" title="Portal do Professor">
+                                <a href="{{ route('login') }}" data-toggle="tooltip" data-placement="auto"
+                                    title="Portal do Professor">
                                     <span class="badge badge-primary mr-2"><i class="fas fa-user-tie"></i></span>
                                 </a>
                             </li>
                             <li>
-                                <a target="_blank" href="https://www.unitins.br/apps/Account/Login?ReturnUrl=%2fapps"
-                                    data-toggle="tooltip" data-placement="auto" title="Administrativo">
+                                <a href="{{ route('login') }}" data-toggle="tooltip" data-placement="auto"
+                                    title="Administrativo">
                                     <span class="badge badge-primary"><i class="fas fa-tv"></i></span>
                                 </a>
                             </li>
@@ -154,10 +153,12 @@
                             </a>
                         </div>
                         <div class="carousel-item">
-                            <img src="{{ asset('img/slide/2.jpg') }}" class="d-block w-100" alt="Protocolo de Segurança em Saúde">
+                            <img src="{{ asset('img/slide/2.jpg') }}" class="d-block w-100"
+                                alt="Protocolo de Segurança em Saúde">
                         </div>
                         <div class="carousel-item">
-                            <img src="{{ asset('img/slide/3.jpg') }}" class="d-block w-100" alt="Encontro FAUBAI Regional Norte">
+                            <img src="{{ asset('img/slide/3.jpg') }}" class="d-block w-100"
+                                alt="Encontro FAUBAI Regional Norte">
                         </div>
                     </div>
                     <a class="carousel-control-prev" href="#carouselNavegacao" role="button" data-slide="prev">
@@ -461,8 +462,8 @@
                     <div class="col-lg-3 col-sm-6 mb-4">
                         <div class="pb-2">
                             <a href="/galeria">
-                                <img src="{{ asset('img/multimidias/4.png') }}" alt="Solenidade de comemoração aos 30 anos da Unitins"
-                                    class="img-fluid">
+                                <img src="{{ asset('img/multimidias/4.png') }}"
+                                    alt="Solenidade de comemoração aos 30 anos da Unitins" class="img-fluid">
                             </a>
                             <span class="badge badge-danger">FOTOS</span>
                         </div>
@@ -480,7 +481,8 @@
                     </div>
                     <div class="col-lg-3 col-sm-6 mb-4">
                         <div class="pb-2">
-                            <img src="{{ asset('img/multimidias/3.png') }}" alt="Inauguração do CTC Agro" class="img-fluid">
+                            <img src="{{ asset('img/multimidias/3.png') }}" alt="Inauguração do CTC Agro"
+                                class="img-fluid">
                             <span class="badge badge-warning">VÍDEO</span>
                             <a href="https://www.youtube.com/embed/BEdaB7f-n6Q" class="play video-botao">
                                 <i class="fas fa-play"></i>

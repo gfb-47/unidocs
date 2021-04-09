@@ -14,17 +14,17 @@ const App = () => {
     return (
         <Router className="App__container">
             <Switch>
-                <Route exact path="/">
+                <Route exact path="/home">
                     <Home />
                 </Route>
             </Switch>
             <Switch>
-                <Route path="/add">
+                <Route path="/home/add">
                     <Add />
                 </Route>
             </Switch>
             <Switch>
-                <Route path="/edit/:id" children={<Edit />} />
+                <Route path="/home/edit/:id" children={<Edit />} />
             </Switch>
         </Router>
     );

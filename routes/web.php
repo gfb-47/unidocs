@@ -14,14 +14,10 @@ use Illuminate\Support\Facades\Route;
 */
 
 // Acessar de maneira manual o Index.
-// Route::get('/', function () {
-//     return view('index');
-// });
+Route::get('/', function () {
+    return view('index');
+});
 
-Route::get('/{any?}', function () {
-    return view('welcome');
-})->where('any','^(?!api).*$');
+Auth::routes(['register' => false]);
 
-Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/home/{any?}','HomeController@index')->where('any', '^(?!api).*$')->middleware('auth')->name('home');

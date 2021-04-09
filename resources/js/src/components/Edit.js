@@ -14,7 +14,7 @@ const Edit = () => {
         setLoading(true);
         try {
             await api.updatePost({title,description},id);
-            history.push('/');
+            history.push('/home');
         }catch(e) {
           console.log('error');  
         }
