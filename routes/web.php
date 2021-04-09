@@ -13,6 +13,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+// Acessar de maneira manual o Index.
+// Route::get('/', function () {
+//     return view('index');
+// });
+
 Route::get('/{any?}', function () {
     return view('welcome');
 })->where('any','^(?!api).*$');
