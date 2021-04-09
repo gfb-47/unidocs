@@ -5,9 +5,9 @@ import {
     Switch,
     Route,
 } from 'react-router-dom';
-import Home from './components/Home'
-import Add from './components/Add'
-import Edit from './components/Edit'
+
+import Home from '../screens/Home'
+import Add from '../screens/Add'
 
 
 const App = () => {
@@ -22,9 +22,6 @@ const App = () => {
                 <Route path="/home/add">
                     <Add />
                 </Route>
-            </Switch>
-            <Switch>
-                <Route path="/home/edit/:id" children={<Edit />} />
             </Switch>
         </Router>
     );

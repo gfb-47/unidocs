@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import AppContainer from './AppContainer';
-import api from '../api';
+import AppContainer from '../components/AppContainer';
+import api from '../api/api';
 
 const Home = () => {
     const [posts, setPosts] = useState(null);
@@ -19,7 +19,6 @@ const Home = () => {
     const renderPosts = () => {
         if (!posts) {
             return (
-
                 <tr colSpan="4">
                     Loading...
                 </tr>

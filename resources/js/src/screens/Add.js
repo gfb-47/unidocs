@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import AppContainer from './AppContainer';
-import api from '../api';
+import AppContainer from '../components/AppContainer';
+import api from '../api/api';
 
 const Add = () => {
     const history = useHistory();
@@ -12,10 +12,10 @@ const Add = () => {
     const onAddSubmit = async () => {
         setLoading(true);
         try {
-            await api.addPost({title,description});
+            await api.addPost({ title, description });
             history.push('/home');
-        }catch(e) {
-          console.log('error');  
+        } catch (e) {
+            console.log('error');
         }
         setLoading(false);
 
@@ -39,7 +39,7 @@ const Add = () => {
                 </div>
                 <div className="row">
                     <div className="col-md-12">
-                        <button disabled={loading} onClick={onAddSubmit} type="button" className="btn btn-success float-right">{loading ? 'Loading...': 'Add'}</button>
+                        <button disabled={loading} onClick={onAddSubmit} type="button" className="btn btn-success float-right">{loading ? 'Loading...' : 'Add'}</button>
                     </div>
                 </div>
             </form>
