@@ -1,6 +1,6 @@
 <h1 align="center">
   <br>
-  <img src="unidocs.jpg" alt="Unidocs" width="200" ></a>
+  <img src="public/img/unidocs.jpg" alt="Unidocs" width="200" ></a>
   <br>
   Unidocs
   <br>
