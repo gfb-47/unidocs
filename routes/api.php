@@ -15,4 +15,7 @@ use Illuminate\Support\Facades\Route;
 */
 Route::resource('posts', 'PostController');
 Route::get('student','API\StudentController@index');
-
+Route::get('professor','API\ProfessorController@index');
+Route::get('course','API\CourseController@index');
+Route::get('subject','API\SubjectController@index');
+Route::get('semester','API\SemesterController@index');
