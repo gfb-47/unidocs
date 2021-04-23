@@ -9,7 +9,7 @@ import {
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 
 import Home from '../screens/Home'
-import Students from '../screens/technician/Students'
+import Students from '../screens/datatable/Students'
 
 const Path = "/home"
 
@@ -45,6 +45,70 @@ const App = () => {
 
                     <Route path={`${Path}/alunos`}>
                         <Students />
+                    </Route>
+
+                    <Route path={`${Path}/professores`}>
+                        {/* <Professors/> */}
+                    </Route>
+
+                    <Route path={`${Path}/semestres`}>
+                        {/* <Semesters/> */}
+                    </Route>
+
+                    <Route path={`${Path}/areasdeconhecimento`}>
+                        {/* <KnowladgeAreas/> */}
+                    </Route>
+
+                    <Route path={`${Path}/disciplinas`}>
+                        {/* <Subjects/> */}
+                    </Route>
+
+                    <Route path={`${Path}/cursos`}>
+                        {/* <Courses/> */}
+                    </Route>
+
+                    <Route path={`${Path}/perfil`}>
+                        {/* <StudentProfile/> or <ProfessorProfile/> */}
+                    </Route>
+
+                    <Route path={`${Path}/meusprocessos`}>
+                        {/* <StudentProcesses/> */}
+                    </Route>
+
+                    <Route path={`${Path}/processossemestre`}>
+                        {/* <SemesterProcesses/> */}
+                    </Route>
+
+                    <Route path={`${Path}/processosvinculados`}>
+                        {/* <LinkedProcesses/> */}
+                    </Route>
+
+                    <Route path={`${Path}/bancas`}>
+                        {/* <JurySemester/> */}
+                    </Route>
+
+                    <Route path={`${Path}/relatorios`}>
+                        {/* <Report/> */}
+                    </Route>
+
+                    <Route path={`${Path}/processo`}>
+                        {/* <Process/> */}
+                    </Route>
+
+                    <Route path={`${Path}/processo/detalhes`}>
+                        {/* <ProcessDetails/> */}
+                    </Route>
+
+                    <Route path={`${Path}/processo/documentos`}>
+                        {/* <ProcessDocuments/> */}
+                    </Route>
+
+                    <Route path={`${Path}/processo/banca `}>
+                        {/* <ProcessJury/> */}
+                    </Route>
+
+                    <Route path={`${Path}/processo/planodetrabalho `}>
+                        {/* <ProcessWorkPlan/> */}
                     </Route>
                 </Switch>
             </ThemeProvider>
