@@ -39,16 +39,6 @@ class KnowledgeAreaController extends BaseController
         return $this->sendResponse([], 'Added with success!');
     }
 
-    public function read()
-    {
-        $k_area = KnowledgeArea::all();
-        if ($k_area != null) {
-            return $this->sendResponse($k_area);
-        } else {
-            return $this->sendResponse([], 'Database is empty.');
-        }
-    }
-
     public function update($id, Request $request) {
         $validate = Validator::make($request->all(), [
             'name' => 'string|max:50',
