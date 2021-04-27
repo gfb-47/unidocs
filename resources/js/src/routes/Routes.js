@@ -11,7 +11,7 @@ import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import Home from '../screens/Home'
 import Students from '../screens/datatable/Students'
 
-const Path = "/home"
+const Path = "/unidocs"
 
 const theme = createMuiTheme({
     palette: {

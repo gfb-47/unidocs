@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Route;
 | routes are loaded by the RouteServiceProvider within a group which
 | contains the "web" middleware group. Now create something great!
 |
-*/
+ */
 
 // Acessar de maneira manual o Index.
 Route::get('/', function () {
@@ -20,4 +20,4 @@ Route::get('/', function () {
 
 Auth::routes(['register' => false]);
 
-Route::get('/home/{any?}','HomeController@index')->where('any', '^(?!api).*$')->middleware('auth')->name('home');
+Route::get('/unidocs/{any?}', 'HomeController@index')->where('any', '^(?!api).*$')->middleware('auth')->name('home');

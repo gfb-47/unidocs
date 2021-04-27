@@ -60,7 +60,7 @@ export default function Navbar() {
                     />
 
                     <div>
-                        <a href="/home" className={classes.link}>
+                        <a href="/unidocs" className={classes.link}>
                             <Typography
                                 variant="h4"
                                 className={classes.title}
@@ -109,7 +109,7 @@ export default function Navbar() {
                     onChange={handleChange}
                     aria-label=""
                 >
-                    <Tab label="Aluno" href="/home/alunos" />
+                    <Tab label="Aluno" href="/unidocs/alunos" />
                     <Tab label="Professor" />
                     <Tab label="Semestre" />
                     <Tab label="Áreas do Conhecimento" />
