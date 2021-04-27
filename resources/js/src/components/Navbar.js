@@ -109,7 +109,7 @@ export default function Navbar() {
                     onChange={handleChange}
                     aria-label=""
                 >
-                    <Tab label="Aluno" href="/unidocs/alunos" />
+                    <Tab label="Aluno" href="/unidocs/students" />
                     <Tab label="Professor" />
                     <Tab label="Semestre" />
                     <Tab label="Áreas do Conhecimento" />

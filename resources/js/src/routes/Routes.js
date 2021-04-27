@@ -43,71 +43,71 @@ const App = () => {
                         <Home />
                     </Route>
 
-                    <Route path={`${Path}/alunos`}>
+                    <Route path={`${Path}/students`}>
                         <Students />
                     </Route>
 
-                    <Route path={`${Path}/professores`}>
+                    <Route path={`${Path}/professors`}>
                         {/* <Professors/> */}
                     </Route>
 
-                    <Route path={`${Path}/semestres`}>
+                    <Route path={`${Path}/semesters`}>
                         {/* <Semesters/> */}
                     </Route>
 
-                    <Route path={`${Path}/areasdeconhecimento`}>
+                    <Route path={`${Path}/knowladgeareas`}>
                         {/* <KnowladgeAreas/> */}
                     </Route>
 
-                    <Route path={`${Path}/disciplinas`}>
+                    <Route path={`${Path}/subjects`}>
                         {/* <Subjects/> */}
                     </Route>
 
-                    <Route path={`${Path}/cursos`}>
+                    <Route path={`${Path}/courses`}>
                         {/* <Courses/> */}
                     </Route>
 
-                    <Route path={`${Path}/perfil`}>
-                        {/* <StudentProfile/> or <ProfessorProfile/> */}
+                    <Route path={`${Path}/profile`}>
+                        {/* <Profile/> or <ProfessorProfile/> */}
                     </Route>
 
-                    <Route path={`${Path}/meusprocessos`}>
+                    <Route path={`${Path}/student/processes`}>
                         {/* <StudentProcesses/> */}
                     </Route>
 
-                    <Route path={`${Path}/processossemestre`}>
+                    <Route path={`${Path}/semesterprocesses`}>
                         {/* <SemesterProcesses/> */}
                     </Route>
 
-                    <Route path={`${Path}/processosvinculados`}>
+                    <Route path={`${Path}/professor/processes`}>
                         {/* <LinkedProcesses/> */}
                     </Route>
 
-                    <Route path={`${Path}/bancas`}>
-                        {/* <JurySemester/> */}
+                    <Route path={`${Path}/semesterjury`}>
+                        {/* <SemesterJury/> */}
                     </Route>
 
-                    <Route path={`${Path}/relatorios`}>
+                    <Route path={`${Path}/reports`}>
                         {/* <Report/> */}
                     </Route>
 
-                    <Route path={`${Path}/processo`}>
+                    <Route path={`${Path}/process`}>
                         {/* <Process/> */}
                     </Route>
 
-                    <Route path={`${Path}/processo/detalhes`}>
+                    <Route path={`${Path}/process/details`}>
                         {/* <ProcessDetails/> */}
                     </Route>
 
-                    <Route path={`${Path}/processo/documentos`}>
+                    <Route path={`${Path}/process/documents`}>
                         {/* <ProcessDocuments/> */}
                     </Route>
 
-                    <Route path={`${Path}/processo/banca `}>
+                    <Route path={`${Path}/process/jury `}>
                         {/* <ProcessJury/> */}
                     </Route>
 
-                    <Route path={`${Path}/processo/planodetrabalho `}>
+                    <Route path={`${Path}/process/workplan `}>
                         {/* <ProcessWorkPlan/> */}
                     </Route>
                 </Switch>
