@@ -24,7 +24,7 @@ const useStyles = makeStyles({
     }
 })
 
-export default function PerfilProfessor(){
+export default function PerfilAluno(){
     const classes = useStyles();
     /*style={{ backgroundColor: '#cfe8fc', height: '30vh' }}*/
     return(
