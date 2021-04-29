@@ -11,6 +11,7 @@ import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import Home from '../screens/Home'
 import Students from '../screens/datatable/Students'
 import Profire from '../screens/profires/Profire'
+import ProfireProfessor from '../screens/profires/ProfessorProfile'
 
 const Path = "/unidocs"
 
@@ -70,7 +71,8 @@ const App = () => {
 
                     <Route path={`${Path}/profile`}>
                         {/* <Profile/> or <ProfessorProfile/> */}
-                        <Profire />
+                        {/*<Profire />*/}
+                        <ProfireProfessor/>
                     </Route>
 
                     <Route path={`${Path}/student/processes`}>
