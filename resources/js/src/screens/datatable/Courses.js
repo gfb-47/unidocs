@@ -27,6 +27,9 @@ function createData(name, updatedAtDate, active, updatedAtHour) {
 //Preencha a função createData() com o mesmo numero de variaveis que voce colocou acima.
 const rows = [
     createData('Direito', '4 de Dezembro, 2019', 'ativo', '1 horas atrás'),
+    createData('Sistemas de Informação', '3 de Dezembro, 2019', 'desativo', '3 horas atrás'),
+    createData('Agronomia', '5 de Dezembro, 2019', 'desativo', '10 minutos atrás'),
+    createData('Serviços Sociais', '6 de Dezembro, 2019', 'ativo', '4 dias atrás'),
 ];
 //----FIM DA Sessão 1----
 
@@ -278,7 +281,7 @@ export default function Courses() {
                                                 <TableCell padding="default">
                                                 </TableCell>
                                                 {/* Não mexa nesse TableCell*/}
-                                                
+
                                                 <TableCell align="left">
                                                     <span>{row.name}</span>
                                                 </TableCell>
