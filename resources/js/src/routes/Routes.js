@@ -12,6 +12,20 @@ import { blue, blueGrey } from '@material-ui/core/colors';
 import Home from '../screens/Home'
 import Students from '../screens/datatable/Students'
 import Professors from '../screens/datatable/Professors';
+import Semesters from '../screens/datatable/Semesters';
+import KnowladgeAreas from '../screens/datatable/KnowladgeAreas';
+import Subjects from '../screens/datatable/Subjects';
+import Courses from '../screens/datatable/Courses';
+import StudentProcesses from '../screens/student/StudentProcesses';
+import SemesterProcesses from '../screens/professor/SemesterProcesses';
+import LinkedProcesses from '../screens/professor/LinkedProcesses';
+import SemesterJury from '../screens/professor/SemesterJury';
+import Report from '../screens/professor/Report';
+import Process from '../screens/process/Process';
+import ProcessDetails from '../screens/process/Process';
+import ProcessDocuments from '../screens/process/Process';
+import ProcessJury from '../screens/process/Process';
+import ProcessWorkPlan from '../screens/process/Process';
 import Profile from '../screens/profiles/Profile'
 import ProfileProfessor from '../screens/profiles/ProfessorProfile'
 
@@ -54,19 +68,19 @@ const App = () => {
                     </Route>
 
                     <Route path={`${Path}/semesters`}>
-                        {/* <Semesters/> */}
+                        <Semesters />
                     </Route>
 
                     <Route path={`${Path}/knowladgeareas`}>
-                        {/* <KnowladgeAreas/> */}
+                        <KnowladgeAreas />
                     </Route>
 
                     <Route path={`${Path}/subjects`}>
-                        {/* <Subjects/> */}
+                        <Subjects />
                     </Route>
 
                     <Route path={`${Path}/courses`}>
-                        {/* <Courses/> */}
+                        <Courses />
                     </Route>
 
                     {/* ALTERAR DEPOIS PARA DETECTAR TIPO DE USUARIO */}
@@ -80,43 +94,43 @@ const App = () => {
                     {/* --------- */}
 
                     <Route path={`${Path}/student/processes`}>
-                        {/* <StudentProcesses/> */}
+                        <StudentProcesses />
                     </Route>
 
-                    <Route path={`${Path}/semesterprocesses`}>
-                        {/* <SemesterProcesses/> */}
+                    <Route path={`${Path}/professor/semesterprocesses`}>
+                        <SemesterProcesses />
                     </Route>
 
                     <Route path={`${Path}/professor/processes`}>
-                        {/* <LinkedProcesses/> */}
+                        <LinkedProcesses />
                     </Route>
 
-                    <Route path={`${Path}/semesterjury`}>
-                        {/* <SemesterJury/> */}
+                    <Route path={`${Path}/professor/semesterjury`}>
+                        <SemesterJury />
                     </Route>
 
-                    <Route path={`${Path}/reports`}>
-                        {/* <Report/> */}
+                    <Route path={`${Path}/professor/reports`}>
+                        <Report />
                     </Route>
 
                     <Route path={`${Path}/process`}>
-                        {/* <Process/> */}
+                        <Process />
                     </Route>
 
                     <Route path={`${Path}/process/details`}>
-                        {/* <ProcessDetails/> */}
+                        <ProcessDetails />
                     </Route>
 
                     <Route path={`${Path}/process/documents`}>
-                        {/* <ProcessDocuments/> */}
+                        <ProcessDocuments />
                     </Route>
 
-                    <Route path={`${Path}/process/jury `}>
-                        {/* <ProcessJury/> */}
+                    <Route path={`${Path}/process/jury`}>
+                        <ProcessJury />
                     </Route>
 
-                    <Route path={`${Path}/process/workplan `}>
-                        {/* <ProcessWorkPlan/> */}
+                    <Route path={`${Path}/process/workplan`}>
+                        <ProcessWorkPlan />
                     </Route>
                 </Switch>
             </ThemeProvider>
