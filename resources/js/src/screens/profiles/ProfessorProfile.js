@@ -1,15 +1,15 @@
 import React from 'react'
 import Header from './components/Header';
-import Section from './components/Section';
+import ProfessorSection from './components/ProfessorSection';
 import NavBar from '../../components/Navbar'
 import { makeStyles } from "@material-ui/core/styles";
 import { Grid } from '@material-ui/core';
 
 const state =({
-    nome:'Duardo Rocha',
-    email:'dudurocha@unitins.com',
-    curso:'Sistemas de Informação',
-    telefone:'(063)98490-9022'
+    nome:'Alex Coelho',
+    email:'alex1234@unitins.com',
+    curso:'Sistemas de Informação, Direito',
+    telefone:'(063)98497-9022'
 })
 const useStyles = makeStyles({
     root:{
@@ -24,7 +24,7 @@ const useStyles = makeStyles({
     }
 })
 
-export default function PerfilAluno(){
+export default function ProfessorProfile(){
     const classes = useStyles();
     /*style={{ backgroundColor: '#cfe8fc', height: '30vh' }}*/
     return(
@@ -32,10 +32,10 @@ export default function PerfilAluno(){
             <NavBar></NavBar>
             <div className={classes.grown}></div>
             <main className={classes.main}>
-                <Header nome={state.nome} cor='#90EE90'></Header>
+                <Header nome={state.nome} cor='#3E66FB'></Header>
                 <Grid container justify="center">
-                    <Grid sm={11}>
-                        <Section nome={state.nome} email={state.email} curso={state.curso} telefone={state.telefone}></Section>
+                    <Grid sm={11} xl={10}>
+                        <ProfessorSection nome={state.nome} email={state.email} curso={state.curso} telefone={state.telefone}/>
                     </Grid> 
                 </Grid> 
             </main>
