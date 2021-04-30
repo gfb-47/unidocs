@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\BaseController as BaseController;
 use App\Models\Post;
 use Illuminate\Http\Request;
-use App\Http\Controllers\BaseController as BaseController;
 
+//!! Remove This File after project End
 class PostController extends BaseController
 {
     /**
@@ -28,7 +29,7 @@ class PostController extends BaseController
     public function store(Request $request)
     {
         Post::create($request->all());
-        return $this->sendResponse([],'Post added with success');
+        return $this->sendResponse([], 'Post added with success');
     }
 
     /**
@@ -55,7 +56,7 @@ class PostController extends BaseController
         $item->fill($request->all());
         $item->save();
 
-        return $this->sendResponse($item,'Post Updated With success');
+        return $this->sendResponse($item, 'Post Updated With success');
 
     }
 

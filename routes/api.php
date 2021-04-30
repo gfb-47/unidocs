@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -12,17 +11,20 @@ use Illuminate\Support\Facades\Route;
 | routes are loaded by the RouteServiceProvider within a group which
 | is assigned the "api" middleware group. Enjoy building your API!
 |
-*/
-Route::resource('posts', 'PostController');
-Route::get('student','API\StudentController@index');
-Route::get('professor','API\ProfessorController@index');
-Route::get('course','API\CourseController@index');
-Route::get('subject','API\SubjectController@index');
-Route::get('semester','API\SemesterController@index');
+ */
+Route::group(['prefix' => 'v1', 'namespace' => 'API'], function () {
 
-Route::group(['prefix' => 'knowledgearea'], function () {
-    Route::get('read', 'API\KnowledgeAreaController@index');
-    Route::post('create', 'API\KnowledgeAreaController@store');
-    Route::put('update/{id}', 'API\KnowledgeAreaController@update');
-    Route::delete('delete/{id}', 'API\KnowledgeAreaController@destroy');
+    Route::group(['prefix' => 'auth'], function () {
+        Route::post('/signin', 'AuthController@signin');
+    });
+
+    Route::apiResource('posts', 'PostController');
+    Route::get('student', 'StudentController@index');
+    Route::get('professor', 'ProfessorController@index');
+    Route::get('course', 'CourseController@index');
+    Route::get('subject', 'SubjectController@index');
+    Route::get('semester', 'SemesterController@index');
+
+    //Use Este Padrão para caso seja CRUD's
+    Route::apiResource('knowledgearea', 'KnowledgeAreaController');
 });
