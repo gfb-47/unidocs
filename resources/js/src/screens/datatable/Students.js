@@ -195,10 +195,6 @@ const useStyles = makeStyles((theme) => ({
     itemInactive: {
         color: theme.palette.error.main,
     },
-    purple: {
-        color: theme.palette.getContrastText(deepPurple[500]),
-        backgroundColor: deepPurple[500],
-    },
 }));
 
 //COMPONENTE QUE SERÁ RENDENIZADO, ou seja, aqui o bagulho é serio.
