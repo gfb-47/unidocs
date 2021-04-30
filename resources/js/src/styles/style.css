@@ -1,9 +1,17 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;700&display=swap");
 
 body {
   padding: 0 !important;
   margin: 0 !important;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #F1F1F1;
+  background-color: #f1f1f1;
+}
+
+a {
+  text-decoration: none !important;
+}
+
+a:hover {
+  color: white !important;
 }

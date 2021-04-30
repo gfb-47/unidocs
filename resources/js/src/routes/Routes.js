@@ -7,21 +7,23 @@ import {
     Route,
 } from 'react-router-dom';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import { blue, blueGrey } from '@material-ui/core/colors';
 
 import Home from '../screens/Home'
 import Students from '../screens/datatable/Students'
-import Profire from '../screens/profires/Profire'
-import ProfireProfessor from '../screens/profires/ProfessorProfile'
+import Professors from '../screens/datatable/Professors';
+import Profile from '../screens/profiles/Profile'
+import ProfileProfessor from '../screens/profiles/ProfessorProfile'
 
 const Path = "/unidocs"
 
 const theme = createMuiTheme({
     palette: {
         primary: {
-            main: '#0E4DA4',
+            main: blue[900],
         },
         secondary: {
-            main: '#263238',
+            main: blueGrey[900],
         }
     },
     typography: {
@@ -30,8 +32,6 @@ const theme = createMuiTheme({
         fontWeightRegular: 500,
         fontWeightMedium: 600,
         fontWeightBold: 700,
-        h1: {
-        }
     }
 });
 
@@ -50,7 +50,7 @@ const App = () => {
                     </Route>
 
                     <Route path={`${Path}/professors`}>
-                        {/* <Professors/> */}
+                        <Professors />
                     </Route>
 
                     <Route path={`${Path}/semesters`}>
@@ -69,11 +69,15 @@ const App = () => {
                         {/* <Courses/> */}
                     </Route>
 
+                    {/* ALTERAR DEPOIS PARA DETECTAR TIPO DE USUARIO */}
                     <Route path={`${Path}/profile`}>
-                        {/* <Profile/> or <ProfessorProfile/> */}
-                        {/*<Profire />*/}
-                        <ProfireProfessor/>
+                        <Profile />
                     </Route>
+
+                    <Route path={`${Path}/professorprofile`}>
+                        <ProfileProfessor />
+                    </Route>
+                    {/* --------- */}
 
                     <Route path={`${Path}/student/processes`}>
                         {/* <StudentProcesses/> */}

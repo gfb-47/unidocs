@@ -8,6 +8,7 @@ import Tab from '@material-ui/core/Tab';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import IconButton from '@material-ui/core/IconButton';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import { Link  } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -25,12 +26,15 @@ const useStyles = makeStyles((theme) => ({
         fontSize: 36,
     },
     link: {
+        textDecoration: "none",
     },
     title: {
+        textDecoration: "none",
         color: 'white',
         fontWeight: 500,
     },
     subtitle: {
+        textDecoration: "none",
         color: 'white',
         fontWeight: 300,
     },
@@ -41,10 +45,15 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Navbar() {
     const classes = useStyles();
-    const [value, setValue] = React.useState(0);
+    const [topBar, setTopBar] = React.useState(0);
+    const [bottomBar, setBottomBar] = React.useState(0);
 
-    const handleChange = (event, newValue) => {
-        setValue(newValue);
+    const handleTopBar = (event, newValue) => {
+        setTopBar(newValue);
+    };
+
+    const handleBottomBar = (event, newValue) => {
+        setBottomBar(newValue);
     };
 
     return (
@@ -58,7 +67,6 @@ export default function Navbar() {
                         className={classes.logo}
                         size='large'
                     />
-
                     <div>
                         <a href="/unidocs" className={classes.link}>
                             <Typography
@@ -79,8 +87,8 @@ export default function Navbar() {
 
                     <Tabs
                         className={classes.tabs}
-                        value={value}
-                        onChange={handleChange}
+                        value={topBar}
+                        onChange={handleTopBar}
                         centered
                     >
                         <Tab label="Gerenciar" />
@@ -105,16 +113,16 @@ export default function Navbar() {
             >
                 <Tabs
                     variant="fullWidth"
-                    value={value}
-                    onChange={handleChange}
-                    aria-label=""
+                    value={bottomBar}
+                    onChange={handleBottomBar}
+                    className={classes.tabs}
                 >
-                    <Tab label="Aluno" href="/unidocs/students" />
-                    <Tab label="Professor" />
-                    <Tab label="Semestre" />
-                    <Tab label="Áreas do Conhecimento" />
-                    <Tab label="Disciplina" />
-                    <Tab label="Curso" />
+                    <Tab label="Aluno" to='/unidocs/students' component={Link}/>
+                    <Tab label="Professor" to='/unidocs/professors' component={Link}/>
+                    <Tab label="Semestre"/>
+                    <Tab label="Áreas do Conhecimento"/>
+                    <Tab label="Disciplina"/>
+                    <Tab label="Curso"/>
                 </Tabs>
             </AppBar>
         </div>

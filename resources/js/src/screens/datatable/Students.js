@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import clsx from 'clsx';
 import { lighten, makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -14,31 +13,37 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import IconButton from '@material-ui/core/IconButton';
-import Tooltip from '@material-ui/core/Tooltip';
-import FilterListIcon from '@material-ui/icons/FilterList';
-import { Container } from '@material-ui/core';
+import MenuIcon from '@material-ui/icons/Menu';
+import { Avatar, Container, Menu, MenuItem } from '@material-ui/core';
 import Navbar from '../../components/Navbar';
+import { deepPurple } from '@material-ui/core/colors';
 
-function createData(name, calories, fat, carbs, protein) {
-    return { name, calories, fat, carbs, protein };
+//Sessão 1 - Area de Criação de Dados para preechimento. Será subistituido pela API do banco - NÃO SERÁ MANTIDO
+//Para os testes, mude as variaveis abaixo para o numero de variaveis que haverão na sua tabela.
+function createData(name, updatedAtDate, course, active, email, updatedAtHour) {
+    return { name, updatedAtDate, course, active, email, updatedAtHour };
 }
 
+//Preencha a função createData() com o mesmo numero de variaveis que voce colocou acima.
 const rows = [
-    createData('Cupcake', 305, 3.7, 67, 13),
-    createData('Donut', 452, 25.0, 51, 12),
-    createData('Eclair', 262, 16.0, 24, 11),
-    createData('Frozen yoghurt', 159, 6.0, 24, 10),
-    createData('Gingerbread', 356, 16.0, 49, 9),
-    createData('Honeycomb', 408, 3.2, 87, 8),
-    createData('Ice cream sandwich', 237, 9.0, 37, 7),
-    createData('Jelly Bean', 375, 0.0, 94, 6),
-    createData('KitKat', 518, 26.0, 65, 5),
-    createData('Lollipop', 392, 0.2, 98, 4),
-    createData('Marshmallow', 318, 0, 81, 3),
-    createData('Nougat', 360, 19.0, 9, 2),
-    createData('Oreo', 437, 18.0, 63, 1),
+    createData('Nelson Edwards', '4 de Dezembro, 2019', 'Direit, Sistemas de Informação', 'ativo', 'email2@email.com', '1 horas atrás'),
+    createData('Ana Gregory', '3 de Dezembro, 2019', 'Sistemas de Informação', 'ativo', 'email1@email.com', '3 horas atrás'),
+    createData('Troy Mcdaniel', '5 de Dezembro, 2019', 'Direi, Sistemas de Informação', 'desativo', 'email4@email.com', '10 minutos atrás'),
+    createData('Rosemary Maldonado', '6 de Dezembro, 2019', 'Dire, Sistemas de Informação', 'ativo', 'email3@email.com', '4 dias atrás'),
 ];
+//----FIM DA Sessão 1----
 
+//Sessão 2 - Aqui será definidas quais serãos as Colunas dos dados. Vincule os nomes com seus dados para facilitar o entendimento
+//id = identificador da variavel, label = nome da coluna na tabela
+const headCells = [
+    { id: 'name', label: 'Alunos' },
+    { id: 'updatedAtDate', label: 'Última Alteração' },
+    { id: 'course', label: 'Cursos' },
+    { id: 'active', label: 'Status' },
+];
+//----FIM DA Sessão 2----
+
+//Sessão 3 - Não mexer. Aqui é feita a filtragem e ordenação da tabela.
 function descendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
         return -1;
@@ -64,17 +69,11 @@ function stableSort(array, comparator) {
     });
     return stabilizedThis.map((el) => el[0]);
 }
+//----FIM DA Sessão 3----
 
-const headCells = [
-    { id: 'name', numeric: false, disablePadding: true, label: 'Dessert (100g serving)' },
-    { id: 'calories', numeric: true, disablePadding: false, label: 'Calories' },
-    { id: 'fat', numeric: true, disablePadding: false, label: 'Fat (g)' },
-    { id: 'carbs', numeric: true, disablePadding: false, label: 'Carbs (g)' },
-    { id: 'protein', numeric: true, disablePadding: false, label: 'Protein (g)' },
-];
-
+//Sessão 4 - Aqui é criado o cabeçalho da tabela. Normalmente, não haverá necessidade de alterar nada.
 function EnhancedTableHead(props) {
-    const { classes, order, orderBy, rowCount, onRequestSort } = props;
+    const { classes, order, orderBy, onRequestSort } = props;
     const createSortHandler = (property) => (event) => {
         onRequestSort(event, property);
     };
@@ -82,13 +81,14 @@ function EnhancedTableHead(props) {
     return (
         <TableHead>
             <TableRow>
-                <TableCell padding="checkbox">
+                <TableCell padding="default">
                 </TableCell>
+
                 {headCells.map((headCell) => (
                     <TableCell
                         key={headCell.id}
-                        align={headCell.numeric ? 'right' : 'left'}
-                        padding={headCell.disablePadding ? 'none' : 'default'}
+                        align='left'
+                        padding='default'
                         sortDirection={orderBy === headCell.id ? order : false}
                     >
                         <TableSortLabel
@@ -105,6 +105,9 @@ function EnhancedTableHead(props) {
                         </TableSortLabel>
                     </TableCell>
                 ))}
+                <TableCell align='right' padding='default'>
+                    Ações
+                </TableCell>
             </TableRow>
         </TableHead>
     );
@@ -138,7 +141,9 @@ const useToolbarStyles = makeStyles((theme) => ({
         flex: '1 1 100%',
     },
 }));
+//----FIM DA Sessão 4----
 
+//Cabeçalho do card da tabela. Mudar o conteudo do <Typography/>
 const EnhancedTableToolbar = (props) => {
     const classes = useToolbarStyles();
 
@@ -147,18 +152,14 @@ const EnhancedTableToolbar = (props) => {
             className={classes.root}
         >
             <Typography className={classes.title} variant="h6" id="tableTitle" component="div">
-                Nutrition
+                Alunos
             </Typography>
-            <Tooltip title="Filter list">
-                <IconButton aria-label="filter list">
-                    <FilterListIcon />
-                </IconButton>
-            </Tooltip>
         </Toolbar>
     );
 };
 
-
+//Sessão 5 - Componente principal. Aqui precisará ser alterado os componentes para comportarem a tabela necessaria.
+//MakeStyles é oq faz as configurações personalizadas de CSS no MaterialUI. Se não se sentir confortavel de mexer, chamar ajuda.
 const useStyles = makeStyles((theme) => ({
     root: {
         width: '100%',
@@ -181,15 +182,37 @@ const useStyles = makeStyles((theme) => ({
         top: 20,
         width: 1,
     },
+    userCell: {
+        display: 'flex',
+    },
+    subItem: {
+        fontSize: "0.75rem !important",
+        color: theme.palette.grey[600],
+    },
+    itemActive: {
+        color: theme.palette.success.main,
+    },
+    itemInactive: {
+        color: theme.palette.error.main,
+    },
+    purple: {
+        color: theme.palette.getContrastText(deepPurple[500]),
+        backgroundColor: deepPurple[500],
+    },
 }));
 
+//COMPONENTE QUE SERÁ RENDENIZADO, ou seja, aqui o bagulho é serio.
 export default function Students() {
+    {/* Variaveis sendo inicializadas */ }
     const classes = useStyles();
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const open = Boolean(anchorEl);
     const [order, setOrder] = React.useState('asc');
-    const [orderBy, setOrderBy] = React.useState('calories');
+    const [orderBy, setOrderBy] = React.useState('active');
     const [page, setPage] = React.useState(0);
-    const [rowsPerPage, setRowsPerPage] = React.useState(5);
+    const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
+    {/* Metodos */ }
     const handleRequestSort = (event, property) => {
         const isAsc = orderBy === property && order === 'asc';
         setOrder(isAsc ? 'desc' : 'asc');
@@ -206,8 +229,17 @@ export default function Students() {
     };
 
 
+    const handleMenu = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
+
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
+    {/* Return que envia o HTML com os componentes */ }
     return (
         <div className={classes.root}>
             <Navbar />
@@ -228,6 +260,11 @@ export default function Students() {
                                 onRequestSort={handleRequestSort}
                                 rowCount={rows.length}
                             />
+
+                            {/* Dentro do TableBody é preenchido atraves de um .map
+                            todos os dados que apareceram na tabela. Altere os 
+                            <TableCell/> dentro de <TableRoll/> para que eles se 
+                            alinhem com a listagem que voce gostaria de fazer */}
                             <TableBody>
                                 {stableSort(rows, getComparator(order, orderBy))
                                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
@@ -237,19 +274,72 @@ export default function Students() {
                                         return (
                                             <TableRow
                                                 hover
-                                                role="checkbox"
                                                 tabIndex={-1}
                                                 key={row.name}
                                             >
-                                                <TableCell padding="checkbox">
+
+                                                {/* Não mexa nesse TableCell*/}
+                                                <TableCell padding="default">
                                                 </TableCell>
-                                                <TableCell component="th" id={labelId} scope="row" padding="none">
-                                                    {row.name}
+                                                {/* Não mexa nesse TableCell*/}
+
+                                                <TableCell component="th" id={labelId} align="left" scope="row" padding="none">
+                                                    <div className={classes.userCell}>
+                                                        <Avatar
+                                                            className={classes.purple}
+                                                            style={{
+                                                                marginRight: "1rem",
+                                                            }}>
+                                                            A
+                                                        </Avatar>
+
+                                                        <div>
+                                                            <b>{row.name}</b> <br />
+                                                            <span className={classes.subItem}>{row.email}</span>
+                                                        </div>
+                                                    </div>
                                                 </TableCell>
-                                                <TableCell align="right">{row.calories}</TableCell>
-                                                <TableCell align="right">{row.fat}</TableCell>
-                                                <TableCell align="right">{row.carbs}</TableCell>
-                                                <TableCell align="right">{row.protein}</TableCell>
+                                                <TableCell align="left">
+                                                    <span>{row.updatedAtDate}</span> <br />
+                                                    <span className={classes.subItem}>{row.updatedAtHour}</span>
+                                                </TableCell>
+                                                <TableCell align="left">
+                                                    <span>{row.course}</span>
+                                                </TableCell>
+                                                <TableCell
+                                                    align="left"
+                                                    className={row.active == 'ativo' ? classes.itemActive : classes.itemInactive}
+                                                >
+                                                    <span>{row.active}</span>
+                                                </TableCell>
+
+                                                {/* Esse <TableCell/> representa o <IconButton/> 
+                                                que todas as linhas precisam ter */}
+                                                <TableCell align="right">
+                                                    <IconButton
+                                                        onClick={handleMenu}
+                                                    >
+                                                        <MenuIcon />
+                                                    </IconButton>
+                                                    <Menu
+                                                        id="item-menu"
+                                                        anchorEl={anchorEl}
+                                                        anchorOrigin={{
+                                                            vertical: 'top',
+                                                            horizontal: 'right',
+                                                        }}
+                                                        keepMounted
+                                                        transformOrigin={{
+                                                            vertical: 'top',
+                                                            horizontal: 'right',
+                                                        }}
+                                                        open={open}
+                                                        onClose={handleClose}
+                                                    >
+                                                        <MenuItem onClick={handleClose}>Profile</MenuItem>
+                                                        <MenuItem onClick={handleClose}>My account</MenuItem>
+                                                    </Menu>
+                                                </TableCell>
                                             </TableRow>
                                         );
                                     })}
@@ -262,7 +352,7 @@ export default function Students() {
                         </Table>
                     </TableContainer>
                     <TablePagination
-                        rowsPerPageOptions={[5, 10, 25]}
+                        rowsPerPageOptions={[5, 10, 15, 25]}
                         component="div"
                         count={rows.length}
                         rowsPerPage={rowsPerPage}
@@ -276,3 +366,4 @@ export default function Students() {
         </div>
     );
 }
+//----FIM DA Sessão 5----
