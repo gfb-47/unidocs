@@ -1,71 +1,82 @@
 import React from 'react'
 import { makeStyles } from "@material-ui/core/styles";
-import Typography from '@material-ui/core/Typography';
-import Paper from '@material-ui/core/Paper';
-import Button from '@material-ui/core/Button';
+import Card from '@material-ui/core/Card';
+import CardHeader from '@material-ui/core/CardHeader';
+import CardContent from '@material-ui/core/CardContent';
 import CreateIcon from '@material-ui/icons/Create';
+import Button from '@material-ui/core/Button';
+import '../../../styles/profile_style.css';
+import { List, ListItem, ListItemText, Divider, CardActions, ListItemIcon, IconButton } from '@material-ui/core';
 
-const userStyles = makeStyles({
-    top:{
-        padding:'30px',
+const useStyles = makeStyles((theme) => ({
+    card: {
+        minHeight: 450,
     },
-    spaceContent:{
-        display:'grid', 
-        gridTemplateColumns: '30% 1fr auto',
-        marginBottom:'20px',
-        borderBottom:'1px solid #f1f1f1',
+    cardContent: {
+        display: 'flex',
     },
-    buttonIcon:{
-        cursor:'pointer',
-        color:'blue',
-        width:'30px',
-        border:'2px solid #000',
-        borderRadius:'5px'
+    cardActions: {
+        marginTop: theme.spacing(3),
+        justifyContent: 'flex-end'
     },
-    button:{
-        backgroundColor:'#0E4DA4',
-        textTransform:'none'
+    userData: {
+        minWidth: '100%'
     },
-    boxButton:{
-        marginTop:'40px',
+    dataTitle: {
+        opacity: 0.75,
     },
-})
+}));
 
-export default function MainContent(props){
-    const classes = userStyles();
-    return(
-        <Paper elevation={3}>
-            <div className={classes.top}>
-                <Typography variant="h4">
-                    Dados Pessoais
-                </Typography>
-                <Typography variant="caption">
-                    Última Atualização: 23 setembro de 2021
-                </Typography>
-                <div style={{marginTop:'20px'}}>
-                    <div className={classes.spaceContent}>
-                        <label className={classes.label}>Email:</label>
-                        <p style={{textAlign:'left'}}>{props.email}</p>
+export default function Section(props) {
+    const classes = useStyles();
+
+    return (
+        <div>
+            <Card className={classes.card}>
+                <CardHeader
+                    title="Dados Pessoais"
+                    subheader="Última Atualização: 23 setembro de 2021"
+                />
+                <CardContent className={classes.cardContent}>
+                    <div className={classes.userData}>
+                        <List component="nav">
+                            <ListItem >
+                                <ListItemText primary="Email" className={classes.dataTitle}/>
+                                <ListItemText primary={props.email} />
+                            </ListItem>
+                            <Divider light />
+                            <ListItem >
+                                <ListItemText primary="Curso" className={classes.dataTitle}/>
+                                <ListItemText primary={props.curso} />
+                            </ListItem>
+                            <Divider light />
+                            <ListItem >
+                                <ListItemText primary="Telefone" className={classes.dataTitle}/>
+                                <ListItemText primary={props.telefone} />
+                                <ListItemIcon>
+                                    <IconButton color="primary">
+                                        <CreateIcon />
+                                    </IconButton>
+                                </ListItemIcon>
+                            </ListItem>
+                            <Divider light />
+                        </List>
                     </div>
-                    <div className={classes.spaceContent}>
-                        <label className={classes.label} >Curso:</label>
-                        <p style={{textAlign:'left'}}>{props.curso}</p>
-                    </div>
-                    <div className={classes.spaceContent}>
-                        <label className={classes.label}>Telefone:</label>
-                        <p style={{textAlign:'left'}}>{props.telefone}</p>
-                        <CreateIcon className={classes.buttonIcon}></CreateIcon>
-                    </div>
-                </div>
-                <div style={{display:'flex', justifyContent:'space-between'}}>
-                    <div></div>
-                    <div className={classes.boxButton}>
-                        <Button variant="contained" size="medium" color="secondary" className={classes.button}>
-                            Alterar Senha
-                        </Button>
-                    </div>
-                </div>
-            </div>
-        </Paper>
+
+                </CardContent>
+                <CardActions className={classes.cardActions}>
+                    <Button
+                        variant="contained"
+                        size="medium"
+                        color="primary"
+                        style={{
+                            textTransform: 'none',
+                        }}
+                    >
+                        Alterar Senha
+                    </Button>
+                </CardActions>
+            </Card>
+        </div>
     )
 }

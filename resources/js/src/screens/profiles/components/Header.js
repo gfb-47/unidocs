@@ -3,38 +3,52 @@ import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Avatar from '@material-ui/core/Avatar';
 
-const userStyles = makeStyles({
-    header:{
-        width:'100%',
-        height:'25vh',
-        marginTop:'-64px',
-        marginBottom:'65px',
-        opacity:'0.4',
+const useStyles = makeStyles((theme) => ({
+    header: {
+        width: '100%',
+        height: 200,
+        marginBottom: 40,
+        display: 'flex',
     },
-    content:{
-        padding:'40px',
-        marginLeft:'3%',
-        display:'flex',
-        alignItems:'center'
+    content: {
+        alignItems: 'center',
+        display: 'flex',
+        alignSelf: 'center',
     },
-    avatar:{
-        width:'75px',
-        height:'75px',
-        fontSize:"25pt",
-        fontStyle:'bold',
-        color:"blue"
+    avatar: {
+        width: '5rem',
+        height: '5rem',
+        fontSize: '3rem',
+        fontWeight: 'bold',
+        marginLeft: 240,
+        marginRight: theme.spacing(5),
     },
-    typography:{
-        color:"#fff"
+    typography: {
+        color: "#000"
     }
-});
+}));
 
-export default function TopContent(props){
-    const classes = userStyles();
-    return(
-        <div className={classes.header} style={{backgroundColor:props.cor}}>
+export default function Header(props) {
+    const classes = useStyles();
+
+    return (
+        <div
+            className={classes.header}
+            style={{
+                backgroundColor: `${props.cor}40`
+            }}
+        >
             <div className={classes.content}>
-                <Avatar alt={props.nome} src="/" className={classes.avatar} style={{marginRight:'10px'}}/>
+                <Avatar
+                    className={classes.avatar}
+                    style={{
+                        backgroundColor: `${props.cor}66`,
+                        color: `${props.cor}`
+                    }}
+                >
+                    B
+                </Avatar>
+
                 <Typography variant="h4" className={classes.typography}>
                     {props.nome}
                 </Typography>
