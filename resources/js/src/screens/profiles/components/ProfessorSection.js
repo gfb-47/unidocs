@@ -30,10 +30,6 @@ const useStyles = makeStyles((theme) => ({
     chips: {
         margin: '0 40px',
     },
-    chip: {
-        padding: theme.spacing(2),
-        margin: theme.spacing(1),
-    },
     dataTitle: {
         opacity: 0.75,
     },
@@ -88,9 +84,10 @@ export default function ProfessorSection(props) {
                                 variant="outlined"
                                 style={{
                                     color: '#f44336',
-                                    border: '1px solid #f4433666'
+                                    border: '1px solid #f4433666',
+                                    padding: 16,
+                                    margin: 8,
                                 }}
-                                className={classes.chip}
                             />
                         </div>
                     </div>

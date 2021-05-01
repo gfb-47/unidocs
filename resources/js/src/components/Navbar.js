@@ -121,8 +121,8 @@ export default function Navbar() {
                     <Tab label="Professor" to='/unidocs/professors' component={Link}/>
                     <Tab label="Semestre"/>
                     <Tab label="Áreas do Conhecimento"/>
-                    <Tab label="Disciplina"/>
-                    <Tab label="Curso"/>
+                    <Tab label="Disciplina" to='/unidocs/subjects' component={Link}/>
+                    <Tab label="Curso" to='/unidocs/courses' component={Link}/>
                 </Tabs>
             </AppBar>
         </div>

@@ -20,16 +20,16 @@ import { deepPurple } from '@material-ui/core/colors';
 
 //Sessão 1 - Area de Criação de Dados para preechimento. Será subistituido pela API do banco - NÃO SERÁ MANTIDO
 //Para os testes, mude as variaveis abaixo para o numero de variaveis que haverão na sua tabela.
-function createData(name, updatedAtDate, course, active, email, updatedAtHour) {
-    return { name, updatedAtDate, course, active, email, updatedAtHour };
+function createData(name, uptadedAt, course, active, email, lastUpdated, color) {
+    return { name, uptadedAt, course, active, email, lastUpdated, color };
 }
 
 //Preencha a função createData() com o mesmo numero de variaveis que voce colocou acima.
 const rows = [
-    createData('Nelson Edwards', '4 de Dezembro, 2019', 'Direit, Sistemas de Informação', 'ativo', 'email2@email.com', '1 horas atrás'),
-    createData('Ana Gregory', '3 de Dezembro, 2019', 'Sistemas de Informação', 'ativo', 'email1@email.com', '3 horas atrás'),
-    createData('Troy Mcdaniel', '5 de Dezembro, 2019', 'Direi, Sistemas de Informação', 'desativo', 'email4@email.com', '10 minutos atrás'),
-    createData('Rosemary Maldonado', '6 de Dezembro, 2019', 'Dire, Sistemas de Informação', 'ativo', 'email3@email.com', '4 dias atrás'),
+    createData('Nelson Edwards', '4 de Dezembro, 2019', 'Direit, Sistemas de Informação', 'ativo', 'email2@email.com', '1 horas atrás', '#673ab7'),
+    createData('Ana Gregory', '3 de Dezembro, 2019', 'Sistemas de Informação', 'ativo', 'email1@email.com', '3 horas atrás', '#3f51b5'),
+    createData('Troy Mcdaniel', '5 de Dezembro, 2019', 'Direi, Sistemas de Informação', 'desativo', 'email4@email.com', '10 minutos atrás', '#f44336'),
+    createData('Rosemary Maldonado', '6 de Dezembro, 2019', 'Dire, Sistemas de Informação', 'ativo', 'email3@email.com', '4 dias atrás', '#00bcd4'),
 ];
 //----FIM DA Sessão 1----
 
@@ -37,7 +37,7 @@ const rows = [
 //id = identificador da variavel, label = nome da coluna na tabela
 const headCells = [
     { id: 'name', label: 'Alunos' },
-    { id: 'updatedAtDate', label: 'Última Alteração' },
+    { id: 'uptadedAt', label: 'Última Alteração' },
     { id: 'course', label: 'Cursos' },
     { id: 'active', label: 'Status' },
 ];
@@ -152,7 +152,7 @@ const EnhancedTableToolbar = (props) => {
             className={classes.root}
         >
             <Typography className={classes.title} variant="h6" id="tableTitle" component="div">
-                Alunos
+                Alunos Cadastrados
             </Typography>
         </Toolbar>
     );
@@ -194,10 +194,6 @@ const useStyles = makeStyles((theme) => ({
     },
     itemInactive: {
         color: theme.palette.error.main,
-    },
-    purple: {
-        color: theme.palette.getContrastText(deepPurple[500]),
-        backgroundColor: deepPurple[500],
     },
 }));
 
@@ -286,11 +282,13 @@ export default function Students() {
                                                 <TableCell component="th" id={labelId} align="left" scope="row" padding="none">
                                                     <div className={classes.userCell}>
                                                         <Avatar
-                                                            className={classes.purple}
                                                             style={{
                                                                 marginRight: "1rem",
-                                                            }}>
-                                                            A
+                                                                color: `${row.color}`,
+                                                                backgroundColor: `${row.color}50`,
+                                                            }}
+                                                        >
+                                                            {row.name[0]}
                                                         </Avatar>
 
                                                         <div>
@@ -300,8 +298,8 @@ export default function Students() {
                                                     </div>
                                                 </TableCell>
                                                 <TableCell align="left">
-                                                    <span>{row.updatedAtDate}</span> <br />
-                                                    <span className={classes.subItem}>{row.updatedAtHour}</span>
+                                                    <span>{row.uptadedAt}</span> <br />
+                                                    <span className={classes.subItem}>{row.lastUpdated}</span>
                                                 </TableCell>
                                                 <TableCell align="left">
                                                     <span>{row.course}</span>
