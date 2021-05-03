@@ -17,4 +17,8 @@ class KnowledgeArea extends Model
     {
         return $this->belongsTo(Course::class);
     }
+
+    public function process() {
+        return $this->hasMany(Process::class);
+    }
 }

@@ -13,4 +13,8 @@ class Semester extends Model
     public function students() {
         return $this->belongsToMany(Student::class, 'semester_students', 'semester_id', 'student_id');
     }
+
+    public function process() {
+        return $this->hasMany(Process::class);
+    }
 }

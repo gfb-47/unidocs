@@ -27,4 +27,8 @@ Route::group(['prefix' => 'v1', 'namespace' => 'API'], function () {
 
     //Use Este Padrão para caso seja CRUD's
     Route::apiResource('knowledgearea', 'KnowledgeAreaController');
+
+    Route::get('processread', 'ProcessController@index');
+    Route::post('processstore', 'ProcessController@store');
+    Route::put('processupdate/{id}', 'ProcessController@update');
 });
