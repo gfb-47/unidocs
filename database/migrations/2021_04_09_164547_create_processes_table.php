@@ -17,7 +17,7 @@ class CreateProcessesTable extends Migration
             $table->id();
             $table->string('title');
             $table->text('content');
-            $table->string('status')->nullable();
+            $table->bigInteger('status')->default(1);
             $table->float('rating')->nullable();
             $table->bigInteger('student_id')->unsigned();
             $table->foreign('student_id')->references('id')->on('students')->onDelete('cascade');
@@ -25,8 +25,6 @@ class CreateProcessesTable extends Migration
             $table->foreign('advise_professor_id')->references('id')->on('professors')->onDelete('cascade');
             $table->bigInteger('semester_id')->unsigned();
             $table->foreign('semester_id')->references('id')->on('semesters')->onDelete('cascade');
-            $table->bigInteger('knowledge_area_id')->unsigned()->nullable();
-            $table->foreign('knowledge_area_id')->references('id')->on('knowledge_areas')->onDelete('cascade');
             $table->timestamps();
         });
     }

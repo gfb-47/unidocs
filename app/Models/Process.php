@@ -9,8 +9,10 @@ class Process extends Model
     protected $table = 'processes';
 
     protected $fillable = [
-        'title', 'content', 'status', 'rating', 'student_id', 'advise_professor_id', 'semester_id', 'knowledge_area_id'
+        'title', 'content', 'status', 'rating', 'student_id', 'advise_professor_id', 'semester_id'
     ];
+
+    protected $appends = ['all_status'];
 
     public function student()
     {
@@ -24,8 +26,24 @@ class Process extends Model
     {
         return $this->belongsTo(Semester::class, 'semester_id');
     }
-    public function knowledgeArea()
+    public function knowledgeAreas()
     {
-        return $this->belongsTo(KnowledgeArea::class, 'knowledge_area_id');
+        return $this->belongsToMany(KnowledgeArea::class, 'process_knowledge_areas', 'process_id' ,'knowledge_area_id');
+    }
+
+    public function getAllStatusAttribute()
+    {
+        return $this->allStatus()[$this->status];
+    }
+
+    public static function allStatus()
+    {
+        return [
+            1 => 'Sob Análise do Responsável da Disciplina',
+            'Sob Análise do Orientador',
+            'Em desenvolvimento',
+            'Aprovado',
+            'Reprovado'
+        ];
     }
 }
