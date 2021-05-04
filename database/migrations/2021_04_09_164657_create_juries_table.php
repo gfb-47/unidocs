@@ -21,7 +21,7 @@ class CreateJuriesTable extends Migration
             $table->float('rating')->nullable();
             $table->boolean('approved')->nullable();
             $table->text('note')->nullable();   
-            $table->bigInteger('process_id')->unsigned();
+            $table->bigInteger('process_id')->unique()->unsigned();
             $table->foreign('process_id')->references('id')->on('processes')->onDelete('cascade');
             $table->timestamps();
         });
