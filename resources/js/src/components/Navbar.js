@@ -93,7 +93,7 @@ export default function Navbar() {
                     >
                         <Tab label="Gerenciar" />
                         <Tab label="Projetos" />
-                        <Tab label="Relatórios" />
+                        <Tab label="Relatórios" to='/unidocs/professor/reports' component={Link}/>
                     </Tabs>
 
                     <IconButton
@@ -119,8 +119,8 @@ export default function Navbar() {
                 >
                     <Tab label="Aluno" to='/unidocs/students' component={Link}/>
                     <Tab label="Professor" to='/unidocs/professors' component={Link}/>
-                    <Tab label="Semestre"/>
-                    <Tab label="Áreas do Conhecimento"/>
+                    <Tab label="Semestre" to='/unidocs/semesters' component={Link}/>
+                    <Tab label="Áreas do Conhecimento" to='/unidocs/knowladgeareas' component={Link}/>
                     <Tab label="Disciplina" to='/unidocs/subjects' component={Link}/>
                     <Tab label="Curso" to='/unidocs/courses' component={Link}/>
                 </Tabs>

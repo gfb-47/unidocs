@@ -104,7 +104,7 @@ function EnhancedTableHead(props) {
         ))}
         <TableCell align='right' padding='default'>
           Ações
-                </TableCell>
+        </TableCell>
       </TableRow>
     </TableHead>
   );
