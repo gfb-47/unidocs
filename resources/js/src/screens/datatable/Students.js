@@ -16,8 +16,7 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import { Avatar, Container, Menu, MenuItem } from '@material-ui/core';
 import Navbar from '../../components/Navbar';
-import { deepPurple } from '@material-ui/core/colors';
-
+import api from '../../api/student';
 //Sessão 1 - Area de Criação de Dados para preechimento. Será subistituido pela API do banco - NÃO SERÁ MANTIDO
 //Para os testes, mude as variaveis abaixo para o numero de variaveis que haverão na sua tabela.
 function createData(name, uptadedAt, course, active, email, lastUpdated, color) {
@@ -207,6 +206,16 @@ export default function Students() {
     const [orderBy, setOrderBy] = React.useState('active');
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
+    const [students, setStudents] = React.useState([]);
+    const fetchStudents = () => {
+        api.getAllStudents().then(res => {
+            const result = res.data.data;
+            setStudents(result);
+        });
+    };
+    React.useEffect(() => {
+        fetchStudents();
+    }, []);
 
     {/* Metodos */ }
     const handleRequestSort = (event, property) => {
@@ -232,8 +241,8 @@ export default function Students() {
     const handleClose = () => {
         setAnchorEl(null);
     };
-
-    const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
+    console.log(students.length)
+    const emptyRows = rowsPerPage - Math.min(rowsPerPage, students.length - page * rowsPerPage);
 
     {/* Return que envia o HTML com os componentes */ }
     return (
@@ -254,7 +263,7 @@ export default function Students() {
                                 order={order}
                                 orderBy={orderBy}
                                 onRequestSort={handleRequestSort}
-                                rowCount={rows.length}
+                                rowCount={students.length}
                             />
 
                             {/* Dentro do TableBody é preenchido atraves de um .map
@@ -262,7 +271,7 @@ export default function Students() {
                             <TableCell/> dentro de <TableRoll/> para que eles se 
                             alinhem com a listagem que voce gostaria de fazer */}
                             <TableBody>
-                                {stableSort(rows, getComparator(order, orderBy))
+                                {stableSort(students, getComparator(order, orderBy))
                                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                     .map((row, index) => {
                                         const labelId = `enhanced-table-checkbox-${index}`;
@@ -271,7 +280,7 @@ export default function Students() {
                                             <TableRow
                                                 hover
                                                 tabIndex={-1}
-                                                key={row.name}
+                                                key={row.id}
                                             >
 
                                                 {/* Não mexa nesse TableCell*/}
@@ -284,8 +293,8 @@ export default function Students() {
                                                         <Avatar
                                                             style={{
                                                                 marginRight: "1rem",
-                                                                color: `${row.color}`,
-                                                                backgroundColor: `${row.color}50`,
+                                                                color: `#ef5350`,
+                                                                backgroundColor: `#ef535050`,
                                                             }}
                                                         >
                                                             {row.name[0]}
@@ -298,17 +307,17 @@ export default function Students() {
                                                     </div>
                                                 </TableCell>
                                                 <TableCell align="left">
-                                                    <span>{row.uptadedAt}</span> <br />
-                                                    <span className={classes.subItem}>{row.lastUpdated}</span>
+                                                    <span>{row.updated_at}</span> <br />
+                                                    {/* <span className={classes.subItem}>{row.lastUpdated}</span> */}
                                                 </TableCell>
                                                 <TableCell align="left">
-                                                    <span>{row.course}</span>
+                                                    <span>Sem cursos</span>
                                                 </TableCell>
                                                 <TableCell
                                                     align="left"
-                                                    className={row.active == 'ativo' ? classes.itemActive : classes.itemInactive}
+                                                    className={row.active == 1 ? classes.itemActive : classes.itemInactive}
                                                 >
-                                                    <span>{row.active}</span>
+                                                    <span>{row.active == 1 ? 'ativo' : 'inativo'}</span>
                                                 </TableCell>
 
                                                 {/* Esse <TableCell/> representa o <IconButton/> 
@@ -352,7 +361,7 @@ export default function Students() {
                     <TablePagination
                         rowsPerPageOptions={[5, 10, 15, 25]}
                         component="div"
-                        count={rows.length}
+                        count={students.length}
                         rowsPerPage={rowsPerPage}
                         page={page}
                         onChangePage={handleChangePage}
