@@ -24,7 +24,8 @@ const useStyles = makeStyles((theme) => ({
         marginRight: theme.spacing(5),
     },
     typography: {
-        color: "#000"
+        color: "#000",
+        fontWeight: 600,
     }
 }));
 
