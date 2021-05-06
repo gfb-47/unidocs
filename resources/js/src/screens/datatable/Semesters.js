@@ -15,21 +15,20 @@ import Paper from '@material-ui/core/Paper';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import { Avatar, Container, Menu, MenuItem } from '@material-ui/core';
-import Navbar from '../../components/Navbar';
 import { deepPurple } from '@material-ui/core/colors';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 
-function createData(identificationCode, discipline, course, responsibleTeacher, email, active, color ) {
+function createData(identificationCode, discipline, course, responsibleTeacher, email, active, color) {
     return { identificationCode, discipline, course, responsibleTeacher, email, active, color };
 }
 
 const rows = [
-    createData('PCC/2021.01', 'PCC', 'Sistemas de Informação', 'Silvano Malfati','silvano12@unitins.com',"ativo", '#EB5757'),
-    createData('PCC/2021.02', 'TCC', 'Direito', 'Alex Coelho','alex12@unitins.com',"ativo", '#3E66FB'),
-    createData('PCC/2021.03', 'PCC', 'Serviço Social', 'Maria de Jesus','mariajesus12@unitins.com',"desativado", '#9B51E0'),
-    createData('PCC/2021.04', 'PCC', 'Sistemas de Informação', 'Jânio Junior','janio12@unitins.com',"ativo", '#27AE60'),
-    createData('PCC/2020.05', 'TCC', 'Sistemas de Informação', 'Frederico Pires','fredpires@unitins.com',"desativado", '#F2C94C'),
+    createData('PCC/2021.01', 'PCC', 'Sistemas de Informação', 'Silvano Malfati', 'silvano12@unitins.com', "ativo", '#EB5757'),
+    createData('PCC/2021.02', 'TCC', 'Direito', 'Alex Coelho', 'alex12@unitins.com', "ativo", '#3E66FB'),
+    createData('PCC/2021.03', 'PCC', 'Serviço Social', 'Maria de Jesus', 'mariajesus12@unitins.com', "desativado", '#9B51E0'),
+    createData('PCC/2021.04', 'PCC', 'Sistemas de Informação', 'Jânio Junior', 'janio12@unitins.com', "ativo", '#27AE60'),
+    createData('PCC/2020.05', 'TCC', 'Sistemas de Informação', 'Frederico Pires', 'fredpires@unitins.com', "desativado", '#F2C94C'),
 ];
 
 const headCells = [
@@ -145,12 +144,12 @@ const EnhancedTableToolbar = (props) => {
             className={classes.root}
         >
             <Typography className={classes.title} variant="h6" id="tableTitle" component="div">
-                Semestre 
-                <Fab style={{marginLeft:'10px', backgroundColor:'#fff'}} aria-label="add" size="small">
-                  <AddIcon style={{color:'blue'}} />
-                </Fab>
+                Semestre
             </Typography>
-            
+            <IconButton color="primary">
+                <AddIcon />
+            </IconButton>
+
         </Toolbar>
     );
 };
@@ -196,43 +195,42 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 export default function Semesters() {
-  const classes = useStyles();
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const open = Boolean(anchorEl);
-  const [order, setOrder] = React.useState('asc');
-  const [orderBy, setOrderBy] = React.useState('active');
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+    const classes = useStyles();
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const open = Boolean(anchorEl);
+    const [order, setOrder] = React.useState('asc');
+    const [orderBy, setOrderBy] = React.useState('active');
+    const [page, setPage] = React.useState(0);
+    const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
-  const handleRequestSort = (event, property) => {
-      const isAsc = orderBy === property && order === 'asc';
-      setOrder(isAsc ? 'desc' : 'asc');
-      setOrderBy(property);
-  };
+    const handleRequestSort = (event, property) => {
+        const isAsc = orderBy === property && order === 'asc';
+        setOrder(isAsc ? 'desc' : 'asc');
+        setOrderBy(property);
+    };
 
-  const handleChangePage = (event, newPage) => {
-      setPage(newPage);
-  };
+    const handleChangePage = (event, newPage) => {
+        setPage(newPage);
+    };
 
-  const handleChangeRowsPerPage = (event) => {
-      setRowsPerPage(parseInt(event.target.value, 10));
-      setPage(0);
-  };
+    const handleChangeRowsPerPage = (event) => {
+        setRowsPerPage(parseInt(event.target.value, 10));
+        setPage(0);
+    };
 
 
-  const handleMenu = (event) => {
-      setAnchorEl(event.currentTarget);
-  };
+    const handleMenu = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
 
-  const handleClose = () => {
-      setAnchorEl(null);
-  };
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
 
-  const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
+    const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
-  return (
-      <div className={classes.root}>
-          <Navbar />
+    return (
+        <div className={classes.root}>
             <Container>
                 <Paper className={classes.paper}>
                     <EnhancedTableToolbar />
@@ -275,20 +273,20 @@ export default function Semesters() {
                                                     <span> {row.course}</span>
                                                 </TableCell>
                                                 <TableCell align="left">
-                                                  <div className={classes.userCell}>
-                                                    <Avatar
-                                                        style={{
-                                                          marginRight: "1rem",
-                                                          color: `${row.color}`,
-                                                          backgroundColor: `${row.color}50`,
-                                                        }}
-                                                        alt={row.responsibleTeacher} src="/" >
-                                                      </Avatar>
-                                                      <div>
-                                                        <b>{row.responsibleTeacher}</b> <br />
-                                                        <span className={classes.subItem}>{row.email}</span>
-                                                      </div>
-                                                  </div>
+                                                    <div className={classes.userCell}>
+                                                        <Avatar
+                                                            style={{
+                                                                marginRight: "1rem",
+                                                                color: `${row.color}`,
+                                                                backgroundColor: `${row.color}50`,
+                                                            }}
+                                                            alt={row.responsibleTeacher} src="/" >
+                                                        </Avatar>
+                                                        <div>
+                                                            <b>{row.responsibleTeacher}</b> <br />
+                                                            <span className={classes.subItem}>{row.email}</span>
+                                                        </div>
+                                                    </div>
                                                 </TableCell>
                                                 <TableCell
                                                     align="left"
@@ -343,6 +341,6 @@ export default function Semesters() {
                     />
                 </Paper>
             </Container>
-      </div>
-  );
+        </div>
+    );
 }

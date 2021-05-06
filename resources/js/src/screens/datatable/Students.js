@@ -15,7 +15,6 @@ import Paper from '@material-ui/core/Paper';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import { Avatar, Container, Menu, MenuItem } from '@material-ui/core';
-import Navbar from '../../components/Navbar';
 import api from '../../api/student';
 //Sessão 1 - Area de Criação de Dados para preechimento. Será subistituido pela API do banco - NÃO SERÁ MANTIDO
 //Para os testes, mude as variaveis abaixo para o numero de variaveis que haverão na sua tabela.
@@ -247,7 +246,6 @@ export default function Students() {
     {/* Return que envia o HTML com os componentes */ }
     return (
         <div className={classes.root}>
-            <Navbar />
             <Container>
                 <Paper className={classes.paper}>
                     <EnhancedTableToolbar />

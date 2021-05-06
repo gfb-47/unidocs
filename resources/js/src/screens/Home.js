@@ -1,7 +1,6 @@
 import React from 'react';
 import { Container } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import Layout from '../components/Navbar'
 
 const useStyles = makeStyles((theme) => ({
     img: {
@@ -21,9 +20,6 @@ export default function Home() {
 
     return (
         <div>
-            <Layout>
-
-            </Layout>
             <Container>
                 <div className={classes.img}>
                     IMG

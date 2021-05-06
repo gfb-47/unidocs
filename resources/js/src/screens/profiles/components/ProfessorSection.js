@@ -76,7 +76,7 @@ export default function ProfessorSection(props) {
 
                         <Typography variant="h5" align="center">
                             Areas de Conhecimento
-                            </Typography>
+                        </Typography>
 
                         <div className={classes.chips}>
                             <Chip

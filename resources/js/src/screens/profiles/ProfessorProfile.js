@@ -1,7 +1,6 @@
 import React from 'react'
 import Header from './components/Header';
 import ProfessorSection from './components/ProfessorSection';
-import NavBar from '../../components/Navbar'
 import { makeStyles } from "@material-ui/core/styles";
 import { Container } from '@material-ui/core';
 
@@ -21,7 +20,6 @@ export default function ProfessorProfile() {
 
     return (
         <>
-            <NavBar></NavBar>
             <Header nome={state.nome} cor={state.cor} />
 
             <Container>

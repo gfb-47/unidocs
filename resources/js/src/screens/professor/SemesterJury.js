@@ -16,7 +16,6 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import { Avatar, Container, Menu, MenuItem } from '@material-ui/core';
 import Brightness1Icon from '@material-ui/icons/Brightness1';
-import Navbar from '../../components/Navbar';
 
 //Sessão 1 - Area de Criação de Dados para preechimento. Será subistituido pela API do banco - NÃO SERÁ MANTIDO
 //Para os testes, mude as variaveis abaixo para o numero de variaveis que haverão na sua tabela.
@@ -237,7 +236,6 @@ export default function SemesterJury() {
   {/* Return que envia o HTML com os componentes */ }
   return (
     <div className={classes.root}>
-      <Navbar />
       <Container>
         <Paper className={classes.paper}>
           <EnhancedTableToolbar />

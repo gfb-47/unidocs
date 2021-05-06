@@ -1,6 +1,5 @@
 import { Container } from '@material-ui/core';
 import React from 'react';
-import Navbar from '../../components/Navbar';
 import {
   MuiPickersUtilsProvider,
   KeyboardTimePicker,
@@ -18,7 +17,6 @@ export default function Report() {
   };
   return (
     <div>
-      <Navbar />
       <Container>
 
         <h1>AAAAAAAAAAAAA</h1>
