@@ -14,7 +14,7 @@ import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
-import { Avatar, Chip, Container, Menu, MenuItem } from '@material-ui/core';
+import { Avatar, Container, Menu, MenuItem } from '@material-ui/core';
 
 //Sessão 1 - Area de Criação de Dados para preechimento. Será subistituido pela API do banco - NÃO SERÁ MANTIDO
 //Para os testes, mude as variaveis abaixo para o numero de variaveis que haverão na sua tabela.

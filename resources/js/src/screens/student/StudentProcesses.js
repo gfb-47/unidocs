@@ -301,9 +301,11 @@ export default function StudentProcesses() {
                             label="Inteligência Artificial"
                             variant="outlined"
                             style={{
+                              fontWeight: 600,
+                              borderRadius: 4,
                               color: '#f44336',
                               border: '1px solid #f4433666',
-                              margin: 8,
+                              margin: '4px',
                             }}
                           />
                         </TableCell>

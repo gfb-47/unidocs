@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
   header: {
     display: 'flex',
     alignItems: 'center',
-    marginBottom: theme.spacing(1),
+    marginBottom: theme.spacing(2),
   },
   headerTitle: {
     paddingLeft: 16,
@@ -76,6 +76,18 @@ export default function Process(props) {
 
   const handleProfessor = (event) => {
     setProfessor(event.target.value);
+  };
+
+  const [chipData, setChipData] = React.useState([
+    { key: 0, label: 'Angular' },
+    { key: 1, label: 'jQuery' },
+    { key: 2, label: 'Polymer' },
+    { key: 3, label: 'React' },
+    { key: 4, label: 'Vue.js' },
+  ]);
+
+  const handleDelete = (chipToDelete) => () => {
+    setChipData((chips) => chips.filter((chip) => chip.key !== chipToDelete.key));
   };
 
   return (
@@ -168,30 +180,38 @@ export default function Process(props) {
                 </IconButton>
               </div>
               <div className={classes.chips}>
-                <Chip
-                  label="Basic"
-                  variant="outlined"
-                  style={{
-                    color: '#f44336',
-                    border: '1px solid #f4433666',
-                    margin: '0 4px',
-                  }}
-                />
+                {chipData.map((data) => {
+                  return (
+                    <Chip
+                      key={data.key}
+                      label={data.label}
+                      variant="outlined"
+                      onDelete={handleDelete(data)}
+                      style={{
+                        fontWeight: 600,
+                        borderRadius: 4,
+                        color: '#f44336',
+                        border: '1px solid #f4433666',
+                        margin: '4px',
+                      }}
+                    />
+                  );
+                })}
               </div>
             </Grid>
             <Grid item xs={12}>
               <FormControl component="fieldset">
                 <FormGroup>
                   <FormControlLabel
-                    control={<Checkbox checked={termAcceptance} onChange={handleChange} name="termoDeAceite" />}
+                    control={<Checkbox color="primary" checked={termAcceptance} onChange={handleChange} name="termoDeAceite" />}
                     label="Eu aceito assinar o Termo de Aceite"
                   />
                   <FormControlLabel
-                    control={<Checkbox checked={termPlagiarism} onChange={handleChange} name="termoDePlagio" />}
+                    control={<Checkbox color="primary" checked={termPlagiarism} onChange={handleChange} name="termoDePlagio" />}
                     label="Eu aceito assinar o Termo de Plagio"
                   />
                   <FormControlLabel
-                    control={<Checkbox checked={termReponsability} onChange={handleChange} name="termoDeResponsabilidade" />}
+                    control={<Checkbox color="primary" checked={termReponsability} onChange={handleChange} name="termoDeResponsabilidade" />}
                     label="Eu aceito assinar o Termo de Responsabilidade"
                   />
                 </FormGroup>

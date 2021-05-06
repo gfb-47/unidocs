@@ -83,10 +83,11 @@ export default function ProfessorSection(props) {
                                 label="Basic"
                                 variant="outlined"
                                 style={{
+                                    fontWeight: 600,
+                                    borderRadius: 4,
                                     color: '#f44336',
                                     border: '1px solid #f4433666',
-                                    padding: 16,
-                                    margin: 8,
+                                    margin: '4px',
                                 }}
                             />
                         </div>
