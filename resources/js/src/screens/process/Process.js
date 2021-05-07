@@ -79,11 +79,11 @@ export default function Process(props) {
   };
 
   const [chipData, setChipData] = React.useState([
-    { key: 0, label: 'Angular' },
-    { key: 1, label: 'jQuery' },
-    { key: 2, label: 'Polymer' },
-    { key: 3, label: 'React' },
-    { key: 4, label: 'Vue.js' },
+    { key: 0, label: 'Angular', color: '#673ab7' },
+    { key: 1, label: 'jQuery', color: '#3f51b5' },
+    { key: 2, label: 'Polymer', color: '#f44336' },
+    { key: 3, label: 'React', color: '#8bc34a' },
+    { key: 4, label: 'Vue.js', color: '#ff9800' },
   ]);
 
   const handleDelete = (chipToDelete) => () => {
@@ -112,7 +112,6 @@ export default function Process(props) {
           <Grid container spacing={3}>
             <Grid item xs={12}>
               <TextField
-                required
                 variant="outlined"
                 id="title"
                 name="Título"
@@ -160,7 +159,6 @@ export default function Process(props) {
             </Grid>
             <Grid item xs={12}>
               <TextField
-                required
                 id="description"
                 label="Descrição"
                 multiline
@@ -190,8 +188,9 @@ export default function Process(props) {
                       style={{
                         fontWeight: 600,
                         borderRadius: 4,
-                        color: '#f44336',
-                        border: '1px solid #f4433666',
+                        color: `${data.color}`,
+                        border: '1px solid',
+                        borderColor: `${data.color}66`,
                         margin: '4px',
                       }}
                     />
@@ -219,7 +218,12 @@ export default function Process(props) {
             </Grid>
           </Grid>
           <div className={classes.footer}>
-            <Button className={classes.button} variant="contained" color="primary">
+            <Button 
+              className={classes.button} 
+              variant="contained" 
+              color="primary"
+              href="/unidocs/process/details"
+            >
               Criar Projeto
             </Button>
           </div>
