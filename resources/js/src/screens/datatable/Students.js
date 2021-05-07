@@ -16,19 +16,10 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import { Avatar, Container, Menu, MenuItem } from '@material-ui/core';
 import api from '../../api/student';
-//Sessão 1 - Area de Criação de Dados para preechimento. Será subistituido pela API do banco - NÃO SERÁ MANTIDO
-//Para os testes, mude as variaveis abaixo para o numero de variaveis que haverão na sua tabela.
-function createData(name, uptadedAt, course, active, email, lastUpdated, color) {
-    return { name, uptadedAt, course, active, email, lastUpdated, color };
-}
+import { formatDistance, format } from 'date-fns';
+import ptBR from 'date-fns/locale/pt-BR';
 
-//Preencha a função createData() com o mesmo numero de variaveis que voce colocou acima.
-const rows = [
-    createData('Nelson Edwards', '4 de Dezembro, 2019', 'Direit, Sistemas de Informação', 'ativo', 'email2@email.com', '1 horas atrás', '#673ab7'),
-    createData('Ana Gregory', '3 de Dezembro, 2019', 'Sistemas de Informação', 'ativo', 'email1@email.com', '3 horas atrás', '#3f51b5'),
-    createData('Troy Mcdaniel', '5 de Dezembro, 2019', 'Direi, Sistemas de Informação', 'desativo', 'email4@email.com', '10 minutos atrás', '#f44336'),
-    createData('Rosemary Maldonado', '6 de Dezembro, 2019', 'Dire, Sistemas de Informação', 'ativo', 'email3@email.com', '4 dias atrás', '#00bcd4'),
-];
+
 //----FIM DA Sessão 1----
 
 //Sessão 2 - Aqui será definidas quais serãos as Colunas dos dados. Vincule os nomes com seus dados para facilitar o entendimento
@@ -291,8 +282,8 @@ export default function Students() {
                                                         <Avatar
                                                             style={{
                                                                 marginRight: "1rem",
-                                                                color: `#ef5350`,
-                                                                backgroundColor: `#ef535050`,
+                                                                color: `${row.color}`,
+                                                                backgroundColor: `${row.color}50`,
                                                             }}
                                                         >
                                                             {row.name[0]}
@@ -305,8 +296,8 @@ export default function Students() {
                                                     </div>
                                                 </TableCell>
                                                 <TableCell align="left">
-                                                    <span>{row.updated_at}</span> <br />
-                                                    {/* <span className={classes.subItem}>{row.lastUpdated}</span> */}
+                                                    <span>{format(new Date(row.updated_at), 'PPP', { locale: ptBR })}</span><br />
+                                                    <span>{formatDistance(new Date(row.created_at), new Date(row.updated_at), { locale: ptBR })}</span>
                                                 </TableCell>
                                                 <TableCell align="left">
                                                     <span>Sem cursos</span>

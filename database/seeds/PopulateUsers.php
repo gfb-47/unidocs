@@ -16,11 +16,28 @@ class PopulateUsers extends Seeder
     public function run()
     {
         $users = factory(User::class, 100)->make()->toArray();
-
+        $colors = [
+            "#673ab7",
+            "#3f51b5",
+            "#f44336",
+            "#00bcd4",
+            "#e91e63",
+            "#673ab7",
+            "#2196f3",
+            "#03a9f4",
+            "#009688",
+            "#4caf50",
+            "#8bc34a",
+            "#ffc107",
+            "#ff9800",
+            "#ff5722",
+            "#795548"  
+        ];
         foreach ($users as $key => $user) {
             try {
                 DB::beginTransaction();
                 $user['password'] = bcrypt('12345678');
+                $user['color'] = $colors[array_rand($colors)];
                 $createdUser = User::create($user);
                 if ($key < 49) {
                     Professor::create(['user_id' => $createdUser->id]);
