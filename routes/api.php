@@ -16,6 +16,8 @@ Route::group(['prefix' => 'v1', 'namespace' => 'API'], function () {
 
     Route::group(['prefix' => 'auth'], function () {
         Route::post('/signin', 'AuthController@signin');
+        Route::get('/profile', 'ProfileController@show')->middleware('auth:api');
+        Route::put('/profile', 'ProfileController@update')->middleware('auth:api');
     });
 
     Route::apiResource('posts', 'PostController');
@@ -26,9 +28,9 @@ Route::group(['prefix' => 'v1', 'namespace' => 'API'], function () {
     Route::get('semester', 'SemesterController@index');
 
     //Use Este Padrão para caso seja CRUD's
-    Route::apiResource('knowledgearea', 'KnowledgeAreaController')->except(['create','edit']);
-    Route::apiResource('process', 'ProcessController')->except(['create','edit']);
-    Route::apiResource('jury', 'JuryController')->except(['create','edit']);
+    Route::apiResource('knowledgearea', 'KnowledgeAreaController')->except(['create', 'edit']);
+    Route::apiResource('process', 'ProcessController')->except(['create', 'edit']);
+    Route::apiResource('jury', 'JuryController')->except(['create', 'edit']);
 
     Route::group(['prefix' => 'process'], function () {
         Route::put('changestatus/{id}/semester_professor', 'StatusController@toSemesterProfessor');

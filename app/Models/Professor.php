@@ -8,11 +8,17 @@ class Professor extends Model
 {
     protected $fillable = ['user_id'];
 
-    public function user() {
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
 
-    public function process() {
+    public function process()
+    {
         return $this->hasMany(Process::class);
     }
+
+    public function knowledges()
+    {
+        return $this->belongsToMany(KnowledgeArea::class, 'professor_knowledge_areas', 'professor_id', 'knowledge_area_id');}
 }
