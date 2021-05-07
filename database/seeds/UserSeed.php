@@ -20,6 +20,8 @@ class UserSeed extends Seeder
             'password' => bcrypt('unitins2021'),
         ]);
 
+        $user->assignRole('administrador_plataforma');
+
         $this->command->info(("User {$user->name} created"));
     }
 }
