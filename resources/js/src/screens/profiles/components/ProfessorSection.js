@@ -33,6 +33,10 @@ const useStyles = makeStyles((theme) => ({
     dataTitle: {
         opacity: 0.75,
     },
+    data: {
+        fontSize: '0.75rem',
+        fontWeight: 400,
+    },
 }));
 
 export default function ProfessorSection(props) {
@@ -50,17 +54,17 @@ export default function ProfessorSection(props) {
                         <List component="nav">
                             <ListItem >
                                 <ListItemText primary="Email" className={classes.dataTitle}/>
-                                <ListItemText primary={props.email} />
+                                <ListItemText primary={props.email} className={classes.data}/>
                             </ListItem>
                             <Divider light />
                             <ListItem >
                                 <ListItemText primary="Curso" className={classes.dataTitle}/>
-                                <ListItemText primary={props.curso} />
+                                <ListItemText primary={props.curso} className={classes.data}/>
                             </ListItem>
                             <Divider light />
                             <ListItem >
                                 <ListItemText primary="Telefone" className={classes.dataTitle}/>
-                                <ListItemText primary={props.telefone} />
+                                <ListItemText primary={props.telefone} className={classes.data}/>
                                 <ListItemIcon>
                                     <IconButton color="primary">
                                         <CreateIcon />
