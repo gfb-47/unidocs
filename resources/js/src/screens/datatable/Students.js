@@ -297,7 +297,7 @@ export default function Students() {
                                                 </TableCell>
                                                 <TableCell align="left">
                                                     <span>{format(new Date(row.updated_at), 'PPP', { locale: ptBR })}</span><br />
-                                                    <span>{formatDistance(new Date(row.created_at), new Date(row.updated_at), { locale: ptBR })}</span>
+                                                    <span>{formatDistance(new Date(row.updated_at), new Date(), { locale: ptBR })}</span>
                                                 </TableCell>
                                                 <TableCell align="left">
                                                     <span>Sem cursos</span>

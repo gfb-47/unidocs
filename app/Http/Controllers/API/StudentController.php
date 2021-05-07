@@ -14,7 +14,7 @@ class StudentController extends BaseController
      */
     public function index()
     {
-        $data = Student::select("students.*", "users.name", "users.color", "users.email", "users.active", "users.phone","users.created_at","users.updated_at")
+        $data = Student::select("students.*", "users.name", "users.color", "users.email", "users.active", "users.phone", "users.updated_at")
             ->join("users", "users.id", "=", "students.user_id")->orderBy("users.name")->get();
         return $this->sendResponse($data);
     }
