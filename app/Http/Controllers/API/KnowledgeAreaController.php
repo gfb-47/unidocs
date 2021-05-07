@@ -5,8 +5,8 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\BaseController as BaseController;
 use App\Models\KnowledgeArea;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class KnowledgeAreaController extends BaseController
 {
@@ -22,7 +22,7 @@ class KnowledgeAreaController extends BaseController
         $validate = Validator::make($request->all(), [
             'name' => 'required|string|max:50',
             'color' => 'required',
-            'course_id' => 'required'
+            'course_id' => 'required',
         ]);
         if ($validate->fails()) {
             return $this->sendError('Error on validating', $validate->errors(), 400);
@@ -33,13 +33,14 @@ class KnowledgeAreaController extends BaseController
             KnowledgeArea::create([
                 'name' => $inputs['name'],
                 'color' => $inputs['color'],
-                'course_id' => $inputs['course_id']
+                'course_id' => $inputs['course_id'],
             ]);
         });
         return $this->sendResponse([], 'Added with success!');
     }
 
-    public function update($id, Request $request) {
+    public function update($id, Request $request)
+    {
         $validate = Validator::make($request->all(), [
             'name' => 'string|max:50',
         ]);
@@ -58,12 +59,12 @@ class KnowledgeAreaController extends BaseController
         return $this->sendResponse([], 'Updated with success!');
     }
 
-    public function destroy($id) {
+    public function destroy($id)
+    {
         DB::transaction(function () use ($id) {
             $k_area = KnowledgeArea::findOrFail($id);
-            if($k_area != null) {
-                $k_area->delete();
-            }
+            $k_area->delete();
+            
         });
         return $this->sendResponse([], 'Removed with success!');
     }
