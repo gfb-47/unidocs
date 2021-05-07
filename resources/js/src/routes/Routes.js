@@ -22,22 +22,16 @@ import LinkedProcesses from '../screens/professor/LinkedProcesses';
 import SemesterJury from '../screens/professor/SemesterJury';
 import Report from '../screens/professor/Report';
 import Process from '../screens/process/Process';
-import ProcessDetails from '../screens/process/Process';
-import ProcessDocuments from '../screens/process/Process';
-import ProcessJury from '../screens/process/Process';
-import ProcessWorkPlan from '../screens/process/Process';
+import ProcessDetails from '../screens/process/ProcessDetails';
+import ProcessDocuments from '../screens/process/ProcessDocuments';
+import ProcessJury from '../screens/process/ProcessJury';
+import ProcessWorkPlan from '../screens/process/ProcessWorkPlan';
 import Profile from '../screens/profiles/Profile'
 import ProfileProfessor from '../screens/profiles/ProfessorProfile'
 
 import Layout from '../components/Layout'
 
 const Path = "/unidocs"
-
-const location = window.location.pathname;
-const lastSlashIndex = location.lastIndexOf('/') + 1;
-const id = location.substring(lastSlashIndex)
-
-console.log(id)
 
 const theme = createMuiTheme({
     palette: {
@@ -122,23 +116,23 @@ const App = () => {
                             <Report />
                         </Route>
 
-                        <Route path={`${Path}/process`}>
+                        <Route exact path={`${Path}/process`}>
                             <Process />
                         </Route>
 
-                        <Route path={`${Path}/process/details`}>
+                        <Route exact path={`${Path}/process/details`}>
                             <ProcessDetails />
                         </Route>
 
-                        <Route path={`${Path}/process/documents`}>
+                        <Route exact path={`${Path}/process/documents`}>
                             <ProcessDocuments />
                         </Route>
 
-                        <Route path={`${Path}/process/jury`}>
+                        <Route exact path={`${Path}/process/jury`}>
                             <ProcessJury />
                         </Route>
 
-                        <Route path={`${Path}/process/workplan`}>
+                        <Route exact path={`${Path}/process/workplan`}>
                             <ProcessWorkPlan />
                         </Route>
                     </Switch>
