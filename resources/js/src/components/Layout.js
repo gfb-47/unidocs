@@ -9,6 +9,7 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import IconButton from '@material-ui/core/IconButton';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import { Link } from "react-router-dom";
+import { Button, ClickAwayListener, Grow, MenuItem, MenuList, Paper, Popper } from '@material-ui/core';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -24,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
         marginRight: theme.spacing(0),
     },
     icon: {
-        fontSize: 36,
+        color: theme.palette.common.white,
     },
     link: {
         textDecoration: "none",
@@ -42,6 +43,9 @@ const useStyles = makeStyles((theme) => ({
     tabs: {
         flexGrow: 1,
     },
+    menu: {
+        zIndex: 1101,
+    },
     footer: {
         marginTop: 112,
         left: 0,
@@ -55,6 +59,37 @@ export default function Layout({ children }) {
     const [topBar, setTopBar] = React.useState(false);
     const [bottomBarGerenciar, setBottomBarGerenciar] = React.useState(false);
     const [bottomBarProjetos, setBottomBarProjetos] = React.useState(false);
+    const [open, setOpen] = React.useState(false);
+    const anchorRef = React.useRef(null);
+
+    const handleToggle = () => {
+        setOpen((prevOpen) => !prevOpen);
+    };
+
+    const handleClose = (event) => {
+        if (anchorRef.current && anchorRef.current.contains(event.target)) {
+            return;
+        }
+
+        setOpen(false);
+    };
+
+    function handleListKeyDown(event) {
+        if (event.key === 'Tab') {
+            event.preventDefault();
+            setOpen(false);
+        }
+    }
+
+    // return focus to the button when we transitioned from !open -> open
+    const prevOpen = React.useRef(open);
+    React.useEffect(() => {
+        if (prevOpen.current === true && open === false) {
+            anchorRef.current.focus();
+        }
+
+        prevOpen.current = open;
+    }, [open]);
 
     const handleTopBar = (event, newValue) => {
         setTopBar(newValue);
@@ -156,14 +191,34 @@ export default function Layout({ children }) {
                         <Tab label="Relatórios" to='/unidocs/professor/reports' component={Link} />
                     </Tabs>
 
+
                     <IconButton
-                        className={classes.iconbutton}
-                        color="inherit"
+                        ref={anchorRef}
+                        aria-controls={open ? 'menu-list-grow' : undefined}
+                        aria-haspopup="true"
+                        onClick={handleToggle}
                     >
-                        <AccountCircleIcon
-                            className={classes.icon}
-                        />
+                        <AccountCircleIcon fontSize="large" className={classes.icon}/>
                     </IconButton>
+                    <Popper className={classes.menu} open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
+                        {({ TransitionProps, placement }) => (
+                            <Grow
+                                {...TransitionProps}
+                                style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}
+                            >
+                                <Paper >
+                                    <ClickAwayListener onClickAway={handleClose}>
+                                        <MenuList autoFocusItem={open} id="menu-list-grow" onKeyDown={handleListKeyDown}>
+                                            <MenuItem onClick={handleClose}>Profile</MenuItem>
+                                            <MenuItem onClick={handleClose}>My account</MenuItem>
+                                            <MenuItem onClick={handleClose}>Logout</MenuItem>
+                                        </MenuList>
+                                    </ClickAwayListener>
+                                </Paper>
+                            </Grow>
+                        )}
+                    </Popper>
+
                 </Toolbar>
             </AppBar>
 

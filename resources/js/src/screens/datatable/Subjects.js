@@ -12,10 +12,9 @@ import TableSortLabel from '@material-ui/core/TableSortLabel';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
-import { Avatar, Container, Menu, MenuItem } from '@material-ui/core';
-import { deepPurple } from '@material-ui/core/colors';
+import { Container } from '@material-ui/core';
+import IconDropdown from '../../components/IconDropdown'
+
 
 //Sessão 1 - Area de Criação de Dados para preechimento. Será subistituido pela API do banco - NÃO SERÁ MANTIDO
 //Para os testes, mude as variaveis abaixo para o numero de variaveis que haverão na sua tabela.
@@ -190,10 +189,6 @@ const useStyles = makeStyles((theme) => ({
     itemInactive: {
         color: theme.palette.error.main,
     },
-    purple: {
-        color: theme.palette.getContrastText(deepPurple[500]),
-        backgroundColor: deepPurple[500],
-    },
 }));
 
 //COMPONENTE QUE SERÁ RENDENIZADO, ou seja, aqui o bagulho é serio.
@@ -287,29 +282,7 @@ export default function Subjects() {
                                                 {/* Esse <TableCell/> representa o <IconButton/> 
                                                 que todas as linhas precisam ter */}
                                                 <TableCell align="right">
-                                                    <IconButton
-                                                        onClick={handleMenu}
-                                                    >
-                                                        <MenuIcon />
-                                                    </IconButton>
-                                                    <Menu
-                                                        id="item-menu"
-                                                        anchorEl={anchorEl}
-                                                        anchorOrigin={{
-                                                            vertical: 'top',
-                                                            horizontal: 'right',
-                                                        }}
-                                                        keepMounted
-                                                        transformOrigin={{
-                                                            vertical: 'top',
-                                                            horizontal: 'right',
-                                                        }}
-                                                        open={open}
-                                                        onClose={handleClose}
-                                                    >
-                                                        <MenuItem onClick={handleClose}>Profile</MenuItem>
-                                                        <MenuItem onClick={handleClose}>My account</MenuItem>
-                                                    </Menu>
+                                                <IconDropdown />
                                                 </TableCell>
                                             </TableRow>
                                         );

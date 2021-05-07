@@ -12,11 +12,9 @@ import TableSortLabel from '@material-ui/core/TableSortLabel';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
-import { Avatar, Container, Menu, MenuItem } from '@material-ui/core';
+import { Container  } from '@material-ui/core';
 import Brightness1Icon from '@material-ui/icons/Brightness1';
-import { deepPurple } from '@material-ui/core/colors';
+import IconDropdown from '../../components/IconDropdown'
 
 //Sessão 1 - Area de Criação de Dados para preechimento. Será subistituido pela API do banco - NÃO SERÁ MANTIDO
 //Para os testes, mude as variaveis abaixo para o numero de variaveis que haverão na sua tabela.
@@ -26,9 +24,9 @@ function createData(name, course, color, active) {
 
 //Preencha a função createData() com o mesmo numero de variaveis que voce colocou acima.
 const rows = [
-  createData('JavaScript', 'Sistemas de Informação', '#9c27b0', 'ativo'),
-  createData('IA', 'Sistemas de Informação', '#4caf50', 'ativo'),
-  createData('Engenharia de Software', 'Sistemas de Informação', '#009688', 'desativo'),
+    createData('JavaScript', 'Sistemas de Informação', '#9c27b0', 'ativo'),
+    createData('IA', 'Sistemas de Informação', '#4caf50', 'ativo'),
+    createData('Engenharia de Software', 'Sistemas de Informação', '#009688', 'desativo'),
 ];
 //----FIM DA Sessão 1----
 
@@ -284,7 +282,7 @@ export default function Students() {
                                                     <span>{row.course}</span>
                                                 </TableCell>
                                                 <TableCell align="left">
-                                                    <Brightness1Icon style={{ color: `${row.color}` }}/>
+                                                    <Brightness1Icon style={{ color: `${row.color}` }} />
                                                     <span> ({row.color})</span>
                                                 </TableCell>
                                                 <TableCell
@@ -297,29 +295,7 @@ export default function Students() {
                                                 {/* Esse <TableCell/> representa o <IconButton/> 
                                                 que todas as linhas precisam ter */}
                                                 <TableCell align="right">
-                                                    <IconButton
-                                                        onClick={handleMenu}
-                                                    >
-                                                        <MenuIcon />
-                                                    </IconButton>
-                                                    <Menu
-                                                        id="item-menu"
-                                                        anchorEl={anchorEl}
-                                                        anchorOrigin={{
-                                                            vertical: 'top',
-                                                            horizontal: 'right',
-                                                        }}
-                                                        keepMounted
-                                                        transformOrigin={{
-                                                            vertical: 'top',
-                                                            horizontal: 'right',
-                                                        }}
-                                                        open={open}
-                                                        onClose={handleClose}
-                                                    >
-                                                        <MenuItem onClick={handleClose}>Profile</MenuItem>
-                                                        <MenuItem onClick={handleClose}>My account</MenuItem>
-                                                    </Menu>
+                                                    <IconDropdown />
                                                 </TableCell>
                                             </TableRow>
                                         );

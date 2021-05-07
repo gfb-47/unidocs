@@ -13,11 +13,9 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
-import { Avatar, Container, Menu, MenuItem } from '@material-ui/core';
-import { deepPurple } from '@material-ui/core/colors';
-import Fab from '@material-ui/core/Fab';
+import { Avatar, Container } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
+import IconDropdown from '../../components/IconDropdown'
 
 function createData(identificationCode, discipline, course, responsibleTeacher, email, active, color) {
     return { identificationCode, discipline, course, responsibleTeacher, email, active, color };
@@ -189,10 +187,6 @@ const useStyles = makeStyles((theme) => ({
     itemInactive: {
         color: theme.palette.error.main,
     },
-    purple: {
-        color: theme.palette.getContrastText(deepPurple[500]),
-        backgroundColor: deepPurple[500],
-    },
 }));
 export default function Semesters() {
     const classes = useStyles();
@@ -295,29 +289,7 @@ export default function Semesters() {
                                                     <span>{row.active}</span>
                                                 </TableCell>
                                                 <TableCell align="right">
-                                                    <IconButton
-                                                        onClick={handleMenu}
-                                                    >
-                                                        <MenuIcon />
-                                                    </IconButton>
-                                                    <Menu
-                                                        id="item-menu"
-                                                        anchorEl={anchorEl}
-                                                        anchorOrigin={{
-                                                            vertical: 'top',
-                                                            horizontal: 'right',
-                                                        }}
-                                                        keepMounted
-                                                        transformOrigin={{
-                                                            vertical: 'top',
-                                                            horizontal: 'right',
-                                                        }}
-                                                        open={open}
-                                                        onClose={handleClose}
-                                                    >
-                                                        <MenuItem onClick={handleClose}>Profile</MenuItem>
-                                                        <MenuItem onClick={handleClose}>My account</MenuItem>
-                                                    </Menu>
+                                                    <IconDropdown />
                                                 </TableCell>
                                             </TableRow>
                                         );

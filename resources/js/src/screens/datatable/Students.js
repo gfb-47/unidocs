@@ -12,13 +12,11 @@ import TableSortLabel from '@material-ui/core/TableSortLabel';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
-import { Avatar, Container, Menu, MenuItem } from '@material-ui/core';
+import { Avatar, Container } from '@material-ui/core';
 import api from '../../api/student';
 import { formatDistance, format } from 'date-fns';
 import ptBR from 'date-fns/locale/pt-BR';
-
+import IconDropdown from '../../components/IconDropdown'
 
 //----FIM DA Sessão 1----
 
@@ -312,29 +310,7 @@ export default function Students() {
                                                 {/* Esse <TableCell/> representa o <IconButton/> 
                                                 que todas as linhas precisam ter */}
                                                 <TableCell align="right">
-                                                    <IconButton
-                                                        onClick={handleMenu}
-                                                    >
-                                                        <MenuIcon />
-                                                    </IconButton>
-                                                    <Menu
-                                                        id="item-menu"
-                                                        anchorEl={anchorEl}
-                                                        anchorOrigin={{
-                                                            vertical: 'top',
-                                                            horizontal: 'right',
-                                                        }}
-                                                        keepMounted
-                                                        transformOrigin={{
-                                                            vertical: 'top',
-                                                            horizontal: 'right',
-                                                        }}
-                                                        open={open}
-                                                        onClose={handleClose}
-                                                    >
-                                                        <MenuItem onClick={handleClose}>Profile</MenuItem>
-                                                        <MenuItem onClick={handleClose}>My account</MenuItem>
-                                                    </Menu>
+                                                    <IconDropdown />
                                                 </TableCell>
                                             </TableRow>
                                         );
