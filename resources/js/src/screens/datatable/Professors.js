@@ -10,22 +10,14 @@ import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import Toolbar from '@material-ui/core/Toolbar';
+import Chip from '@material-ui/core/Chip';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
-import { Avatar, Chip, Container } from '@material-ui/core';
+import { Avatar, Container } from '@material-ui/core';
+import api from '../../api/professor';
+import { formatDistance, format } from 'date-fns';
+import ptBR from 'date-fns/locale/pt-BR';
 import IconDropdown from '../../components/IconDropdown'
-
-//Sessão 1 - Area de Criação de Dados para preechimento. Será subistituido pela API do banco - NÃO SERÁ MANTIDO
-//Para os testes, mude as variaveis abaixo para o numero de variaveis que haverão na sua tabela.
-function createData(name, email, updatedAt, lastUpdated, course, knowladgeArea, active, color) {
-  return { name, email, updatedAt, lastUpdated, course, knowladgeArea, active, color };
-}
-
-//Preencha a função createData() com o mesmo numero de variaveis que voce colocou acima.
-const rows = [
-  createData('Alex Coelho', 'alex@email.br', '3 de Dezembro, 2019', '2 dias atrás', 'Direito, Sistemas', '', 'ativo', '#ffeb3b'),
-];
-//----FIM DA Sessão 1----
 
 //Sessão 2 - Aqui será definidas quais serãos as Colunas dos dados. Vincule os nomes com seus dados para facilitar o entendimento
 //id = identificador da variavel, label = nome da coluna na tabela
@@ -197,11 +189,21 @@ export default function Professors() {
   {/* Variaveis sendo inicializadas */ }
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const open = Boolean(anchorEl);
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('active');
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  //BUSCANDO NO BANCO DE DADOS
+  const [professors, setProfessors] = React.useState([]);
+  const fetchProfessors = () => {
+    api.getAllProfessors().then(res => {
+      const result = res.data.data;
+      setProfessors(result);
+    });
+  };
+  React.useEffect(() => {
+    fetchProfessors();
+  }, []);
 
   {/* Metodos */ }
   const handleRequestSort = (event, property) => {
@@ -227,8 +229,8 @@ export default function Professors() {
   const handleClose = () => {
     setAnchorEl(null);
   };
-
-  const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
+  console.log(professors.length)
+  const emptyRows = rowsPerPage - Math.min(rowsPerPage, professors.length - page * rowsPerPage);
 
   {/* Return que envia o HTML com os componentes */ }
   return (
@@ -248,7 +250,7 @@ export default function Professors() {
                 order={order}
                 orderBy={orderBy}
                 onRequestSort={handleRequestSort}
-                rowCount={rows.length}
+                rowCount={professors.length}
               />
 
               {/* Dentro do TableBody é preenchido atraves de um .map
@@ -256,7 +258,7 @@ export default function Professors() {
                             <TableCell/> dentro de <TableRoll/> para que eles se 
                             alinhem com a listagem que voce gostaria de fazer */}
               <TableBody>
-                {stableSort(rows, getComparator(order, orderBy))
+                {stableSort(professors, getComparator(order, orderBy))
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) => {
                     const labelId = `enhanced-table-checkbox-${index}`;
@@ -292,8 +294,8 @@ export default function Professors() {
                           </div>
                         </TableCell>
                         <TableCell align="left">
-                          <span>{row.updatedAt}</span> <br />
-                          <span className={classes.subItem}>{row.lastUpdated}</span>
+                          <span>{format(new Date(row.updated_at), 'PPP', { locale: ptBR })}</span><br />
+                          <span className={classes.subItem}>{formatDistance(new Date(row.updated_at), new Date(), { locale: ptBR })} atrás</span>
                         </TableCell>
                         <TableCell align="left">
                           <span>{row.course}</span>
@@ -313,9 +315,9 @@ export default function Professors() {
                         </TableCell>
                         <TableCell
                           align="left"
-                          className={row.active == 'ativo' ? classes.itemActive : classes.itemInactive}
+                          className={row.active == 1 ? classes.itemActive : classes.itemInactive}
                         >
-                          <span>{row.active}</span>
+                          <span>{row.active == 1 ? 'ativo' : 'inativo'}</span>
                         </TableCell>
 
                         {/* Esse <TableCell/> representa o <IconButton/> 
@@ -337,7 +339,7 @@ export default function Professors() {
           <TablePagination
             rowsPerPageOptions={[5, 10, 15, 25]}
             component="div"
-            count={rows.length}
+            count={professors.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onChangePage={handleChangePage}

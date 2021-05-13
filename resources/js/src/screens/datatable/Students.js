@@ -18,8 +18,6 @@ import { formatDistance, format } from 'date-fns';
 import ptBR from 'date-fns/locale/pt-BR';
 import IconDropdown from '../../components/IconDropdown'
 
-//----FIM DA Sessão 1----
-
 //Sessão 2 - Aqui será definidas quais serãos as Colunas dos dados. Vincule os nomes com seus dados para facilitar o entendimento
 //id = identificador da variavel, label = nome da coluna na tabela
 const headCells = [
@@ -189,11 +187,11 @@ export default function Students() {
     {/* Variaveis sendo inicializadas */ }
     const classes = useStyles();
     const [anchorEl, setAnchorEl] = React.useState(null);
-    const open = Boolean(anchorEl);
     const [order, setOrder] = React.useState('asc');
     const [orderBy, setOrderBy] = React.useState('active');
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
+    //BUSCANDO NO BANCO DE DADOS
     const [students, setStudents] = React.useState([]);
     const fetchStudents = () => {
         api.getAllStudents().then(res => {
@@ -229,7 +227,7 @@ export default function Students() {
     const handleClose = () => {
         setAnchorEl(null);
     };
-    console.log(students.length)
+    
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, students.length - page * rowsPerPage);
 
     {/* Return que envia o HTML com os componentes */ }
@@ -261,7 +259,6 @@ export default function Students() {
                                 {stableSort(students, getComparator(order, orderBy))
                                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                     .map((row, index) => {
-                                        const labelId = `enhanced-table-checkbox-${index}`;
 
                                         return (
                                             <TableRow
@@ -275,7 +272,7 @@ export default function Students() {
                                                 </TableCell>
                                                 {/* Não mexa nesse TableCell*/}
 
-                                                <TableCell component="th" id={labelId} align="left" scope="row" padding="none">
+                                                <TableCell component="th" align="left" scope="row" padding="none">
                                                     <div className={classes.userCell}>
                                                         <Avatar
                                                             style={{
@@ -295,7 +292,7 @@ export default function Students() {
                                                 </TableCell>
                                                 <TableCell align="left">
                                                     <span>{format(new Date(row.updated_at), 'PPP', { locale: ptBR })}</span><br />
-                                                    <span>{formatDistance(new Date(row.updated_at), new Date(), { locale: ptBR })}</span>
+                                                    <span className={classes.subItem}>{formatDistance(new Date(row.updated_at), new Date(), { locale: ptBR })} atrás</span>
                                                 </TableCell>
                                                 <TableCell align="left">
                                                     <span>Sem cursos</span>

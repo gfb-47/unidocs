@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container } from '@material-ui/core';
+import { Container, Paper } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
@@ -13,6 +13,9 @@ const useStyles = makeStyles((theme) => ({
         color: '#000',
         fontSize: 75,
     },
+    paper: {
+        minHeight: 520,
+    }
 }));
 
 export default function Home() {
@@ -24,6 +27,9 @@ export default function Home() {
                 <div className={classes.img}>
                     IMG
                 </div>
+                <Paper className={classes.paper}>
+
+                </Paper>
             </Container>
         </div>
     )

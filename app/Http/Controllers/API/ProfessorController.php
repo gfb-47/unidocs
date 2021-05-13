@@ -15,7 +15,7 @@ class ProfessorController extends BaseController
      */
     public function index()
     {
-        $data=Professor::select("professors.*", "users.name", "users.email", "users.phone")
+        $data=Professor::select("professors.*", "users.name", "users.email", "users.phone", "users.color", "users.active")
         ->join("users", "users.id", "=", "professors.user_id")->orderBy("users.name")->get();
         return $this->sendResponse($data);
     }
