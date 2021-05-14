@@ -1,6 +1,7 @@
 import React from 'react';
-import { Container, Paper } from '@material-ui/core';
+import { Chip, Container, Divider, Grid, IconButton, Paper, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+import ProcessCard from '../components/ProcessCard/ProcessCard'
 
 const useStyles = makeStyles((theme) => ({
     img: {
@@ -15,9 +16,8 @@ const useStyles = makeStyles((theme) => ({
     },
     paper: {
         minHeight: 520,
-    }
+    },
 }));
-
 export default function Home() {
     const classes = useStyles();
 
@@ -28,7 +28,18 @@ export default function Home() {
                     IMG
                 </div>
                 <Paper className={classes.paper}>
+                    <Container>
 
+                        <Typography variant="h4">
+                            Projetos Ativos
+                        </Typography>
+
+                        {/*Map de cada projeto ativo*/}
+                        <ProcessCard/>
+                        
+                        <ProcessCard/>
+
+                    </Container>
                 </Paper>
             </Container>
         </div>

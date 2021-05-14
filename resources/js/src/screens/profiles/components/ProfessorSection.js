@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
         minWidth: '45%'
     },
     chips: {
-        margin: '0 40px',
+        margin: '5px 40px',
     },
     dataTitle: {
         opacity: 0.75,
