@@ -22,7 +22,7 @@ import IconDropdown from '../../components/IconDropdown'
 //Sessão 2 - Aqui será definidas quais serãos as Colunas dos dados. Vincule os nomes com seus dados para facilitar o entendimento
 //id = identificador da variavel, label = nome da coluna na tabela
 const headCells = [
-  { id: 'name', label: 'Alunos' },
+  { id: 'name', label: 'Professores' },
   { id: 'updatedAtDate', label: 'Última Alteração' },
   { id: 'course', label: 'Cursos' },
   { id: 'knowladgeArea', label: 'Áreas do Conhecimento' },
