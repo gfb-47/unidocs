@@ -14,7 +14,7 @@ import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import { Container } from '@material-ui/core';
 import IconDropdown from '../../components/IconDropdown'
-
+import api from '../../api/subject';
 
 //Sessão 1 - Area de Criação de Dados para preechimento. Será subistituido pela API do banco - NÃO SERÁ MANTIDO
 //Para os testes, mude as variaveis abaixo para o numero de variaveis que haverão na sua tabela.
@@ -23,10 +23,10 @@ function createData(name, initials) {
 }
 
 //Preencha a função createData() com o mesmo numero de variaveis que voce colocou acima.
-const rows = [
+/*const rows = [
     createData('Trabalho de Conclusão de Curso', 'TCC'),
     createData('Projeto de Conclusão de Curso', 'PCC'),
-];
+];*/
 //----FIM DA Sessão 1----
 
 //Sessão 2 - Aqui será definidas quais serãos as Colunas dos dados. Vincule os nomes com seus dados para facilitar o entendimento
@@ -201,7 +201,18 @@ export default function Subjects() {
     const [orderBy, setOrderBy] = React.useState('active');
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
-
+    
+    //BUSCANDO NO BANCO DE DADOS
+    const [subject, setSubjects] = React.useState([]);
+    const fetchSubjects = () => {
+        api.getAllSubjects().then(res => {
+            const result = res.data.data;
+            setSubjects(result);
+        });
+    };
+    React.useEffect(() => {
+        fetchSubjects();
+    }, []);
     {/* Metodos */ }
     const handleRequestSort = (event, property) => {
         const isAsc = orderBy === property && order === 'asc';
@@ -227,7 +238,7 @@ export default function Subjects() {
         setAnchorEl(null);
     };
 
-    const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
+    const emptyRows = rowsPerPage - Math.min(rowsPerPage, subject.length - page * rowsPerPage);
 
     {/* Return que envia o HTML com os componentes */ }
     return (
@@ -247,7 +258,7 @@ export default function Subjects() {
                                 order={order}
                                 orderBy={orderBy}
                                 onRequestSort={handleRequestSort}
-                                rowCount={rows.length}
+                                rowCount={subject.length}
                             />
 
                             {/* Dentro do TableBody é preenchido atraves de um .map
@@ -255,7 +266,7 @@ export default function Subjects() {
                             <TableCell/> dentro de <TableRoll/> para que eles se 
                             alinhem com a listagem que voce gostaria de fazer */}
                             <TableBody>
-                                {stableSort(rows, getComparator(order, orderBy))
+                                {stableSort(subject, getComparator(order, orderBy))
                                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                     .map((row, index) => {
                                         const labelId = `enhanced-table-checkbox-${index}`;
@@ -276,7 +287,7 @@ export default function Subjects() {
                                                     <span>{row.name}</span>
                                                 </TableCell>
                                                 <TableCell align="left">
-                                                    <span>{row.initials}</span>
+                                                    <span>{row.acronym}</span>
                                                 </TableCell>
 
                                                 {/* Esse <TableCell/> representa o <IconButton/> 
@@ -298,7 +309,7 @@ export default function Subjects() {
                     <TablePagination
                         rowsPerPageOptions={[5, 10, 15, 25]}
                         component="div"
-                        count={rows.length}
+                        count={subject.length}
                         rowsPerPage={rowsPerPage}
                         page={page}
                         onChangePage={handleChangePage}
