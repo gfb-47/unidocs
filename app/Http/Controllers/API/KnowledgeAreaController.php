@@ -13,7 +13,7 @@ class KnowledgeAreaController extends BaseController
 
     public function index()
     {
-        $data = KnowledgeArea::select("knowledge_areas.*")->orderBy("knowledge_areas.name")->get();
+        $data = KnowledgeArea::select("knowledge_areas.*")->with("course")->orderBy("knowledge_areas.name")->get();
         return $this->sendResponse($data);
     }
 
