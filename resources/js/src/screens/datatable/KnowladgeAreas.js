@@ -15,19 +15,19 @@ import Paper from '@material-ui/core/Paper';
 import { Container  } from '@material-ui/core';
 import Brightness1Icon from '@material-ui/icons/Brightness1';
 import IconDropdown from '../../components/IconDropdown'
-
+import api from '../../api/knowladgearea';
 //Sessão 1 - Area de Criação de Dados para preechimento. Será subistituido pela API do banco - NÃO SERÁ MANTIDO
 //Para os testes, mude as variaveis abaixo para o numero de variaveis que haverão na sua tabela.
 function createData(name, course, color, active) {
     return { name, course, color, active };
 }
 
-//Preencha a função createData() com o mesmo numero de variaveis que voce colocou acima.
+/*Preencha a função createData() com o mesmo numero de variaveis que voce colocou acima.
 const rows = [
     createData('JavaScript', 'Sistemas de Informação', '#9c27b0', 'ativo'),
     createData('IA', 'Sistemas de Informação', '#4caf50', 'ativo'),
     createData('Engenharia de Software', 'Sistemas de Informação', '#009688', 'desativo'),
-];
+];*/
 //----FIM DA Sessão 1----
 
 //Sessão 2 - Aqui será definidas quais serãos as Colunas dos dados. Vincule os nomes com seus dados para facilitar o entendimento
@@ -204,7 +204,20 @@ export default function Students() {
     const [orderBy, setOrderBy] = React.useState('active');
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
+    
+    //BUSCANDO NO BANCO DE DADOS
+    const [knowladgeAreas, setKnowladgeAreas] = React.useState([]);
+    const fetchKnowladgeAreas = () => {
+        api.getAllKnowladgeAreas().then(res => {
+            const result = res.data.data;
+            setKnowladgeAreas(result);
+        });
+    };
+    React.useEffect(() => {
+        fetchKnowladgeAreas();
+    }, []);
 
+    {/* Metodos */ }
     {/* Metodos */ }
     const handleRequestSort = (event, property) => {
         const isAsc = orderBy === property && order === 'asc';
@@ -230,7 +243,7 @@ export default function Students() {
         setAnchorEl(null);
     };
 
-    const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
+    const emptyRows = rowsPerPage - Math.min(rowsPerPage, knowladgeAreas.length - page * rowsPerPage);
 
     {/* Return que envia o HTML com os componentes */ }
     return (
@@ -250,7 +263,7 @@ export default function Students() {
                                 order={order}
                                 orderBy={orderBy}
                                 onRequestSort={handleRequestSort}
-                                rowCount={rows.length}
+                                rowCount={knowladgeAreas.length}
                             />
 
                             {/* Dentro do TableBody é preenchido atraves de um .map
@@ -258,7 +271,7 @@ export default function Students() {
                             <TableCell/> dentro de <TableRoll/> para que eles se 
                             alinhem com a listagem que voce gostaria de fazer */}
                             <TableBody>
-                                {stableSort(rows, getComparator(order, orderBy))
+                                {stableSort(knowladgeAreas, getComparator(order, orderBy))
                                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                     .map((row, index) => {
                                         const labelId = `enhanced-table-checkbox-${index}`;
@@ -279,7 +292,7 @@ export default function Students() {
                                                     <span>{row.name}</span>
                                                 </TableCell>
                                                 <TableCell align="left">
-                                                    <span>{row.course}</span>
+                                                    <span>{row.course.name}</span>
                                                 </TableCell>
                                                 <TableCell align="left">
                                                     <Brightness1Icon style={{ color: `${row.color}` }} />
@@ -287,9 +300,9 @@ export default function Students() {
                                                 </TableCell>
                                                 <TableCell
                                                     align="left"
-                                                    className={row.active == 'ativo' ? classes.itemActive : classes.itemInactive}
+                                                    className={row.active == 1 ? classes.itemActive : classes.itemInactive}
                                                 >
-                                                    <span>{row.active}</span>
+                                                    <span>{row.active == 1 ? 'ativo' : 'inativo'}</span>
                                                 </TableCell>
 
                                                 {/* Esse <TableCell/> representa o <IconButton/> 
@@ -311,7 +324,7 @@ export default function Students() {
                     <TablePagination
                         rowsPerPageOptions={[5, 10, 15, 25]}
                         component="div"
-                        count={rows.length}
+                        count={knowladgeAreas.length}
                         rowsPerPage={rowsPerPage}
                         page={page}
                         onChangePage={handleChangePage}
