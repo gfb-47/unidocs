@@ -79,9 +79,6 @@ function EnhancedTableHead(props) {
     return (
         <TableHead>
             <TableRow>
-                <TableCell padding="default">
-                </TableCell>
-
                 {headCells.map((headCell) => (
                     <TableCell
                         key={headCell.id}
@@ -266,20 +263,12 @@ export default function Courses() {
                                 {stableSort(rows, getComparator(order, orderBy))
                                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                     .map((row, index) => {
-                                        const labelId = `enhanced-table-checkbox-${index}`;
-
                                         return (
                                             <TableRow
                                                 hover
                                                 tabIndex={-1}
                                                 key={row.name}
                                             >
-
-                                                {/* Não mexa nesse TableCell*/}
-                                                <TableCell padding="default">
-                                                </TableCell>
-                                                {/* Não mexa nesse TableCell*/}
-
                                                 <TableCell align="left">
                                                     <span>{row.name}</span>
                                                 </TableCell>

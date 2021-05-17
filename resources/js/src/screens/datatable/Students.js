@@ -66,8 +66,6 @@ function EnhancedTableHead(props) {
     return (
         <TableHead>
             <TableRow>
-                <TableCell padding="default">
-                </TableCell>
 
                 {headCells.map((headCell) => (
                     <TableCell
@@ -168,6 +166,7 @@ const useStyles = makeStyles((theme) => ({
         width: 1,
     },
     userCell: {
+        marginLeft: theme.spacing(2),
         display: 'flex',
     },
     subItem: {
@@ -186,7 +185,6 @@ const useStyles = makeStyles((theme) => ({
 export default function Students() {
     {/* Variaveis sendo inicializadas */ }
     const classes = useStyles();
-    const [anchorEl, setAnchorEl] = React.useState(null);
     const [order, setOrder] = React.useState('asc');
     const [orderBy, setOrderBy] = React.useState('active');
     const [page, setPage] = React.useState(0);
@@ -219,15 +217,6 @@ export default function Students() {
         setPage(0);
     };
 
-
-    const handleMenu = (event) => {
-        setAnchorEl(event.currentTarget);
-    };
-
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
-    
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, students.length - page * rowsPerPage);
 
     {/* Return que envia o HTML com os componentes */ }
@@ -266,12 +255,6 @@ export default function Students() {
                                                 tabIndex={-1}
                                                 key={row.id}
                                             >
-
-                                                {/* Não mexa nesse TableCell*/}
-                                                <TableCell padding="default">
-                                                </TableCell>
-                                                {/* Não mexa nesse TableCell*/}
-
                                                 <TableCell component="th" align="left" scope="row" padding="none">
                                                     <div className={classes.userCell}>
                                                         <Avatar

@@ -16,19 +16,6 @@ import { Container } from '@material-ui/core';
 import IconDropdown from '../../components/IconDropdown'
 import api from '../../api/subject';
 
-//Sessão 1 - Area de Criação de Dados para preechimento. Será subistituido pela API do banco - NÃO SERÁ MANTIDO
-//Para os testes, mude as variaveis abaixo para o numero de variaveis que haverão na sua tabela.
-function createData(name, initials) {
-    return { name, initials };
-}
-
-//Preencha a função createData() com o mesmo numero de variaveis que voce colocou acima.
-/*const rows = [
-    createData('Trabalho de Conclusão de Curso', 'TCC'),
-    createData('Projeto de Conclusão de Curso', 'PCC'),
-];*/
-//----FIM DA Sessão 1----
-
 //Sessão 2 - Aqui será definidas quais serãos as Colunas dos dados. Vincule os nomes com seus dados para facilitar o entendimento
 //id = identificador da variavel, label = nome da coluna na tabela
 const headCells = [
@@ -75,9 +62,6 @@ function EnhancedTableHead(props) {
     return (
         <TableHead>
             <TableRow>
-                <TableCell padding="default">
-                </TableCell>
-
                 {headCells.map((headCell) => (
                     <TableCell
                         key={headCell.id}
@@ -269,7 +253,6 @@ export default function Subjects() {
                                 {stableSort(subject, getComparator(order, orderBy))
                                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                     .map((row, index) => {
-                                        const labelId = `enhanced-table-checkbox-${index}`;
 
                                         return (
                                             <TableRow
@@ -277,12 +260,6 @@ export default function Subjects() {
                                                 tabIndex={-1}
                                                 key={row.name}
                                             >
-
-                                                {/* Não mexa nesse TableCell*/}
-                                                <TableCell padding="default">
-                                                </TableCell>
-                                                {/* Não mexa nesse TableCell*/}
-
                                                 <TableCell align="left">
                                                     <span>{row.name}</span>
                                                 </TableCell>

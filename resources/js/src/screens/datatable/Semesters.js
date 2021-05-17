@@ -73,8 +73,6 @@ function EnhancedTableHead(props) {
     return (
         <TableHead>
             <TableRow>
-                <TableCell padding="default">
-                </TableCell>
 
                 {headCells.map((headCell) => (
                     <TableCell
@@ -247,7 +245,6 @@ export default function Semesters() {
                                 {stableSort(rows, getComparator(order, orderBy))
                                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                     .map((row, index) => {
-                                        const labelId = `enhanced-table-checkbox-${index}`;
 
                                         return (
                                             <TableRow
@@ -255,8 +252,6 @@ export default function Semesters() {
                                                 tabIndex={-1}
                                                 key={row.identificationCode}
                                             >
-                                                <TableCell padding="default">
-                                                </TableCell>
                                                 <TableCell align="left">
                                                     <span>{row.identificationCode}</span>
                                                 </TableCell>

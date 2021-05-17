@@ -31,48 +31,48 @@ export default function KnowladgeAreaBadge(props) {
   return (
     <div>
       <div className={classes.wrapper}>
-      <div className={classes.infoWrapper}>
-        <div className={classes.infoTitle}>
-          <SupervisorAccountIcon />
-          <Typography variant="body2">
-            <b>Orientador</b>
-          </Typography>
+        <div className={classes.infoWrapper}>
+          <div className={classes.infoTitle}>
+            <SupervisorAccountIcon />
+            <Typography variant="body2">
+              <b>Orientador</b>
+            </Typography>
+          </div>
+          <div className={classes.infoName}>
+            <Typography variant="body2">
+              {props.advisor}
+            </Typography>
+          </div>
         </div>
-        <div className={classes.infoName}>
-          <Typography variant="body2">
-            {props.advisor}
-        </Typography>
-        </div>
-      </div>
 
-      <div className={classes.infoWrapper}>
-        <div className={classes.infoTitle}>
-          <MenuBookIcon />
-          <Typography variant="body2">
-            <b>Semestre</b>
-          </Typography>
+        <div className={classes.infoWrapper}>
+          <div className={classes.infoTitle}>
+            <MenuBookIcon />
+            <Typography variant="body2">
+              <b>Semestre</b>
+            </Typography>
+          </div>
+          <div className={classes.infoName}>
+            <Typography variant="body2">
+              {props.semester}
+            </Typography>
+          </div>
         </div>
-        <div className={classes.infoName}>
-          <Typography variant="body2">
-            {props.semester}
-        </Typography>
-        </div>
-      </div>
 
-      <div className={classes.infoWrapper}>
-        <div className={classes.infoTitle}>
-          <PersonIcon />
-          <Typography variant="body2">
-            <b>Aluno</b>
-          </Typography>
-        </div>
-        <div className={classes.infoName}>
-          <Typography variant="body2">
-            {props.student}
-        </Typography>
+        <div className={classes.infoWrapper}>
+          <div className={classes.infoTitle}>
+            <PersonIcon />
+            <Typography variant="body2">
+              <b>Aluno</b>
+            </Typography>
+          </div>
+          <div className={classes.infoName}>
+            <Typography variant="body2">
+              {props.student}
+            </Typography>
+          </div>
         </div>
       </div>
-    </div>
     </div>
   );
 }

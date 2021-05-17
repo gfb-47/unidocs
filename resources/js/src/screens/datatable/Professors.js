@@ -68,9 +68,6 @@ function EnhancedTableHead(props) {
   return (
     <TableHead>
       <TableRow>
-        <TableCell padding="default">
-        </TableCell>
-
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
@@ -188,7 +185,6 @@ const useStyles = makeStyles((theme) => ({
 export default function Professors() {
   {/* Variaveis sendo inicializadas */ }
   const classes = useStyles();
-  const [anchorEl, setAnchorEl] = React.useState(null);
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('active');
   const [page, setPage] = React.useState(0);
@@ -221,14 +217,6 @@ export default function Professors() {
     setPage(0);
   };
 
-
-  const handleMenu = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
   console.log(professors.length)
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, professors.length - page * rowsPerPage);
 
@@ -269,12 +257,6 @@ export default function Professors() {
                         tabIndex={-1}
                         key={row.name}
                       >
-
-                        {/* Não mexa nesse TableCell*/}
-                        <TableCell padding="default">
-                        </TableCell>
-                        {/* Não mexa nesse TableCell*/}
-
                         <TableCell component="th" id={labelId} align="left" scope="row" padding="none">
                           <div className={classes.userCell}>
                             <Avatar

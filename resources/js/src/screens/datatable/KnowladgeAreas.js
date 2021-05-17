@@ -16,19 +16,6 @@ import { Container  } from '@material-ui/core';
 import Brightness1Icon from '@material-ui/icons/Brightness1';
 import IconDropdown from '../../components/IconDropdown'
 import api from '../../api/knowladgearea';
-//Sessão 1 - Area de Criação de Dados para preechimento. Será subistituido pela API do banco - NÃO SERÁ MANTIDO
-//Para os testes, mude as variaveis abaixo para o numero de variaveis que haverão na sua tabela.
-function createData(name, course, color, active) {
-    return { name, course, color, active };
-}
-
-/*Preencha a função createData() com o mesmo numero de variaveis que voce colocou acima.
-const rows = [
-    createData('JavaScript', 'Sistemas de Informação', '#9c27b0', 'ativo'),
-    createData('IA', 'Sistemas de Informação', '#4caf50', 'ativo'),
-    createData('Engenharia de Software', 'Sistemas de Informação', '#009688', 'desativo'),
-];*/
-//----FIM DA Sessão 1----
 
 //Sessão 2 - Aqui será definidas quais serãos as Colunas dos dados. Vincule os nomes com seus dados para facilitar o entendimento
 //id = identificador da variavel, label = nome da coluna na tabela
@@ -78,9 +65,6 @@ function EnhancedTableHead(props) {
     return (
         <TableHead>
             <TableRow>
-                <TableCell padding="default">
-                </TableCell>
-
                 {headCells.map((headCell) => (
                     <TableCell
                         key={headCell.id}
@@ -282,12 +266,6 @@ export default function Students() {
                                                 tabIndex={-1}
                                                 key={row.name}
                                             >
-
-                                                {/* Não mexa nesse TableCell*/}
-                                                <TableCell padding="default">
-                                                </TableCell>
-                                                {/* Não mexa nesse TableCell*/}
-
                                                 <TableCell align="left">
                                                     <span>{row.name}</span>
                                                 </TableCell>
