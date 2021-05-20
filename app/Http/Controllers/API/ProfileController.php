@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+use Exception;
 use App\Http\Controllers\BaseController as BaseController;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -9,9 +10,12 @@ use Illuminate\Support\Facades\Validator;
 
 class ProfileController extends BaseController
 {
-    public function show()
+
+
+    public function show(Request $request)
     {
-        $item = User::with('professor.knowledges', 'student')->findOrFail(auth()->id());
+        
+        $item = User::with('professor.knowledges', 'student')->findOrFail($request->header()['user'][0]);
         return $this->sendResponse($item);
 
     }

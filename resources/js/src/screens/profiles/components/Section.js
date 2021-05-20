@@ -7,6 +7,8 @@ import CreateIcon from '@material-ui/icons/Create';
 import Button from '@material-ui/core/Button';
 import '../../../styles/profile_style.css';
 import { List, ListItem, ListItemText, Divider, CardActions, ListItemIcon, IconButton } from '@material-ui/core';
+import { formatDistance, format } from 'date-fns';
+import ptBR from 'date-fns/locale/pt-BR';
 
 const useStyles = makeStyles((theme) => ({
     card: {
@@ -39,7 +41,7 @@ export default function Section(props) {
             <Card className={classes.card}>
                 <CardHeader
                     title="Dados Pessoais"
-                    subheader="Última Atualização: 23 setembro de 2021"
+                    subheader = {formatDistance(props.updated ? new Date(props.updated) : new Date(), new Date(), { locale: ptBR })}
                 />
                 <CardContent className={classes.cardContent}>
                     <div className={classes.userData}>
@@ -47,11 +49,6 @@ export default function Section(props) {
                             <ListItem >
                                 <ListItemText primary="Email" className={classes.dataTitle}/>
                                 <ListItemText primary={props.email} className={classes.data} />
-                            </ListItem>
-                            <Divider light />
-                            <ListItem >
-                                <ListItemText primary="Curso" className={classes.dataTitle}/>
-                                <ListItemText primary={props.curso} className={classes.data} />
                             </ListItem>
                             <Divider light />
                             <ListItem >

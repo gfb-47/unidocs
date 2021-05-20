@@ -1,6 +1,7 @@
 @extends('layouts.app')
 @push('css')
 <meta name="csrf-token" content="{{csrf_token()}}" />
+<meta name="user" content="{{auth()->id()}}" />
 <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 
 @endpush
