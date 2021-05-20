@@ -7,7 +7,7 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Chip from '@material-ui/core/Chip';
 import '../../../styles/profile_style.css';
-import { List, ListItem, ListItemText, Divider, CardActions, ListItemIcon, IconButton } from '@material-ui/core';
+import { List, ListItem, ListItemText, Divider, CardActions, ListItemIcon, IconButton, DialogContent, DialogTitle, Dialog, TextField, DialogActions, DialogContentText } from '@material-ui/core';
 import CreateIcon from '@material-ui/icons/Create';
 
 const useStyles = makeStyles((theme) => ({
@@ -37,10 +37,31 @@ const useStyles = makeStyles((theme) => ({
         fontSize: '0.75rem',
         fontWeight: 400,
     },
+    margin: {
+        marginBottom: theme.spacing(2),
+    }
 }));
 
 export default function ProfessorSection(props) {
     const classes = useStyles();
+    const [openChangePassword, setOpenChangePassword] = React.useState(false);
+    const [openChangePhone, setOpenChangePhone] = React.useState(false);
+
+    const handleOpenChangePassword = () => {
+        setOpenChangePassword(true);
+    };
+
+    const handleCloseChangePassword = () => {
+        setOpenChangePassword(false);
+    };
+
+    const handleOpenChangePhone = () => {
+        setOpenChangePhone(true);
+    };
+
+    const handleCloseChangePhone = () => {
+        setOpenChangePhone(false);
+    };
 
     return (
         <div>
@@ -53,20 +74,41 @@ export default function ProfessorSection(props) {
                     <div className={classes.userData}>
                         <List component="nav">
                             <ListItem >
-                                <ListItemText primary="Email" className={classes.dataTitle}/>
-                                <ListItemText primary={props.email} className={classes.data}/>
+                                <ListItemText
+                                    primary="Email"
+                                    className={classes.dataTitle}
+                                />
+                                <ListItemText
+                                    primary={props.email}
+                                    className={classes.data}
+                                />
                             </ListItem>
                             <Divider light />
                             <ListItem >
-                                <ListItemText primary="Curso" className={classes.dataTitle}/>
-                                <ListItemText primary={props.curso} className={classes.data}/>
+                                <ListItemText
+                                    primary="Curso"
+                                    className={classes.dataTitle}
+                                />
+                                <ListItemText
+                                    primary={props.curso}
+                                    className={classes.data}
+                                />
                             </ListItem>
                             <Divider light />
                             <ListItem >
-                                <ListItemText primary="Telefone" className={classes.dataTitle}/>
-                                <ListItemText primary={props.telefone} className={classes.data}/>
+                                <ListItemText
+                                    primary="Telefone"
+                                    className={classes.dataTitle}
+                                />
+                                <ListItemText
+                                    primary={props.telefone}
+                                    className={classes.data}
+                                />
                                 <ListItemIcon>
-                                    <IconButton color="primary">
+                                    <IconButton
+                                        color="primary"
+                                        onClick={handleOpenChangePhone}
+                                    >
                                         <CreateIcon />
                                     </IconButton>
                                 </ListItemIcon>
@@ -99,11 +141,86 @@ export default function ProfessorSection(props) {
 
                 </CardContent>
                 <CardActions className={classes.cardActions}>
-                    <Button variant="contained" size="medium" color="primary">
+                    <Button
+                        variant="contained"
+                        size="medium"
+                        color="primary"
+                        onClick={handleOpenChangePassword}
+                    >
                         Alterar Senha
                     </Button>
                 </CardActions>
             </Card>
+
+            <Dialog
+                open={openChangePassword}
+                onClose={handleCloseChangePassword}
+                aria-labelledby="form-dialog-title"
+            >
+                <DialogTitle id="form-dialog-title">Altere a sua senha</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        Preencha ambos os campos abaixo.
+                    </DialogContentText>
+                    <TextField
+                        className={classes.margin}
+                        autoFocus
+                        variant="outlined"
+                        label="Senha Atual"
+                        fullWidth
+                    />
+                    <TextField
+                        className={classes.margin}
+                        variant="outlined"
+                        label="Nova Senha"
+                        fullWidth
+                    />
+                    <TextField
+                        className={classes.margin}
+                        variant="outlined"
+                        label="Repetir Nova Senha"
+                        fullWidth
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseChangePassword} color="secondary">
+                        Cancelar
+                    </Button>
+                    <Button onClick={handleCloseChangePassword} color="primary">
+                        Trocar Senha
+                    </Button>
+                </DialogActions>
+            </Dialog>
+
+            <Dialog
+                open={openChangePhone}
+                onClose={handleCloseChangePhone}
+                aria-labelledby="form-dialog-title"
+            >
+                <DialogTitle id="form-dialog-title">
+                    Altere a seu telefone
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        Preencha abaixo o seu número de telefone.
+                    </DialogContentText>
+                    <TextField
+                        className={classes.margin}
+                        autoFocus
+                        variant="outlined"
+                        label="Novo Telefone"
+                        fullWidth
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseChangePhone} color="secondary">
+                        Cancelar
+                    </Button>
+                    <Button onClick={handleCloseChangePhone} color="primary">
+                        Confirmar
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </div>
     )
 }
