@@ -12,23 +12,12 @@ import TableSortLabel from '@material-ui/core/TableSortLabel';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
-import IconButton from '@material-ui/core/IconButton';
 import { Avatar, Container } from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add';
+import api from '../../api/semester';
 import IconDropdown from '../../components/IconDropdown'
 
-function createData(identificationCode, discipline, course, responsibleTeacher, email, active, color) {
-    return { identificationCode, discipline, course, responsibleTeacher, email, active, color };
-}
-
-const rows = [
-    createData('PCC/2021.01', 'PCC', 'Sistemas de Informação', 'Silvano Malfati', 'silvano12@unitins.com', "ativo", '#EB5757'),
-    createData('PCC/2021.02', 'TCC', 'Direito', 'Alex Coelho', 'alex12@unitins.com', "ativo", '#3E66FB'),
-    createData('PCC/2021.03', 'PCC', 'Serviço Social', 'Maria de Jesus', 'mariajesus12@unitins.com', "desativado", '#9B51E0'),
-    createData('PCC/2021.04', 'PCC', 'Sistemas de Informação', 'Jânio Junior', 'janio12@unitins.com', "ativo", '#27AE60'),
-    createData('PCC/2020.05', 'TCC', 'Sistemas de Informação', 'Frederico Pires', 'fredpires@unitins.com', "desativado", '#F2C94C'),
-];
-
+//Sessão 2 - Aqui será definidas quais serãos as Colunas dos dados. Vincule os nomes com seus dados para facilitar o entendimento
+//id = identificador da variavel, label = nome da coluna na tabela
 const headCells = [
     { id: 'identificationCode', label: 'Código de Identificação' },
     { id: 'discipline', label: 'Disciplina' },
@@ -37,7 +26,9 @@ const headCells = [
     { id: 'active', label: 'Status' },
 
 ];
+//----FIM DA Sessão 2----
 
+//Sessão 3 - Não mexer. Aqui é feita a filtragem e ordenação da tabela.
 function descendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
         return -1;
@@ -63,7 +54,9 @@ function stableSort(array, comparator) {
     });
     return stabilizedThis.map((el) => el[0]);
 }
+//----FIM DA Sessão 3----
 
+//Sessão 4 - Aqui é criado o cabeçalho da tabela. Normalmente, não haverá necessidade de alterar nada.
 function EnhancedTableHead(props) {
     const { classes, order, orderBy, onRequestSort } = props;
     const createSortHandler = (property) => (event) => {
@@ -131,7 +124,9 @@ const useToolbarStyles = makeStyles((theme) => ({
         flex: '1 1 100%',
     },
 }));
+//----FIM DA Sessão 4----
 
+//Cabeçalho do card da tabela. Mudar o conteudo do <Typography/>
 const EnhancedTableToolbar = (props) => {
     const classes = useToolbarStyles();
 
@@ -140,16 +135,14 @@ const EnhancedTableToolbar = (props) => {
             className={classes.root}
         >
             <Typography className={classes.title} variant="h6" id="tableTitle" component="div">
-                Semestre
+                Semestres
             </Typography>
-            <IconButton color="primary">
-                <AddIcon />
-            </IconButton>
-
         </Toolbar>
     );
 };
 
+//Sessão 5 - Componente principal. Aqui precisará ser alterado os componentes para comportarem a tabela necessaria.
+//MakeStyles é oq faz as configurações personalizadas de CSS no MaterialUI. Se não se sentir confortavel de mexer, chamar ajuda.
 const useStyles = makeStyles((theme) => ({
     root: {
         width: '100%',
@@ -186,15 +179,29 @@ const useStyles = makeStyles((theme) => ({
         color: theme.palette.error.main,
     },
 }));
+
+//COMPONENTE QUE SERÁ RENDENIZADO, ou seja, aqui o bagulho é serio.
 export default function Semesters() {
+    {/* Variaveis sendo inicializadas */ }
     const classes = useStyles();
     const [anchorEl, setAnchorEl] = React.useState(null);
-    const open = Boolean(anchorEl);
     const [order, setOrder] = React.useState('asc');
     const [orderBy, setOrderBy] = React.useState('active');
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
+    //BUSCANDO NO BANCO DE DADOS
+    const [semesters, setSemesters] = React.useState([]);
+    const fetchSemesters = () => {
+        api.getAllSemesters().then(res => {
+            const result = res.data.data;
+            setSemesters(result);
+        });
+    };
+    React.useEffect(() => {
+        fetchSemesters();
+    }, []);
 
+    {/* Metodos */ }
     const handleRequestSort = (event, property) => {
         const isAsc = orderBy === property && order === 'asc';
         setOrder(isAsc ? 'desc' : 'asc');
@@ -218,9 +225,10 @@ export default function Semesters() {
     const handleClose = () => {
         setAnchorEl(null);
     };
+    
+    const emptyRows = rowsPerPage - Math.min(rowsPerPage, semesters.length - page * rowsPerPage);
 
-    const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
-
+    {/* Return que envia o HTML com os componentes */ }
     return (
         <div className={classes.root}>
             <Container>
@@ -238,11 +246,15 @@ export default function Semesters() {
                                 order={order}
                                 orderBy={orderBy}
                                 onRequestSort={handleRequestSort}
-                                rowCount={rows.length}
+                                rowCount={semesters.length}
                             />
 
+                            {/* Dentro do TableBody é preenchido atraves de um .map
+                            todos os dados que apareceram na tabela. Altere os 
+                            <TableCell/> dentro de <TableRoll/> para que eles se 
+                            alinhem com a listagem que voce gostaria de fazer */}
                             <TableBody>
-                                {stableSort(rows, getComparator(order, orderBy))
+                                {stableSort(semesters, getComparator(order, orderBy))
                                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                     .map((row, index) => {
 
@@ -250,18 +262,21 @@ export default function Semesters() {
                                             <TableRow
                                                 hover
                                                 tabIndex={-1}
-                                                key={row.identificationCode}
+                                                key={row.id}
                                             >
-                                                <TableCell align="left">
+                                                
+                                              
+
+                                                <TableCell padding="left">
                                                     <span>{row.identificationCode}</span>
                                                 </TableCell>
-                                                <TableCell align="left">
+                                                <TableCell padding="left">
                                                     <span>{row.discipline}</span>
                                                 </TableCell>
                                                 <TableCell align="left">
-                                                    <span> {row.course}</span>
+                                                    <span>{row.course}</span>
                                                 </TableCell>
-                                                <TableCell align="left">
+                                                <TableCell component="th" align="left" scope="row" padding="none">
                                                     <div className={classes.userCell}>
                                                         <Avatar
                                                             style={{
@@ -269,8 +284,10 @@ export default function Semesters() {
                                                                 color: `${row.color}`,
                                                                 backgroundColor: `${row.color}50`,
                                                             }}
-                                                            alt={row.responsibleTeacher} src="/" >
+                                                        >
+                                                            {row.responsibleTeacher[0]}
                                                         </Avatar>
+
                                                         <div>
                                                             <b>{row.responsibleTeacher}</b> <br />
                                                             <span className={classes.subItem}>{row.email}</span>
@@ -279,10 +296,13 @@ export default function Semesters() {
                                                 </TableCell>
                                                 <TableCell
                                                     align="left"
-                                                    className={row.active == 'ativo' ? classes.itemActive : classes.itemInactive}
+                                                    className={row.active == 1 ? classes.itemActive : classes.itemInactive}
                                                 >
-                                                    <span>{row.active}</span>
+                                                    <span>{row.active == 1 ? 'ativo' : 'inativo'}</span>
                                                 </TableCell>
+
+                                                {/* Esse <TableCell/> representa o <IconButton/> 
+                                                que todas as linhas precisam ter */}
                                                 <TableCell align="right">
                                                     <IconDropdown />
                                                 </TableCell>
@@ -300,14 +320,16 @@ export default function Semesters() {
                     <TablePagination
                         rowsPerPageOptions={[5, 10, 15, 25]}
                         component="div"
-                        count={rows.length}
+                        count={semesters.length}
                         rowsPerPage={rowsPerPage}
                         page={page}
                         onChangePage={handleChangePage}
                         onChangeRowsPerPage={handleChangeRowsPerPage}
                     />
                 </Paper>
+
             </Container>
         </div>
     );
 }
+//----FIM DA Sessão 5----

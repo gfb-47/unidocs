@@ -12,32 +12,20 @@ import TableSortLabel from '@material-ui/core/TableSortLabel';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
-import IconButton from '@material-ui/core/IconButton';
-import { Avatar, Container, Menu, MenuItem } from '@material-ui/core';
+import { Avatar, Container } from '@material-ui/core';
+import api from '../../api/course';
 import IconDropdown from '../../components/IconDropdown'
-import { deepPurple } from '@material-ui/core/colors';
-
-//Sessão 1 - Area de Criação de Dados para preechimento. Será subistituido pela API do banco - NÃO SERÁ MANTIDO
-//Para os testes, mude as variaveis abaixo para o numero de variaveis que haverão na sua tabela.
-function createData(name, updatedAtDate, active, updatedAtHour) {
-    return { name, updatedAtDate, active, updatedAtHour };
-}
-
-//Preencha a função createData() com o mesmo numero de variaveis que voce colocou acima.
-const rows = [
-    createData('Direito', '4 de Dezembro, 2019', 'ativo', '1 horas atrás'),
-    createData('Sistemas de Informação', '3 de Dezembro, 2019', 'desativo', '3 horas atrás'),
-    createData('Agronomia', '5 de Dezembro, 2019', 'desativo', '10 minutos atrás'),
-    createData('Serviços Sociais', '6 de Dezembro, 2019', 'ativo', '4 dias atrás'),
-];
-//----FIM DA Sessão 1----
+import { formatDistance, format } from 'date-fns';
+import ptBR from 'date-fns/locale/pt-BR';
 
 //Sessão 2 - Aqui será definidas quais serãos as Colunas dos dados. Vincule os nomes com seus dados para facilitar o entendimento
 //id = identificador da variavel, label = nome da coluna na tabela
 const headCells = [
-    { id: 'name', label: 'Cursos' },
+
+    { id: 'name', label: 'Curso' },
     { id: 'updatedAtDate', label: 'Última Alteração' },
     { id: 'active', label: 'Status' },
+
 ];
 //----FIM DA Sessão 2----
 
@@ -79,6 +67,7 @@ function EnhancedTableHead(props) {
     return (
         <TableHead>
             <TableRow>
+
                 {headCells.map((headCell) => (
                     <TableCell
                         key={headCell.id}
@@ -147,7 +136,7 @@ const EnhancedTableToolbar = (props) => {
             className={classes.root}
         >
             <Typography className={classes.title} variant="h6" id="tableTitle" component="div">
-                Cursos
+                Nome
             </Typography>
         </Toolbar>
     );
@@ -190,10 +179,6 @@ const useStyles = makeStyles((theme) => ({
     itemInactive: {
         color: theme.palette.error.main,
     },
-    purple: {
-        color: theme.palette.getContrastText(deepPurple[500]),
-        backgroundColor: deepPurple[500],
-    },
 }));
 
 //COMPONENTE QUE SERÁ RENDENIZADO, ou seja, aqui o bagulho é serio.
@@ -201,11 +186,21 @@ export default function Courses() {
     {/* Variaveis sendo inicializadas */ }
     const classes = useStyles();
     const [anchorEl, setAnchorEl] = React.useState(null);
-    const open = Boolean(anchorEl);
     const [order, setOrder] = React.useState('asc');
     const [orderBy, setOrderBy] = React.useState('active');
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
+    //BUSCANDO NO BANCO DE DADOS
+    const [courses, setCourses] = React.useState([]);
+    const fetchCourses = () => {
+        api.getAllCourses().then(res => {
+            const result = res.data.data;
+            setCourses(result);
+        });
+    };
+    React.useEffect(() => {
+        fetchCourses();
+    }, []);
 
     {/* Metodos */ }
     const handleRequestSort = (event, property) => {
@@ -231,8 +226,8 @@ export default function Courses() {
     const handleClose = () => {
         setAnchorEl(null);
     };
-
-    const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
+    
+    const emptyRows = rowsPerPage - Math.min(rowsPerPage, courses.length - page * rowsPerPage);
 
     {/* Return que envia o HTML com os componentes */ }
     return (
@@ -252,7 +247,7 @@ export default function Courses() {
                                 order={order}
                                 orderBy={orderBy}
                                 onRequestSort={handleRequestSort}
-                                rowCount={rows.length}
+                                rowCount={courses.length}
                             />
 
                             {/* Dentro do TableBody é preenchido atraves de um .map
@@ -260,27 +255,32 @@ export default function Courses() {
                             <TableCell/> dentro de <TableRoll/> para que eles se 
                             alinhem com a listagem que voce gostaria de fazer */}
                             <TableBody>
-                                {stableSort(rows, getComparator(order, orderBy))
+                                {stableSort(courses, getComparator(order, orderBy))
                                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                     .map((row, index) => {
+
                                         return (
                                             <TableRow
                                                 hover
                                                 tabIndex={-1}
-                                                key={row.name}
+                                                key={row.id}
                                             >
+                                                
+                                              
+
+                                               
                                                 <TableCell align="left">
                                                     <span>{row.name}</span>
                                                 </TableCell>
                                                 <TableCell align="left">
-                                                    <span>{row.updatedAtDate}</span> <br />
-                                                    <span className={classes.subItem}>{row.updatedAtHour}</span>
+                                                    <span>{format(new Date(row.updated_at), 'PPP', { locale: ptBR })}</span><br />
+                                                    <span className={classes.subItem}>{formatDistance(new Date(row.updated_at), new Date(), { locale: ptBR })} atrás</span>
                                                 </TableCell>
                                                 <TableCell
                                                     align="left"
-                                                    className={row.active == 'ativo' ? classes.itemActive : classes.itemInactive}
+                                                    className={row.active == 1 ? classes.itemActive : classes.itemInactive}
                                                 >
-                                                    <span>{row.active}</span>
+                                                    <span>{row.active == 1 ? 'ativo' : 'inativo'}</span>
                                                 </TableCell>
 
                                                 {/* Esse <TableCell/> representa o <IconButton/> 
@@ -302,7 +302,7 @@ export default function Courses() {
                     <TablePagination
                         rowsPerPageOptions={[5, 10, 15, 25]}
                         component="div"
-                        count={rows.length}
+                        count={courses.length}
                         rowsPerPage={rowsPerPage}
                         page={page}
                         onChangePage={handleChangePage}

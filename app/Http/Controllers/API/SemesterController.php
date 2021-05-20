@@ -15,7 +15,8 @@ class SemesterController extends BaseController
      */
     public function index()
     {
-        $data=Semester::select("semesters.*", "subjects.name as subjectName", "courses.name as courseName", "users.name as professorName")
+
+        $data=Semester::select("semesters.name as identificationCode", "subjects.name as discipline", "courses.name as course", "users.name as responsibleTeacher", "users.color", "users.email",)
         ->join("subjects", "subjects.id", "=", "semesters.subject_id")
         ->join("courses", "courses.id", "=", "semesters.course_id")
         ->join("professors", "professors.id", "=", "semesters.professor_id")
