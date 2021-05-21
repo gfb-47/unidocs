@@ -23,20 +23,18 @@ import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import Paper from '@material-ui/core/Paper';
 import Checkbox from '@material-ui/core/Checkbox';
-import { MuiPickersUtilsProvider, KeyboardDatePicker, KeyboardTimePicker} from '@material-ui/pickers';
-import Grid from '@material-ui/core/Grid';
-import DateFnsUtils from '@date-io/date-fns';
-import { ptBR } from "date-fns/locale";
-import { Avatar, Chip,} from '@material-ui/core';
+import ColorPicker from 'material-ui-color-picker';
+import TextField from '@material-ui/core/TextField';
+import Brightness1Icon from '@material-ui/icons/Brightness1';
 
-function createData(name, professorEmail, course, knowladgeArea, color) {
-  return { name, professorEmail, course, knowladgeArea, color };
+function createData(name, course, color) {
+  return { name, course, color };
 }
 
 const rows = [
-  createData('Alex Coelho', 'alex@unitins.br', 'Sistemas de Informação', '', '#F40909'),
-  createData('Silvano','silvano@unitins.br', 'Direito', '', '#E47B09'),
-  createData('Fredson','fredson@unitins.br', 'Agronomia', '', '#358DF5'),
+  createData('Texto 1','Sistemas de Informação', '#F40909'),
+  createData('Texto 2', 'Direito', '#E47B09'),
+  createData('Texto 3','Serviços Sociais', '#358DF5'),
 ];
 
 function descendingComparator(a, b, orderBy) {
@@ -66,9 +64,9 @@ function stableSort(array, comparator) {
 }
 
 const headCells = [
-  { id: 'professorName', disablePadding: false, label: 'Professores' },
-  { id: 'course', disablePadding: true, label: 'Curso' },
-  { id: 'knowladgeArea', disablePadding: true, label: 'Áreas do Conhecimento' },
+  { id: 'name', disablePadding: true, label: 'Nome' },
+  { id: 'course', disablePadding: false, label: 'Curso' },
+  { id: 'color', disablePadding: false, label: 'Cor (HEX)' },
 ];
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -113,7 +111,7 @@ const useStyles = makeStyles((theme) => ({
     },
   divButton: {
     position: "relative",
-    marginTop: 180,
+    marginTop: 140,
     marginLeft: 188,
   },
   divEsquerdaBanca: {
@@ -123,7 +121,7 @@ const useStyles = makeStyles((theme) => ({
   },
   divDireitaBanca: {
     marginLeft: 855,
-    marginTop: -483,
+    marginTop: -423,
   },
   textField: {
     marginLeft: theme.spacing(1),
@@ -157,8 +155,8 @@ const useStyles = makeStyles((theme) => ({
     top: 20,
     width: 1,
   }, 
-  divTimePicker: {
-    marginTop: -45,
+  divColorPicker: {
+    marginTop: -20,
   },
   }));
 
@@ -219,11 +217,6 @@ const useStyles = makeStyles((theme) => ({
 
   export default function ProfessorProfile() {
     const classes = useStyles();
-
-    const [selectedDate, setSelectedDate] = React.useState(new Date());
-    const handleDateChange = (date) => {
-      setSelectedDate(date);
-    };
 
     const [alignment, setAlignment] = React.useState('left');
 
@@ -314,15 +307,14 @@ const useStyles = makeStyles((theme) => ({
                 </div>
 
                 <div className={classes.cardContent}>
-                <Typography component={'span'} variant="h5" component="h2">
-                    Banca
+                  <Typography component={'span'} variant="h5" component="h2">
+                    Áreas do Conhecimento
                   </Typography>
 
                   <Typography component={'span'} className={classes.title} color="textSecondary" gutterBottom>
-                    Escolha os participantes que farão parte da banca.
+                    Selecione suas áreas ou crie novas.
                   </Typography>
                 </div>
-
                 <div className={classes.divEsquerdaBanca}>
                   <Paper className={classes.paper}> 
                     <TableContainer>
@@ -366,23 +358,8 @@ const useStyles = makeStyles((theme) => ({
                                     />
                                   </TableCell>
                                   
-                                  <TableCell component="th" id={labelId} align="left" scope="row" padding="none">
-                                    <div className={classes.userCell}>
-                                      <Avatar
-                                        style={{
-                                          marginRight: "1rem",
-                                          color: `${row.color}`,
-                                          backgroundColor: `${row.color}50`,
-                                        }}
-                                      >
-                                        {row.name[0]}
-                                      </Avatar>
-
-                                      <div>
-                                        <b>{row.name}</b> <br />
-                                        <span className={classes.subItem}>{row.professorEmail}</span>
-                                      </div>
-                                    </div>
+                                  <TableCell component="th" id={labelId} scope="row" padding="none">
+                                    {row.name}
                                   </TableCell>
 
                                   <TableCell align="left">
@@ -390,28 +367,8 @@ const useStyles = makeStyles((theme) => ({
                                   </TableCell>
 
                                   <TableCell align="left">
-                                    <Chip
-                                      label="Inteligência Artificial"
-                                      variant="outlined"
-                                      style={{
-                                        fontWeight: 600,
-                                        borderRadius: 4,
-                                        color: '#f44336',
-                                        border: '1px solid #f4433666',
-                                        margin: '4px',
-                                      }}
-                                    />
-                                    <Chip
-                                      label="Java"
-                                      variant="outlined"
-                                      style={{
-                                        fontWeight: 600,
-                                        borderRadius: 4,
-                                        color: '#E038FF',
-                                        border: '1px solid #812094',
-                                        margin: '4px',
-                                      }}
-                                    />
+                                    <Brightness1Icon style={{ color: `${row.color}` }} />
+                                    <span> ({row.color})</span>
                                   </TableCell>
 
                                 </TableRow>
@@ -438,61 +395,52 @@ const useStyles = makeStyles((theme) => ({
                 </div>
 
                 <div className= {classes.divDireitaBanca}>
-                <MuiPickersUtilsProvider utils={DateFnsUtils}  locale={ptBR}>
-                    <Grid container justify="space-around">
-                      <FormControl className={classes.root}>
-                          <KeyboardDatePicker
-                            variant="inline"
-                            inputVariant="outlined"
-                            format="dd/MM/yyyy"
-                            minDate= {new Date()}
-                            id="standard-required"
-                            label="Data da Banca"
-                            value={selectedDate}
-                            onChange={handleDateChange}
-                            KeyboardButtonProps={{
-                              'aria-label': 'change date',
-                            }}
-                          />
-                          <div className={classes.divTimePicker}>
-                            <KeyboardTimePicker
-                              margin="normal"
-                              inputVariant="outlined"
-                              variant="inline"
-                              id="time-picker"
-                              ampm={false}
-                              label="Horário da Banca"
-                              value={selectedDate}
-                              onChange={handleDateChange}
-                              KeyboardButtonProps={{
-                                'aria-label': 'change time',
-                              }}
-                            />
-                          </div>
-                        </FormControl>
-                      </Grid>
-                    </MuiPickersUtilsProvider>
-                    <div className={classes.divTimePicker}>
+                    <FormControl variant="outlined" className={classes.formControl}>
+                      <TextField 
+                      id="outlined-basic" 
+                      placeholder="Informe uma área" 
+                      label="Área do Conhecimento" 
+                      variant="outlined" 
+                      InputLabelProps={{
+                        shrink: true,
+                      }}/>
+                    </FormControl>
+                   
+                   <div className={classes.divColorPicker}>
                       <FormControl variant="outlined" className={classes.formControl}>
-                          <InputLabel id="demo-simple-select-outlined-label">Escolha um campus</InputLabel>
-                          <Select
-                              labelId="demo-simple-select-outlined-label"
-                              id="demo-simple-select-outlined"
-                              value={age}
-                              onChange={handleChange}
-                              label="Escolha um campus"
+                        <ColorPicker
+                            name="color"
+                            variant="outlined"
+                            label="Escolha uma cor"
+                            defaultValue="Cor Definida"
+                            // value={this.state.color}
+                            onChange={color => console.log(color)}
+                        />
+                      </FormControl>
+                    </div>
+                   
+                    <div className={classes.divColorPicker}>
+                      <FormControl variant="outlined" className={classes.formControl}>
+                        <InputLabel id="demo-simple-select-outlined-label">Selecione um curso</InputLabel>
+                        <Select
+                          labelId="demo-simple-select-outlined-label"
+                          id="demo-simple-select-outlined"
+                          value={age}
+                          onChange={handleChange}
+                          label="Selecione um curso"
                           >
-                          <MenuItem value={10}>Campus Augistinópolis</MenuItem>
-                          <MenuItem value={20}>Campus Araguatins</MenuItem>
-                          <MenuItem value={30}>Campus Palmas</MenuItem>
-                          <MenuItem value={40}>Campus Paraíso</MenuItem>
+                          <MenuItem value={10}>Agronomia</MenuItem>
+                          <MenuItem value={20}>Direito</MenuItem>
+                          <MenuItem value={30}>Sistemas de Informação</MenuItem>
+                          <MenuItem value={40}>Serviços Sociais</MenuItem>
                         </Select>
                       </FormControl>
-                    </div>          
+                    </div>
+                    
                   <CardActions>
                     <div className={classes.divButton}>
                       <Button variant="contained" color="primary" className={classes.typography}>
-                          Fechar Banca
+                          Concluir
                       </Button>
                     </div>
                   </CardActions>
