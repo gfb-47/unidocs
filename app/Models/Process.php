@@ -9,7 +9,7 @@ class Process extends Model
     protected $table = 'processes';
 
     protected $fillable = [
-        'title', 'content', 'status', 'rating', 'student_id', 'advise_professor_id', 'semester_id'
+        'title', 'content', 'status', 'rating', 'student_id', 'advise_professor_id', 'semester_id',
     ];
 
     protected $appends = ['all_status'];
@@ -28,7 +28,11 @@ class Process extends Model
     }
     public function knowledgeAreas()
     {
-        return $this->belongsToMany(KnowledgeArea::class, 'process_knowledge_areas', 'process_id' ,'knowledge_area_id');
+        return $this->belongsToMany(KnowledgeArea::class, 'process_knowledge_areas', 'process_id', 'knowledge_area_id');
+    }
+    public function terms()
+    {
+        return $this->hasMany(Term::class);
     }
 
     public function getAllStatusAttribute()
@@ -43,7 +47,8 @@ class Process extends Model
             'Sob Análise do Orientador',
             'Em desenvolvimento',
             'Aprovado',
-            'Reprovado'
+            'Reprovado',
         ];
     }
+
 }

@@ -3,13 +3,13 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\BaseController as BaseController;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\DB;
 use App\Models\Process;
-use App\Models\Professor;
-use App\Models\Student;
-use App\Models\KnowledgeArea;
+use App\Models\Term;
+use File;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class ProcessController extends BaseController
 {
@@ -28,7 +28,7 @@ class ProcessController extends BaseController
             'content' => 'required',
             'student_id' => 'required',
             'advise_professor_id' => 'required',
-            'semester_id' => 'required'
+            'semester_id' => 'required',
         ]);
         if ($validate->fails()) {
             return $this->sendError('Error on validating', $validate->errors(), 400);
@@ -36,7 +36,22 @@ class ProcessController extends BaseController
 
         $inputs = $request->all();
         DB::transaction(function () use ($inputs) {
+            $files = File::files(public_path() . '/defaultdocs');
+
             $process = Process::create($inputs);
+            $unique = uniqid($process->id);
+            $directory = "process/{$unique}/{$process->title}";
+            Storage::disk('public')->makeDirectory($directory);
+
+            foreach ($files as $file) {
+
+                Storage::disk('public')->put("$directory/{$file->getFileName()}", file_get_contents($file->getRealPath()));
+                Term::create([
+                    'name' => $file->getFileName(),
+                    'directory' => "$directory/{$file->getFileName()}",
+                    'process_id' => $process->id,
+                ]);
+            }
             if (array_key_exists('knowledge_areas', $inputs)) {
                 foreach ($inputs['knowledge_areas'] as $value) {
                     $process->knowledgeAreas()->attach($value);
