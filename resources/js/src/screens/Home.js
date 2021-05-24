@@ -17,6 +17,9 @@ const useStyles = makeStyles((theme) => ({
     paper: {
         minHeight: 520,
     },
+    title: {
+
+    },
 }));
 export default function Home() {
     const classes = useStyles();
@@ -30,7 +33,7 @@ export default function Home() {
                 <Paper className={classes.paper}>
                     <Container>
 
-                        <Typography variant="h4">
+                        <Typography className={classes.title} variant="h4">
                             Projetos Ativos
                         </Typography>
 

@@ -3,7 +3,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Avatar, Button, Checkbox, Chip, Container, FormControl, FormControlLabel, FormGroup, FormHelperText, FormLabel, Grid, IconButton, InputLabel, MenuItem, Paper, Select, TextField, Typography } from '@material-ui/core';
 import SchoolIcon from '@material-ui/icons/School';
 import AddIcon from '@material-ui/icons/Add';
-
+import { Controller, useForm } from 'react-hook-form'
+import * as validation from '../../utils/validation';
 const useStyles = makeStyles((theme) => ({
   margin: {
     margin: theme.spacing(1),
@@ -56,6 +57,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Process(props) {
   const classes = useStyles();
+  const { handleSubmit, control } = useForm();
   const [professor, setProfessor] = React.useState('');
   const [semester, setSemester] = React.useState('');
   const [state, setState] = React.useState({
@@ -90,6 +92,9 @@ export default function Process(props) {
     setChipData((chips) => chips.filter((chip) => chip.key !== chipToDelete.key));
   };
 
+  const onSubmit = data => {
+    console.log(data);
+  };
   return (
     <div>
 
@@ -108,125 +113,136 @@ export default function Process(props) {
               </Typography>
             </div>
           </div>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <Grid container spacing={3}>
+              <Grid item xs={12}>
+                <Controller
+                  name="title"
+                  control={control}
+                  defaultValue=""
+                  rules={validation.titleValidation}
+                  render={({ field: { onChange, value }, fieldState: { error } }) => (
+                    <TextField
+                      variant="outlined"
+                      id="title"
+                      error={!!error}
+                      helperText={error ? error.message : null}
+                      name="Título"
+                      label="Título"
+                      value={value}
+                      onChange={onChange}
+                      fullWidth
+                    />
+                  )}
+                />
 
-          <Grid container spacing={3}>
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                id="title"
-                name="Título"
-                label="Título"
-                fullWidth
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <FormControl variant="outlined" className={classes.formControl}>
-                <InputLabel id="professor">Professor Orientador</InputLabel>
-                <Select
-                  labelId="professor"
-                  id="professor"
-                  value={professor}
-                  onChange={handleProfessor}
-                  label="Professor Responsável"
-                >
-                  <MenuItem value="">
-                    <em>Selecione</em>
-                  </MenuItem>
-                  <MenuItem value={10}>janio12</MenuItem>
-                  <MenuItem value={20}>Alex</MenuItem>
-                  <MenuItem value={30}>Fred</MenuItem>
-                </Select>
-              </FormControl>
-            </Grid>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="professor">Professor Orientador</InputLabel>
+                  <Select
+                    labelId="professor"
+                    id="professor"
+                    value={professor}
+                    onChange={handleProfessor}
+                    label="Professor Responsável"
+                  >
+                    <MenuItem value="">
+                      <em>Selecione</em>
+                    </MenuItem>
+                    <MenuItem value={10}>janio12</MenuItem>
+                    <MenuItem value={20}>Alex</MenuItem>
+                    <MenuItem value={30}>Fred</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
 
-            <Grid item xs={12} sm={6}>
-              <FormControl variant="outlined" className={classes.formControl}>
-                <InputLabel id="demo-simple-select-outlined-label">Semestre</InputLabel>
-                <Select
-                  labelId="semester"
-                  id="semester"
-                  value={semester}
-                  onChange={handleSemester}
-                  label="Semestre"
-                >
-                  <MenuItem value="">
-                    <em>Selecione</em>
-                  </MenuItem>
-                  <MenuItem value={10}>2021/1-TCC</MenuItem>
-                  <MenuItem value={20}>2021/1-PCC</MenuItem>
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                id="description"
-                label="Descrição"
-                multiline
-                rows={4}
-                variant="outlined"
-                fullWidth
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <div className={classes.knowladgeArea}>
-                <Typography className={classes.border} variant="h6">
-                  Areas de Conhecimento
+              <Grid item xs={12} sm={6}>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="demo-simple-select-outlined-label">Semestre</InputLabel>
+                  <Select
+                    labelId="semester"
+                    id="semester"
+                    value={semester}
+                    onChange={handleSemester}
+                    label="Semestre"
+                  >
+                    <MenuItem value="">
+                      <em>Selecione</em>
+                    </MenuItem>
+                    <MenuItem value={1}>2020.2 PCC</MenuItem>
+                    <MenuItem value={2}>2021.1</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12}>
+                <Controller
+                  name="title"
+                  control={control}
+                  defaultValue=""
+                  rules={validation.descriptionValidation}
+                  render={({ field: { onChange, value }, fieldState: { error } }) => (
+                    <TextField
+                      id="description"
+                      label="Descrição"
+                      multiline
+                      rows={4}
+                      error={!!error}
+                      helperText={error ? error.message : null}
+                      value={value}
+                      onChange={onChange}
+                      variant="outlined"
+                      fullWidth
+                    />
+
+                  )}
+                />
+
+
+              </Grid>
+              <Grid item xs={12}>
+                <div className={classes.knowladgeArea}>
+                  <Typography className={classes.border} variant="h6">
+                    Areas de Conhecimento
                 </Typography>
 
-                <IconButton className={classes.border} color="primary">
-                  <AddIcon />
-                </IconButton>
-              </div>
-              <div className={classes.chips}>
-                {chipData.map((data) => {
-                  return (
-                    <Chip
-                      key={data.key}
-                      label={data.label}
-                      variant="outlined"
-                      onDelete={handleDelete(data)}
-                      style={{
-                        fontWeight: 600,
-                        borderRadius: 4,
-                        color: `${data.color}`,
-                        border: '1px solid',
-                        borderColor: `${data.color}66`,
-                        margin: '4px',
-                      }}
-                    />
-                  );
-                })}
-              </div>
+                  <IconButton className={classes.border} color="primary">
+                    <AddIcon />
+                  </IconButton>
+                </div>
+                <div className={classes.chips}>
+                  {/* {chipData.map((data) => {
+                    return (
+                      <Chip
+                        key={data.key}
+                        label={data.label}
+                        variant="outlined"
+                        onDelete={handleDelete(data)}
+                        style={{
+                          fontWeight: 600,
+                          borderRadius: 4,
+                          color: `${data.color}`,
+                          border: '1px solid',
+                          borderColor: `${data.color}66`,
+                          margin: '4px',
+                        }}
+                      />
+                    );
+                  })} */}
+                </div>
+              </Grid>
             </Grid>
-            <Grid item xs={12}>
-              <FormControl component="fieldset">
-                <FormGroup>
-                  <FormControlLabel
-                    control={<Checkbox color="primary" checked={termAcceptance} onChange={handleChange} name="termoDeAceite" />}
-                    label="Eu aceito assinar o Termo de Aceite"
-                  />
-                  <FormControlLabel
-                    control={<Checkbox color="primary" checked={termPlagiarism} onChange={handleChange} name="termoDePlagio" />}
-                    label="Eu aceito assinar o Termo de Plagio"
-                  />
-                  <FormControlLabel
-                    control={<Checkbox color="primary" checked={termReponsability} onChange={handleChange} name="termoDeResponsabilidade" />}
-                    label="Eu aceito assinar o Termo de Responsabilidade"
-                  />
-                </FormGroup>
-              </FormControl>
-            </Grid>
-          </Grid>
-          <div className={classes.footer}>
-            <Button 
-              className={classes.button} 
-              variant="contained" 
-              color="primary"
-              href="/unidocs/process/details"
-            >
-              Criar Projeto
+            <div className={classes.footer}>
+              <Button
+                type="submit"
+                className={classes.button}
+                variant="contained"
+                color="primary"
+              >
+                Criar Projeto
             </Button>
-          </div>
+            </div>
+          </form>
         </Paper>
       </Container>
     </div>

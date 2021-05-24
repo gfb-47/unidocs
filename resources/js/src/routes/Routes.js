@@ -28,7 +28,7 @@ import ProcessJury from '../screens/process/ProcessJury';
 import ProcessWorkPlan from '../screens/process/ProcessWorkPlan';
 import Profile from '../screens/profiles/Profile'
 import ProfileProfessor from '../screens/profiles/ProfessorProfile'
-import ModalProfileProfessor from '../screens/profiles/ModalProfessorProfile'
+import ModalProfessorProfile from '../screens/profiles/ModalProfessorProfile'
 
 import Layout from '../components/Layout'
 
@@ -95,9 +95,9 @@ const App = () => {
                         <Route path={`${Path}/professorprofile`}>
                             <ProfileProfessor />
                         </Route>
-                        
+
                         <Route path={`${Path}/modalprofessorprofile`}>
-                            <ModalProfileProfessor />
+                            <ModalProfessorProfile />
                         </Route>
                         {/* --------- */}
 
