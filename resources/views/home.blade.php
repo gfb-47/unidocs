@@ -10,4 +10,9 @@
 @endsection
 @push('js')
 <script src="{{asset('js/app.js')}}"></script>
+<script type="text/javascript">
+  window.Laravel = {
+      jsPermissions: {!! auth()->check()?auth()->user()->jsPermissions():null !!}
+  }
+</script> 
 @endpush
