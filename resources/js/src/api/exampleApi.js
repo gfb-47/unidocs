@@ -1,5 +1,5 @@
 const axios = window.axios;
-const BASE_URL = 'http://localhost:8000/api/'
+const BASE_URL = `${getUrl()}/api/v1`
 
 export default {
     getAllPosts: () => axios.get(`${BASE_URL}posts`),
