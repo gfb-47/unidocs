@@ -167,7 +167,8 @@ const useStyles = makeStyles((theme) => ({
     width: 1,
   },
   userCell: {
-    display: 'flex',
+      marginLeft: theme.spacing(2),
+      display: 'flex',
   },
   subItem: {
     fontSize: "0.75rem !important",
