@@ -31,6 +31,8 @@
         "@material-ui/lab": "^4.0.0-alpha.58",
         "@material-ui/pickers": "^3.3.10",
         "date-fns": "^2.21.3",
+        "material-ui-color-picker": "^3.5.1",
+        "react-hook-form": "^7.6.6",
         "react-router-dom": "^5.2.0"
     }
 }
