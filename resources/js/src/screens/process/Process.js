@@ -5,6 +5,12 @@ import SchoolIcon from '@material-ui/icons/School';
 import AddIcon from '@material-ui/icons/Add';
 import { Controller, useForm } from 'react-hook-form'
 import * as validation from '../../utils/validation';
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import api from '../../api/process';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import { useHistory } from 'react-router'
+import { toast } from 'react-toastify';
+
 const useStyles = makeStyles((theme) => ({
   margin: {
     margin: theme.spacing(1),
@@ -57,7 +63,10 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Process(props) {
   const classes = useStyles();
-  const { handleSubmit, control } = useForm();
+  const [open, setOpen] = React.useState(false);
+  const [options, setOptions] = React.useState([]);
+  const loading = open && options.length === 0;
+  const { handleSubmit, control, reset } = useForm();
   const [professor, setProfessor] = React.useState('');
   const [semester, setSemester] = React.useState('');
   const [state, setState] = React.useState({
@@ -65,6 +74,34 @@ export default function Process(props) {
     jason: false,
     antoine: false,
   });
+
+  const history = useHistory();
+
+  React.useEffect(() => {
+    let active = true;
+
+    if (!loading) {
+      return undefined;
+    }
+
+    (async () => {
+      const response = await fetch(`${getUrl()}/api/v1/public/search/professor`);
+      const professors = await response.json();
+      if (active) {
+        setOptions(Object.values(professors).map(data => data));
+      }
+    })();
+
+    return () => {
+      active = false;
+    };
+  }, [loading]);
+
+  React.useEffect(() => {
+    if (!open) {
+      setOptions([]);
+    }
+  }, [open]);
 
   const handleChange = (event) => {
     setState({ ...state, [event.target.name]: event.target.checked });
@@ -92,9 +129,42 @@ export default function Process(props) {
     setChipData((chips) => chips.filter((chip) => chip.key !== chipToDelete.key));
   };
 
-  const onSubmit = data => {
-    console.log(data);
+  const onSubmit = async data => {
+    try {
+      await api.addProcess(data);
+      toast.success('👍 Cadastrado Com Sucesso', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      reset({
+        title: '',
+        advise_professor_id: undefined,
+        semester_id: '',
+        content: '',
+      });
+      setTimeout(history.push('student/processes'), 4000);
+    } catch (e) {
+      toast.error('❌ Erro ao Salvar o Processo', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      console.log('error');
+    }
   };
+
+
+
+
   return (
     <div>
 
@@ -138,52 +208,91 @@ export default function Process(props) {
 
               </Grid>
               <Grid item xs={12} sm={6}>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="professor">Professor Orientador</InputLabel>
-                  <Select
-                    labelId="professor"
-                    id="professor"
-                    value={professor}
-                    onChange={handleProfessor}
-                    label="Professor Responsável"
-                  >
-                    <MenuItem value="">
-                      <em>Selecione</em>
-                    </MenuItem>
-                    <MenuItem value={10}>janio12</MenuItem>
-                    <MenuItem value={20}>Alex</MenuItem>
-                    <MenuItem value={30}>Fred</MenuItem>
-                  </Select>
-                </FormControl>
+                <Controller
+                  name="advise_professor_id"
+                  control={control}
+                  defaultValue=""
+                  rules={validation.autoCompleteValidation}
+                  render={({ field: { onChange }, fieldState: { error } }) => (
+                    <Autocomplete
+                      id="asynchronous-demo"
+                      style={{ width: 300 }}
+                      open={open}
+                      onOpen={() => {
+                        setOpen(true);
+                      }}
+                      onClose={() => {
+                        setOpen(false);
+                      }}
+                      onChange={(e, options) => options ? onChange(options.id) : onChange(undefined)}
+                      getOptionSelected={(option, value) => option.name === value.name}
+                      getOptionLabel={(option) => option.name}
+                      options={options}
+                      loading={loading}
+                      renderInput={(params) => (
+
+                        <TextField
+                          {...params}
+                          label="Professores"
+                          variant="outlined"
+                          error={!!error}
+                          helperText={error ? error.message : null}
+
+                          InputProps={{
+                            ...params.InputProps,
+                            endAdornment: (
+                              <React.Fragment>
+                                {loading ? <CircularProgress color="inherit" size={20} /> : null}
+                                {params.InputProps.endAdornment}
+                              </React.Fragment>
+                            ),
+                          }}
+                        />
+                      )}
+                    />
+                  )}
+                />
               </Grid>
 
               <Grid item xs={12} sm={6}>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="demo-simple-select-outlined-label">Semestre</InputLabel>
-                  <Select
-                    labelId="semester"
-                    id="semester"
-                    value={semester}
-                    onChange={handleSemester}
-                    label="Semestre"
-                  >
-                    <MenuItem value="">
-                      <em>Selecione</em>
-                    </MenuItem>
-                    <MenuItem value={1}>2020.2 PCC</MenuItem>
-                    <MenuItem value={2}>2021.1</MenuItem>
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid item xs={12}>
                 <Controller
-                  name="title"
+                  name="semester_id"
                   control={control}
                   defaultValue=""
                   rules={validation.descriptionValidation}
                   render={({ field: { onChange, value }, fieldState: { error } }) => (
                     <TextField
-                      id="description"
+                      id="content"
+                      label="Semestre"
+                      select
+                      rows={4}
+                      error={!!error}
+                      helperText={error ? error.message : null}
+                      value={value}
+                      onChange={onChange}
+                      variant="outlined"
+                      fullWidth
+                    >
+                      <MenuItem value="">
+                        <em>Selecione</em>
+                      </MenuItem>
+                      <MenuItem value={1}>2020.2 PCC</MenuItem>
+                      <MenuItem value={2}>2021.1</MenuItem>
+                    </TextField>
+
+                  )}
+                />
+
+              </Grid>
+              <Grid item xs={12}>
+                <Controller
+                  name="content"
+                  control={control}
+                  defaultValue=""
+                  rules={validation.descriptionValidation}
+                  render={({ field: { onChange, value }, fieldState: { error } }) => (
+                    <TextField
+                      id="content"
                       label="Descrição"
                       multiline
                       rows={4}
@@ -245,6 +354,7 @@ export default function Process(props) {
           </form>
         </Paper>
       </Container>
+
     </div>
   )
 }

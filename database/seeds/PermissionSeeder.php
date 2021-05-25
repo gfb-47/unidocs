@@ -35,23 +35,29 @@ class PermissionSeeder extends Seeder
     private function createRoles()
     {
         $admin = Role::firstOrCreate([
-            'name' => 'administrador_plataforma',
+            'name' => 'administrador',
             'description' => 'Administrador'
         ]);
 
-        $professor = Role::firstOrCreate([
-            'name' => 'professor_plataforma',
-            'description' => 'Professor'
+        $professor_disciplina = Role::firstOrCreate([
+            'name' => 'professor_disciplina',
+            'description' => 'Professor da disciplina'
+        ]);
+
+        $professor_orientador = Role::firstOrCreate([
+            'name' => 'professor_orientador',
+            'description' => 'Professor orientador'
         ]);
 
         $student = Role::firstOrCreate([
-            'name' => 'estudante_plataforma',
+            'name' => 'estudante',
             'description' => 'Estudante'
         ]);
 
         $admin->permissions()->sync(Permission::all());
-        $professor->permissions()->sync(Permission::all());
-        $student->permissions()->sync(Permission::all());
+        $professor_disciplina->permissions()->sync([1,2,3,4,5,8,10,13,14,15,16,17]);
+        $professor_orientador->permissions()->sync([1,2,3,4,5,6,7,9]);
+        $student->permissions()->sync([1,5,10,11,12]);
         
         $this->command->info('Full Permissions sucessfull added');
     }
