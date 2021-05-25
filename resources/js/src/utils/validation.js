@@ -65,10 +65,11 @@ export const passwordValidation = {
 }
 
 export const passwordConfirmValidation = {
-  required: 'Confirme sua senha.'
+  required: 'Confirme sua senha.',
+  confirmed: 'Esse campo não coincide com a senha informada'
 }
 
-export const dateValidation = getDateValidation('Você precisa informar uma dta válida.')
+export const dateValidation = getDateValidation('Você precisa informar uma data válida.')
 export const hourValidation = {
   required: 'Você precisa informar a hora',
   pattern: {

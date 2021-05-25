@@ -76,4 +76,26 @@ class ProfileController extends BaseController
             return $this->sendError('Error in update profile', $e->getMessage());
         }
     }
+
+    public function updatePassword(Request $request)
+    {
+        $inputs = $request->all();
+        $validate = Validator::make($inputs['data'], [
+            'password' => 'required|confirmed',
+        ]);
+        if ($validate->fails()) {
+            return $this->sendError('Error on validating', $validate->errors(), 400);
+        }
+
+        try {
+            $inputs['password'] = bcrypt($inputs['data']['password']);
+            $item = User::with('professor')->findOrFail($request->header()['user'][0]);
+            $item->fill($inputs);
+            $item->save();
+
+            return $this->sendResponse([], 'Profile Updated with success');
+        } catch (Exception $e) {
+            return $this->sendError('Error in update profile', $e->getMessage());
+        }
+    }
 }

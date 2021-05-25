@@ -18,6 +18,7 @@ Route::group(['prefix' => 'v1', 'namespace' => 'API'], function () {
         Route::post('/signin', 'AuthController@signin');
         Route::get('/profile', 'ProfileController@show');
         Route::put('/profile', 'ProfileController@updatePhone');
+        Route::put('/profile2', 'ProfileController@updatePassword');
     });
 
     Route::apiResource('posts', 'PostController');
