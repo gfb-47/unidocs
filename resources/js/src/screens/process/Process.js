@@ -8,8 +8,8 @@ import * as validation from '../../utils/validation';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import api from '../../api/process';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import Snackbar from '@material-ui/core/Snackbar';
 import { useHistory } from 'react-router'
+import { toast } from 'react-toastify';
 
 const useStyles = makeStyles((theme) => ({
   margin: {
@@ -74,10 +74,6 @@ export default function Process(props) {
     jason: false,
     antoine: false,
   });
-  const [snack, setSnack] = React.useState({
-    open: false,
-  });
-  const { vertical, horizontal, open: snackOpen } = snack;
 
   const history = useHistory();
 
@@ -136,15 +132,32 @@ export default function Process(props) {
   const onSubmit = async data => {
     try {
       await api.addProcess(data);
-      setSnack({ snackOpen: true });
+      toast.success('👍 Cadastrado Com Sucesso', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
       reset({
         title: '',
         advise_professor_id: undefined,
         semester_id: '',
         content: '',
       });
-      setTimeout(history.push('student/processes'), 2000);
+      setTimeout(history.push('student/processes'), 4000);
     } catch (e) {
+      toast.error('❌ Erro ao Salvar o Processo', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
       console.log('error');
     }
   };
@@ -341,13 +354,7 @@ export default function Process(props) {
           </form>
         </Paper>
       </Container>
-      <Snackbar
-        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-        open={snackOpen}
-        autoHideDuration={2000}
-        message="Adicionado Com Sucesso"
-        key={'topright'}
-      />
+
     </div>
   )
 }
