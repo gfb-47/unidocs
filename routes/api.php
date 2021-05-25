@@ -17,7 +17,7 @@ Route::group(['prefix' => 'v1', 'namespace' => 'API'], function () {
     Route::group(['prefix' => 'auth'], function () {
         Route::post('/signin', 'AuthController@signin');
         Route::get('/profile', 'ProfileController@show');
-        Route::put('/profile', 'ProfileController@update')->middleware('auth:api');
+        Route::put('/profile', 'ProfileController@updatePhone');
     });
 
     Route::apiResource('posts', 'PostController');

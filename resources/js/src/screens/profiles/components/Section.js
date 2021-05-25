@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react';
 import { makeStyles } from "@material-ui/core/styles";
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -8,6 +8,9 @@ import Button from '@material-ui/core/Button';
 import '../../../styles/profile_style.css';
 import { List, ListItem, ListItemText, Divider, CardActions, ListItemIcon, IconButton, DialogContent, DialogTitle, Dialog, TextField, DialogActions, DialogContentText } from '@material-ui/core';
 import { formatDistance, format } from 'date-fns';
+import { useHistory } from 'react-router-dom';
+import api from '../../../api/profile';
+
 import ptBR from 'date-fns/locale/pt-BR';
 
 const useStyles = makeStyles((theme) => ({
@@ -41,6 +44,28 @@ export default function Section(props) {
     const [openChangePassword, setOpenChangePassword] = React.useState(false);
     const [openChangePhone, setOpenChangePhone] = React.useState(false);
 
+    const history = useHistory();
+    const [loading, setLoading] = useState(false);
+    const [phone, setPhone] = useState('');
+
+    const onEditSubmit = async () => {
+        setLoading(true);
+        try {
+            await api.updateProfile({ phone });
+            history.push('/unidocs/profile');
+        } catch (e) {
+            console.log('error');
+        }
+        setLoading(false);
+        setOpenChangePhone(false);
+    }
+    useEffect(() => {
+        api.getProfile().then(res => {
+            const result = res.data.data;
+            setPhone(result.phone);
+        })
+    }, []);
+
     const handleOpenChangePassword = () => {
         setOpenChangePassword(true);
     };
@@ -62,32 +87,32 @@ export default function Section(props) {
             <Card className={classes.card}>
                 <CardHeader
                     title="Dados Pessoais"
-                    subheader={formatDistance(props.updated 
-                        ? new Date(props.updated) 
+                    subheader={formatDistance(props.updated
+                        ? new Date(props.updated)
                         : new Date(), new Date(), { locale: ptBR })}
                 />
                 <CardContent className={classes.cardContent}>
                     <div className={classes.userData}>
                         <List component="nav">
                             <ListItem >
-                                <ListItemText 
-                                primary="Email" 
-                                className={classes.dataTitle} 
+                                <ListItemText
+                                    primary="Email"
+                                    className={classes.dataTitle}
                                 />
-                                <ListItemText 
-                                primary={props.email} 
-                                className={classes.data} 
+                                <ListItemText
+                                    primary={props.email}
+                                    className={classes.data}
                                 />
                             </ListItem>
                             <Divider light />
                             <ListItem >
-                                <ListItemText 
-                                primary="Telefone" 
-                                className={classes.dataTitle} 
+                                <ListItemText
+                                    primary="Telefone"
+                                    className={classes.dataTitle}
                                 />
-                                <ListItemText 
-                                primary={props.telefone} 
-                                className={classes.data} 
+                                <ListItemText
+                                    primary={phone}
+                                    className={classes.data}
                                 />
                                 <ListItemIcon>
                                     <IconButton
@@ -172,6 +197,8 @@ export default function Section(props) {
                     </DialogContentText>
                     <TextField
                         className={classes.margin}
+                        value={phone}
+                        onChange={e => setPhone(e.target.value)}
                         autoFocus
                         variant="outlined"
                         label="Novo Telefone"
@@ -182,8 +209,8 @@ export default function Section(props) {
                     <Button onClick={handleCloseChangePhone} color="secondary">
                         Cancelar
                     </Button>
-                    <Button onClick={handleCloseChangePhone} color="primary">
-                        Confirmar
+                    <Button onClick={onEditSubmit} disabled={loading} color="primary" type="button">
+                        {loading ? 'Loading...': 'Confirmar'}
                     </Button>
                 </DialogActions>
             </Dialog>
