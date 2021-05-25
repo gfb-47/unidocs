@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\BaseController as BaseController;
 use App\Models\Process;
 use App\Models\Term;
+use App\Models\User;
 use File;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -26,7 +27,6 @@ class ProcessController extends BaseController
         $validate = Validator::make($request->all(), [
             'title' => 'required|string|max:100',
             'content' => 'required',
-            'student_id' => 'required',
             'advise_professor_id' => 'required',
             'semester_id' => 'required',
         ]);
@@ -35,6 +35,8 @@ class ProcessController extends BaseController
         }
 
         $inputs = $request->all();
+        $user = User::with('student')->find($request->header()['user'][0]);
+        $inputs['student_id'] = $user->student->id;
         DB::transaction(function () use ($inputs) {
             $files = File::files(public_path() . '/defaultdocs');
 

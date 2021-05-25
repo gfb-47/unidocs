@@ -44,6 +44,10 @@ export const titleValidation = {
   required: 'O campo título não pode ficar vazio.'
 }
 
+export const autoCompleteValidation = {
+  required: 'Por favor efetue a pesquisa e selecione uma opção'
+}
+
 export const descriptionValidation = {
   required: 'O campo Descrição não pode ficar vazio.'
 }
