@@ -31,6 +31,7 @@ Route::group(['prefix' => 'v1', 'namespace' => 'API'], function () {
     //Use Este Padrão para caso seja CRUD's
     Route::apiResource('knowledgearea', 'KnowledgeAreaController')->except(['create', 'edit']);
     Route::apiResource('process', 'ProcessController')->except(['create', 'edit']);
+    Route::get('process2', 'ProcessController@indexProcessSemesters');
     Route::apiResource('jury', 'JuryController')->except(['create', 'edit']);
 
     Route::group(['prefix' => 'process'], function () {

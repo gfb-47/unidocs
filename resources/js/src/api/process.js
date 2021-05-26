@@ -4,6 +4,8 @@ const BASE_URL = `${getUrl()}/api/v1`
 export default {
   getProcesses: () => axios.get(`${BASE_URL}/process`),
 
+  getSemesterProcesses: () => axios.get(`${BASE_URL}/process2`),
+
   getTerms: (id) => axios.get(`${BASE_URL}/process/terms/${id}`),
 
   showProcess: (id) => axios.get(`${BASE_URL}/process/${id}`),
