@@ -125,11 +125,11 @@ const App = () => {
                             <Process />
                         </Route>
 
-                        <Route exact path={`${Path}/process/details`}>
+                        <Route exact path={`${Path}/process/details/:id`}>
                             <ProcessDetails />
                         </Route>
 
-                        <Route exact path={`${Path}/process/documents`}>
+                        <Route exact path={`${Path}/process/documents/:id`}>
                             <ProcessDocuments />
                         </Route>
 

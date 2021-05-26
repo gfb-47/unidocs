@@ -23,6 +23,18 @@ class ProcessController extends BaseController
         return $this->sendResponse($data);
     }
 
+    public function show(Request $request, $id)
+    {
+        $user = User::with('student')->find($request->header()['user'][0]);
+        $item = Process::select("processes.*")
+            ->with('adviseProfessor.user', 'semester', 'knowledgeAreas')
+            ->orderBy("processes.title")
+            ->where('id', $id)
+            ->where('student_id', $user->student->id)
+            ->first();
+        return $this->sendResponse($item);
+    }
+
     public function store(Request $request)
     {
 

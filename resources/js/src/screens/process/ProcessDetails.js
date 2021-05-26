@@ -1,4 +1,7 @@
 import React from 'react'
+import api from '../../api/process';
+import { useParams } from 'react-router-dom';
+
 import { makeStyles } from "@material-ui/core/styles";
 import {
   Avatar,
@@ -97,7 +100,15 @@ const useStyles = makeStyles((theme) => ({
 
 export default function ProcessDetails() {
   const classes = useStyles();
+  const { id } = useParams();
 
+  const [processShow, setProcess] = React.useState(null);
+  React.useEffect(() => {
+    api.showProcess(id).then(res => {
+      const result = res.data.data;
+      setProcess(result);
+    });
+  }, []);
   const handleChange = (event) => {
     setState({ ...state, [event.target.name]: event.target.checked });
   };
@@ -117,12 +128,12 @@ export default function ProcessDetails() {
           <div className={classes.status}>
             <AssignmentIcon style={{ color: '#FF9900' }} />
             <Typography className={classes.statusText} style={{ color: '#FF9900' }}>
-              Em Desenvolvimento
-              </Typography>
+              {processShow?.status_name || ''}
+            </Typography>
           </div>
           <Typography variant="h4">
-            Os diferentes usos para o paralax e como ele altera o campo de trabalho de CSS e HTML
-            </Typography>
+            {processShow?.title || ''}
+          </Typography>
           <Typography className={classes.subtitle}>
             Última atualização: September 14, 2016
             </Typography>
@@ -146,7 +157,7 @@ export default function ProcessDetails() {
               <List component="nav">
                 <ListItem >
                   <ListItemText primary="Orientador" className={classes.dataTitle} />
-                  <ListItemText primary="123@123.com" className={classes.data} />
+                  <ListItemText primary={processShow?.advise_professor.user.name || ''} className={classes.data} />
                 </ListItem>
                 <Divider light />
                 <ListItem >
@@ -156,7 +167,7 @@ export default function ProcessDetails() {
                 <Divider light />
                 <ListItem >
                   <ListItemText primary="Semestre" className={classes.dataTitle} />
-                  <ListItemText primary="2021.1/TCC" className={classes.data} />
+                  <ListItemText primary={processShow?.semester.name || ''} className={classes.data} />
                 </ListItem>
                 <Divider light />
                 <ListItem >
@@ -217,14 +228,9 @@ export default function ProcessDetails() {
               </div>
               <div className={classes.description}>
                 <Typography variant="body1" gutterBottom>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Auctor eu augue ut lectus. Tempus egestas sed sed risus. Nec nam aliquam sem et tortor consequat id porta nibh. Tempor commodo ullamcorper a lacus vestibulum sed. Sagittis vitae et leo duis ut. Sagittis nisl rhoncus mattis rhoncus. Accumsan tortor posuere ac ut consequat semper viverra nam. Est sit amet facilisis magna. Massa enim nec dui nunc mattis enim. Porta non pulvinar neque laoreet suspendisse. Vulputate enim nulla aliquet porttitor lacus luctus accumsan. Posuere lorem ipsum dolor sit. Turpis egestas sed tempus urna et pharetra pharetra massa. Ac placerat vestibulum lectus mauris. Fermentum dui faucibus in ornare quam viverra orci sagittis.
+                  {processShow?.content || ''}
                 </Typography>
-                <Typography variant="body1" gutterBottom>
-                  Sit amet risus nullam eget felis eget. Dignissim cras tincidunt lobortis feugiat vivamus at augue eget arcu. Vulputate dignissim suspendisse in est ante. Risus feugiat in ante metus dictum at tempor commodo. Dui accumsan sit amet nulla facilisi. Aliquam sem fringilla ut morbi tincidunt augue interdum velit euismod. Semper viverra nam libero justo laoreet sit. Dapibus ultrices in iaculis nunc sed augue lacus viverra vitae. Bibendum at varius vel pharetra. Eu nisl nunc mi ipsum. Aliquet lectus proin nibh nisl. Proin fermentum leo vel orci. Massa massa ultricies mi quis. Aenean euismod elementum nisi quis eleifend quam adipiscing. Cras pulvinar mattis nunc sed. Nec feugiat in fermentum posuere urna nec tincidunt praesent semper. Volutpat blandit aliquam etiam erat velit scelerisque. Gravida arcu ac tortor dignissim convallis aenean et tortor.
-                </Typography>
-                <Typography variant="body1" gutterBottom>
-                  Egestas pretium aenean pharetra magna ac placerat. Turpis egestas sed tempus urna et pharetra pharetra massa massa. Rhoncus est pellentesque elit ullamcorper dignissim cras tincidunt. Penatibus et magnis dis parturient montes nascetur ridiculus mus. Erat nam at lectus urna duis. Enim tortor at auctor urna nunc id cursus metus. Nec feugiat nisl pretium fusce id velit. Elementum facilisis leo vel fringilla. Gravida dictum fusce ut placerat orci nulla pellentesque dignissim enim. Iaculis urna id volutpat lacus laoreet non. Bibendum ut tristique et egestas quis ipsum suspendisse ultrices gravida. Aenean sed adipiscing diam donec. Amet nulla facilisi morbi tempus iaculis urna id.
-                </Typography>
+
               </div>
             </div>
           </Grid>
@@ -235,32 +241,32 @@ export default function ProcessDetails() {
             <div className={classes.footer}>
               <Button
                 href='#'
-                variant='contained' 
-                color='primary' 
+                variant='contained'
+                color='primary'
                 className={classes.margin}
               >
                 Rejeitar Orientação
               </Button>
               <Button
                 href='documents'
-                variant='contained' 
-                color='primary' 
+                variant='contained'
+                color='primary'
                 className={classes.margin}
               >
                 Meus Documentos
               </Button>
               <Button
                 href='jury'
-                variant='contained' 
-                color='primary' 
+                variant='contained'
+                color='primary'
                 className={classes.margin}
               >
                 Formar Banca
               </Button>
               <Button
                 href='workplan'
-                variant='contained' 
-                color='primary' 
+                variant='contained'
+                color='primary'
                 className={classes.margin}
               >
                 Plano de Trabalho

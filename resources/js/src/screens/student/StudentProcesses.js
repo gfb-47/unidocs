@@ -15,8 +15,9 @@ import Paper from '@material-ui/core/Paper';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import AddIcon from '@material-ui/icons/Add';
-import { Avatar, Chip, Container, Menu, MenuItem } from '@material-ui/core';
+import { Avatar, Chip, Container, Menu, MenuItem, Button } from '@material-ui/core';
 import api from '../../api/process';
+import { useHistory } from 'react-router'
 
 
 //----FIM DA Sessão 1----
@@ -79,17 +80,17 @@ function EnhancedTableHead(props) {
             key={headCell.id}
             align='left'
             padding='default'
-            sortDirection={orderBy === headCell.id ? order : false}
+            sortDirection={orderBy === headCell.id ? order[0] : false}
           >
             <TableSortLabel
               active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : 'asc'}
+              direction={orderBy === headCell.id ? order[0] : 'asc'}
               onClick={createSortHandler(headCell.id)}
             >
               {headCell.label}
               {orderBy === headCell.id ? (
                 <span className={classes.visuallyHidden}>
-                  {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
+                  {order[0] === 'desc' ? 'sorted descending' : 'sorted ascending'}
                 </span>
               ) : null}
             </TableSortLabel>
@@ -106,7 +107,7 @@ function EnhancedTableHead(props) {
 EnhancedTableHead.propTypes = {
   classes: PropTypes.object.isRequired,
   onRequestSort: PropTypes.func.isRequired,
-  order: PropTypes.oneOf(['asc', 'desc']).isRequired,
+  order: PropTypes.array.isRequired,
   orderBy: PropTypes.string.isRequired,
   rowCount: PropTypes.number.isRequired,
 };
@@ -194,6 +195,8 @@ const useStyles = makeStyles((theme) => ({
 export default function StudentProcesses() {
   {/* Variaveis sendo inicializadas */ }
   const [processes, setProcesses] = React.useState([]);
+  const history = useHistory();
+
   const fetchProcesses = () => {
     api.getProcesses().then(res => {
       const result = res.data.data;
@@ -206,15 +209,14 @@ export default function StudentProcesses() {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
-  const [order, setOrder] = React.useState('asc');
+  const [order, setOrder] = React.useState(['desc', 'asc']);
   const [orderBy, setOrderBy] = React.useState('active');
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
   {/* Metodos */ }
   const handleRequestSort = (event, property) => {
-    const isAsc = orderBy === property && order === 'asc';
-    setOrder(isAsc ? 'desc' : 'asc');
+    setOrder(order.reverse());
     setOrderBy(property);
   };
 
@@ -234,6 +236,10 @@ export default function StudentProcesses() {
 
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const showProcess = (id) => {
+    history.push(`/unidocs/process/details/${id}`);
   };
 
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, processes.length - page * rowsPerPage);
@@ -264,11 +270,10 @@ export default function StudentProcesses() {
                             <TableCell/> dentro de <TableRoll/> para que eles se 
                             alinhem com a listagem que voce gostaria de fazer */}
               <TableBody>
-                {stableSort(processes, getComparator(order, orderBy))
+                {stableSort(processes, getComparator(order[0], orderBy))
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) => {
                     const labelId = `enhanced-table-checkbox-${index}`;
-                    console.log(row)
                     return (
                       <TableRow
                         hover
@@ -325,7 +330,6 @@ export default function StudentProcesses() {
                         >
                           <span>{row.status_name}</span>
                         </TableCell>
-
                         {/* Esse <TableCell/> representa o <IconButton/> 
                          que todas as linhas precisam ter */}
                         <TableCell align="right">
@@ -349,8 +353,8 @@ export default function StudentProcesses() {
                             open={open}
                             onClose={handleClose}
                           >
-                            <MenuItem onClick={handleClose}>Profile</MenuItem>
-                            <MenuItem onClick={handleClose}>My account</MenuItem>
+                            <MenuItem onClick={() => showProcess(row.id)}>Visualizar Processo</MenuItem>
+                            <MenuItem onClick={handleClose}>Alguma Opção do Menu</MenuItem>
                           </Menu>
                         </TableCell>
                       </TableRow>
