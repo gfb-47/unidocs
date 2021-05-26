@@ -207,12 +207,12 @@ export default function StudentProcesses() {
     fetchProcesses();
   }, []);
   const classes = useStyles();
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const open = Boolean(anchorEl);
+  const [open, setOpen] = React.useState(false);
   const [order, setOrder] = React.useState(['desc', 'asc']);
   const [orderBy, setOrderBy] = React.useState('active');
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const anchorRef = React.useRef([]);
 
   {/* Metodos */ }
   const handleRequestSort = (event, property) => {
@@ -230,12 +230,12 @@ export default function StudentProcesses() {
   };
 
 
-  const handleMenu = (event) => {
-    setAnchorEl(event.currentTarget);
+  const handleMenu = (index) => {
+    setOpen(index);
   };
 
   const handleClose = () => {
-    setAnchorEl(null);
+    setOpen(false);
   };
 
   const showProcess = (id) => {
@@ -265,10 +265,6 @@ export default function StudentProcesses() {
                 rowCount={processes.length}
               />
 
-              {/* Dentro do TableBody é preenchido atraves de um .map
-                            todos os dados que apareceram na tabela. Altere os 
-                            <TableCell/> dentro de <TableRoll/> para que eles se 
-                            alinhem com a listagem que voce gostaria de fazer */}
               <TableBody>
                 {stableSort(processes, getComparator(order[0], orderBy))
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
@@ -334,13 +330,14 @@ export default function StudentProcesses() {
                          que todas as linhas precisam ter */}
                         <TableCell align="right">
                           <IconButton
-                            onClick={handleMenu}
+                            ref={ref => anchorRef.current[index] = ref}
+                            onClick={() => handleMenu(index)}
                           >
                             <MenuIcon />
                           </IconButton>
                           <Menu
                             id="item-menu"
-                            anchorEl={anchorEl}
+                            anchorEl={anchorRef.current[index]}
                             anchorOrigin={{
                               vertical: 'top',
                               horizontal: 'right',
@@ -350,7 +347,7 @@ export default function StudentProcesses() {
                               vertical: 'top',
                               horizontal: 'right',
                             }}
-                            open={open}
+                            open={open === index}
                             onClose={handleClose}
                           >
                             <MenuItem onClick={() => showProcess(row.id)}>Visualizar Processo</MenuItem>
