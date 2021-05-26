@@ -22,6 +22,7 @@ import LinkedProcesses from '../screens/professor/LinkedProcesses';
 import SemesterJury from '../screens/professor/SemesterJury';
 import Report from '../screens/professor/Report';
 import Process from '../screens/process/Process';
+import DocumentSign from '../screens/process/DocumentSign';
 import ProcessDetails from '../screens/process/ProcessDetails';
 import ProcessDocuments from '../screens/process/ProcessDocuments';
 import ProcessJury from '../screens/process/ProcessJury';
@@ -139,6 +140,10 @@ const App = () => {
 
                         <Route exact path={`${Path}/process/workplan`}>
                             <ProcessWorkPlan />
+                        </Route>
+
+                        <Route exact path={`${Path}/process/documentsign`}>
+                            <DocumentSign />
                         </Route>
                     </Switch>
                 </Layout>

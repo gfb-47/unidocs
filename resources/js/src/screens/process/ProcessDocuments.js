@@ -23,14 +23,13 @@ import MenuList from '@material-ui/core/MenuList';
 import MenuIcon from '@material-ui/icons/Menu';
 import DescriptionIcon from '@material-ui/icons/Description';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import { useParams, useHistory } from 'react-router-dom';
+import api from '../../api/process';
 
 function createData(id, document, createdAt, signList) {
   return { id, document, createdAt, signList };
 }
 
-const rows = [
-  createData('1', 'Manual de TCC', '30/12/2021', 'Caio, Alex'),
-];
 
 const headCells = [
   { id: 'document', label: 'Documentos' },
@@ -190,12 +189,22 @@ const useStyles = makeStyles((theme) => ({
 }));
 export default function ProcessDocuments() {
   const classes = useStyles();
+  const { id } = useParams();
+  const [terms, setTerms] = React.useState([]);
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('active');
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [open, setOpen] = React.useState(false);
-  const anchorRef = React.useRef(null);
+  const anchorRef = React.useRef([]);
+  const history = useHistory();
+
+  React.useEffect(() => {
+    api.getTerms(id).then(res => {
+      const result = res.data.data;
+      setTerms(result);
+    });
+  }, []);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -212,12 +221,12 @@ export default function ProcessDocuments() {
     setPage(0);
   };
 
-  const handleToggle = () => {
-    setOpen((prevOpen) => !prevOpen);
+  const handleToggle = (index) => {
+    setOpen(open !== false ? false : index);
   };
 
   const handleClose = (event) => {
-    if (anchorRef.current && anchorRef.current.contains(event.target)) {
+    if (anchorRef.current[open] && anchorRef.current[open].contains(event.target)) {
       return;
     }
 
@@ -232,17 +241,17 @@ export default function ProcessDocuments() {
   }
 
   // return focus to the button when we transitioned from !open -> open
-  const prevOpen = React.useRef(open);
   React.useEffect(() => {
-    if (prevOpen.current === true && open === false) {
-      anchorRef.current.focus();
+    if (open !== false) {
+      anchorRef.current[open].focus();
     }
-
-    prevOpen.current = open;
   }, [open]);
 
+  const sign = (link) => {
+    history.push('/unidocs/process/documentsign', { link })
+  }
 
-  const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
+  const emptyRows = rowsPerPage - Math.min(rowsPerPage, terms.length - page * rowsPerPage);
 
   return (
     <div className={classes.root}>
@@ -261,11 +270,11 @@ export default function ProcessDocuments() {
                 order={order}
                 orderBy={orderBy}
                 onRequestSort={handleRequestSort}
-                rowCount={rows.length}
+                rowCount={terms.length}
               />
 
               <TableBody>
-                {stableSort(rows, getComparator(order, orderBy))
+                {stableSort(terms, getComparator(order, orderBy))
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) => {
 
@@ -287,7 +296,7 @@ export default function ProcessDocuments() {
                               <DescriptionIcon />
                             </Avatar>
                             <div>
-                              <b>{row.document}</b> <br />
+                              <b>{row.name}</b> <br />
                               <span className={classes.subItem}>{row.createdAt}</span>
                             </div>
                           </div>
@@ -297,14 +306,15 @@ export default function ProcessDocuments() {
                         </TableCell>
                         <TableCell align="right">
                           <IconButton
-                            ref={anchorRef}
-                            aria-controls={open ? 'menu-list-grow' : undefined}
+                            ref={ref => anchorRef.current[index] = ref}
+                            aria-describedby={`popper${row.id}`}
+                            aria-controls={open !== false ? 'menu-list-grow' : undefined}
                             aria-haspopup="true"
-                            onClick={handleToggle}
+                            onClick={() => handleToggle(index)}
                           >
                             <MenuIcon />
                           </IconButton>
-                          <Popper className={classes.menu} open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
+                          <Popper id={`popper${row.id}`} className={classes.menu} anchorEl={anchorRef.current[index]} open={open === index} role={undefined} transition disablePortal>
                             {({ TransitionProps, placement }) => (
                               <Grow
                                 {...TransitionProps}
@@ -312,11 +322,11 @@ export default function ProcessDocuments() {
                               >
                                 <Paper>
                                   <ClickAwayListener onClickAway={handleClose}>
-                                    <MenuList autoFocusItem={open} id="menu-list-grow" onKeyDown={handleListKeyDown}>
-                                    <MenuItem onClick={handleClose}>Desativar</MenuItem>
-                                    <MenuItem onClick={handleClose}>Assinar</MenuItem>
-                                    <Divider light />
-                                    <MenuItem onClick={handleClose}>Excluir</MenuItem>
+                                    <MenuList autoFocusItem={open !== false} id="menu-list-grow" onKeyDown={handleListKeyDown}>
+                                      <MenuItem onClick={() => sign(row.directory)}>Assinar</MenuItem>
+                                      <MenuItem onClick={handleClose}>Desativar</MenuItem>
+                                      <Divider light />
+                                      <MenuItem onClick={handleClose}>Excluir</MenuItem>
                                     </MenuList>
                                   </ClickAwayListener>
                                 </Paper>
@@ -338,7 +348,7 @@ export default function ProcessDocuments() {
           <TablePagination
             rowsPerPageOptions={[5, 10, 15, 25]}
             component="div"
-            count={rows.length}
+            count={terms.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onChangePage={handleChangePage}

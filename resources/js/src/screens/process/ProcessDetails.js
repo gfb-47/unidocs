@@ -248,7 +248,7 @@ export default function ProcessDetails() {
                 Rejeitar Orientação
               </Button>
               <Button
-                href='documents'
+                href={`/unidocs/process/documents/${id}`}
                 variant='contained'
                 color='primary'
                 className={classes.margin}

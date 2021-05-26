@@ -8,6 +8,12 @@ class Term extends Model
 {
     protected $fillable = ['name', 'directory', 'process_id'];
 
+    protected $appends = ['full_link'];
+
+    public function getFullLinkAttribute()
+    {
+        return asset('storage/' . $this->directory);
+    }
     public function process()
     {
         return $this->belongsTo(Process::class, 'process_id');

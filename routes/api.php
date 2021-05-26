@@ -39,6 +39,7 @@ Route::group(['prefix' => 'v1', 'namespace' => 'API'], function () {
         Route::put('changestatus/{id}/development', 'StatusController@toDevelopment');
         Route::put('changestatus/{id}/approved', 'StatusController@approved');
         Route::put('changestatus/{id}/rejected', 'StatusController@rejected');
+        Route::get('terms/{process_id}', 'TermController@index');
     });
     Route::group(['prefix' => 'public'], function () {
         Route::get('search/professor', 'PublicController@searchProfessors');
