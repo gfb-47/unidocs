@@ -19,13 +19,24 @@ class ProcessController extends BaseController
     {
         $user = User::with('student')->find($request->header()['user'][0]);
 
-        $data = Process::select("processes.*")->with('adviseProfessor.user', 'semester', 'knowledgeAreas')->orderBy("processes.title")->where('student_id', $user->student->id)->get();
+        $data = Process::select("processes.*")
+        ->with('adviseProfessor.user', 'semester', 'knowledgeAreas', 'student.user')
+        ->orderBy("processes.title")
+        ->where(function ($q) use ($user) {
+            if ($user->student != null) {
+                $q->where('student_id', $user->student->id);
+            } else {
+                $q->where('advise_professor_id', $user->professor->id);
+            }
+        })
+        ->get();
         return $this->sendResponse($data);
     }
 
     public function show(Request $request, $id)
     {
         $user = User::with('student')->find($request->header()['user'][0]);
+        
         $item = Process::select("processes.*")
             ->with('adviseProfessor.user', 'semester', 'knowledgeAreas')
             ->orderBy("processes.title")

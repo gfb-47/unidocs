@@ -33,7 +33,7 @@
         "@pdftron/webviewer": "^7.3.2",
         "date-fns": "^2.21.3",
         "material-ui-color-picker": "^3.5.1",
-        "react-hook-form": "^7.6.6",
+        "react-hook-form": "^7.6.7",
         "react-router-dom": "^5.2.0",
         "react-toastify": "^7.0.4"
     }
