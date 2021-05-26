@@ -147,7 +147,7 @@ export default function Process(props) {
         semester_id: '',
         content: '',
       });
-      setTimeout(history.push('student/processes'), 4000);
+      history.push('student/processes');
     } catch (e) {
       toast.error('❌ Erro ao Salvar o Processo', {
         position: "top-right",

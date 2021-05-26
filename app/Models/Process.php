@@ -12,7 +12,7 @@ class Process extends Model
         'title', 'content', 'status', 'rating', 'student_id', 'advise_professor_id', 'semester_id',
     ];
 
-    protected $appends = ['all_status'];
+    protected $appends = ['status_name'];
 
     public function student()
     {
@@ -35,7 +35,7 @@ class Process extends Model
         return $this->hasMany(Term::class);
     }
 
-    public function getAllStatusAttribute()
+    public function getStatusNameAttribute()
     {
         return $this->allStatus()[$this->status];
     }

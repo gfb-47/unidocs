@@ -16,17 +16,9 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import AddIcon from '@material-ui/icons/Add';
 import { Avatar, Chip, Container, Menu, MenuItem } from '@material-ui/core';
+import api from '../../api/process';
 
-//Sessão 1 - Area de Criação de Dados para preechimento. Será subistituido pela API do banco - NÃO SERÁ MANTIDO
-//Para os testes, mude as variaveis abaixo para o numero de variaveis que haverão na sua tabela.
-function createData(title, professorName, professorEmail, knowladgeArea, semester, status, color) {
-  return { title, professorName, professorEmail, knowladgeArea, semester, status, color };
-}
 
-//Preencha a função createData() com o mesmo numero de variaveis que voce colocou acima.
-const rows = [
-  createData('Os diferentes usos para o paralax e como ele altera o campo de trabalho de CSS e HTML', 'Alex Coelho', 'alex@email.br', '', '2021.1/TCC', 'Em Desenvolvimento', '#0E4DA4'),
-];
 //----FIM DA Sessão 1----
 
 //Sessão 2 - Aqui será definidas quais serãos as Colunas dos dados. Vincule os nomes com seus dados para facilitar o entendimento
@@ -70,6 +62,7 @@ function stableSort(array, comparator) {
 
 //Sessão 4 - Aqui é criado o cabeçalho da tabela. Normalmente, não haverá necessidade de alterar nada.
 function EnhancedTableHead(props) {
+
   const { classes, order, orderBy, onRequestSort } = props;
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
@@ -200,6 +193,16 @@ const useStyles = makeStyles((theme) => ({
 //COMPONENTE QUE SERÁ RENDENIZADO, ou seja, aqui o bagulho é serio.
 export default function StudentProcesses() {
   {/* Variaveis sendo inicializadas */ }
+  const [processes, setProcesses] = React.useState([]);
+  const fetchProcesses = () => {
+    api.getProcesses().then(res => {
+      const result = res.data.data;
+      setProcesses(result);
+    });
+  };
+  React.useEffect(() => {
+    fetchProcesses();
+  }, []);
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -233,7 +236,7 @@ export default function StudentProcesses() {
     setAnchorEl(null);
   };
 
-  const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
+  const emptyRows = rowsPerPage - Math.min(rowsPerPage, processes.length - page * rowsPerPage);
 
   {/* Return que envia o HTML com os componentes */ }
   return (
@@ -253,7 +256,7 @@ export default function StudentProcesses() {
                 order={order}
                 orderBy={orderBy}
                 onRequestSort={handleRequestSort}
-                rowCount={rows.length}
+                rowCount={processes.length}
               />
 
               {/* Dentro do TableBody é preenchido atraves de um .map
@@ -261,11 +264,11 @@ export default function StudentProcesses() {
                             <TableCell/> dentro de <TableRoll/> para que eles se 
                             alinhem com a listagem que voce gostaria de fazer */}
               <TableBody>
-                {stableSort(rows, getComparator(order, orderBy))
+                {stableSort(processes, getComparator(order, orderBy))
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) => {
                     const labelId = `enhanced-table-checkbox-${index}`;
-
+                    console.log(row)
                     return (
                       <TableRow
                         hover
@@ -287,21 +290,21 @@ export default function StudentProcesses() {
                             <Avatar
                               style={{
                                 marginRight: "1rem",
-                                color: `${row.color}`,
-                                backgroundColor: `${row.color}50`,
+                                color: `${row.advise_professor.user.color}`,
+                                backgroundColor: `${row.advise_professor.user.color}50`,
                               }}
                             >
-                              {row.professorName[0]}
+                              {row.advise_professor.user.name[0]}
                             </Avatar>
 
                             <div>
-                              <b>{row.professorName}</b> <br />
-                              <span className={classes.subItem}>{row.professorEmail}</span>
+                              <b>{row.advise_professor.user.name}</b> <br />
+                              <span className={classes.subItem}>{row.advise_professor.user.email}</span>
                             </div>
                           </div>
                         </TableCell>
                         <TableCell align="left">
-                          <Chip
+                          {/* <Chip
                             label="Inteligência Artificial"
                             variant="outlined"
                             style={{
@@ -311,16 +314,16 @@ export default function StudentProcesses() {
                               border: '1px solid #f4433666',
                               margin: '4px',
                             }}
-                          />
+                          /> */}
                         </TableCell>
                         <TableCell align="left">
-                          <span>{row.semester}</span>
+                          <span>{row.semester.name}</span>
                         </TableCell>
                         <TableCell
                           align="left"
-                          className={row.status == 'ativo' ? classes.itemActive : classes.itemInactive}
+                          className={row.status == 1 ? classes.itemActive : classes.itemInactive}
                         >
-                          <span>{row.status}</span>
+                          <span>{row.status_name}</span>
                         </TableCell>
 
                         {/* Esse <TableCell/> representa o <IconButton/> 
@@ -364,7 +367,7 @@ export default function StudentProcesses() {
           <TablePagination
             rowsPerPageOptions={[5, 10, 15, 25]}
             component="div"
-            count={rows.length}
+            count={processes.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onChangePage={handleChangePage}

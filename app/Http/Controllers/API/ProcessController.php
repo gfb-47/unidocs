@@ -15,9 +15,11 @@ use Illuminate\Support\Facades\Validator;
 class ProcessController extends BaseController
 {
 
-    public function index()
+    public function index(Request $request)
     {
-        $data = Process::select("processes.*")->orderBy("processes.title")->get();
+        $user = User::with('student')->find($request->header()['user'][0]);
+
+        $data = Process::select("processes.*")->with('adviseProfessor.user', 'semester', 'knowledgeAreas')->orderBy("processes.title")->where('student_id', $user->student->id)->get();
         return $this->sendResponse($data);
     }
 
