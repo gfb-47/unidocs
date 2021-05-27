@@ -21,6 +21,14 @@ class UserSeed extends Seeder
             'phone' => '(63) 90000-0000',
             'password' => bcrypt('unitins2021'),
         ]);
+        $studentadmin = Student::create([
+            'cpf' => '000.000.000-00',
+            'user_id' => $user->id,
+        ]);
+        $professor = Professor::create([
+            'user_id' => $user->id,
+        ]);
+
         $user->assignRole('administrador');      
 
         ////////////////////////////////////////////////////////////
@@ -33,7 +41,7 @@ class UserSeed extends Seeder
         ]);
         $student->assignRole('estudante');
         $student = Student::create([
-            'cpf' => '000.000.000-00',
+            'cpf' => '000.000.000-01',
             'user_id' => $student->id,
         ]);
 
