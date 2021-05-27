@@ -200,7 +200,7 @@ export default function Students() {
     React.useEffect(() => {
         fetchStudents();
     }, []);
-
+    
     {/* Metodos */ }
     const handleRequestSort = (event, property) => {
         const isAsc = orderBy === property && order === 'asc';
@@ -290,7 +290,7 @@ export default function Students() {
                                                 {/* Esse <TableCell/> representa o <IconButton/> 
                                                 que todas as linhas precisam ter */}
                                                 <TableCell align="right">
-                                                    <IconDropdown />
+                                                    <IconDropdown id={row.id} />
                                                 </TableCell>
                                             </TableRow>
                                         );

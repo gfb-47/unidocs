@@ -18,6 +18,7 @@ export default function Profile() {
             const result = res.data.data;
             setProfile(result);
         });
+        history.push('/unidocs/profile');
     };
     React.useEffect(() => {
         fetchProfile();

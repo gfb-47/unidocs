@@ -9,27 +9,30 @@ import { makeStyles } from '@material-ui/core/styles';
 import { IconButton } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import api from '../api/student';
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   menu: {
-      zIndex: 1101,
+    zIndex: 1101,
   },
 }));
 
-export default function IconDropdown() {
+export default function IconDropdown({id}) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef(null);
-
+  const history = useHistory();
+  
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
   };
 
   const handleClose = (event) => {
-    if (anchorRef.current && anchorRef.current.contains(event.target)) {
-      return;
+    try {
+      api.changeStatus(id);
+    } catch (e) {
+      console.log('error');
     }
-    changeStatus(row.id);
     setOpen(false);
   };
 
@@ -39,11 +42,6 @@ export default function IconDropdown() {
       setOpen(false);
     }
   }
-  useEffect(() => {
-    api.changeStatus().then(res => {
-        const result = res.data.data;
-    })
-}, []);
 
   // return focus to the button when we transitioned from !open -> open
   const prevOpen = React.useRef(open);
@@ -63,7 +61,7 @@ export default function IconDropdown() {
         aria-haspopup="true"
         onClick={handleToggle}
       >
-        <MenuIcon/>
+        <MenuIcon />
       </IconButton>
       <Popper className={classes.menu} open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
         {({ TransitionProps, placement }) => (
