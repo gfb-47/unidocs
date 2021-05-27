@@ -290,7 +290,7 @@ export default function Students() {
                                                 {/* Esse <TableCell/> representa o <IconButton/> 
                                                 que todas as linhas precisam ter */}
                                                 <TableCell align="right">
-                                                    <IconDropdown id={row.id} />
+                                                    <IconDropdown id={row.id} onClose={fetchStudents}/>
                                                 </TableCell>
                                             </TableRow>
                                         );

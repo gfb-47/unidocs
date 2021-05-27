@@ -17,24 +17,30 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function IconDropdown({id}) {
+export default function IconDropdown({ id, onClose = () => { } }) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef(null);
   const history = useHistory();
-  
+
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
   };
 
   const handleClose = (event) => {
-    try {
-      api.changeStatus(id);
-    } catch (e) {
-      console.log('error');
-    }
     setOpen(false);
   };
+
+  const changeStatus = async () => {
+    handleClose();
+    try {
+      await api.changeStatus(id);
+    } catch (e) {
+      console.log('error');
+    } finally {
+      onClose()
+    }
+  }
 
   function handleListKeyDown(event) {
     if (event.key === 'Tab') {
@@ -72,7 +78,7 @@ export default function IconDropdown({id}) {
             <Paper>
               <ClickAwayListener onClickAway={handleClose}>
                 <MenuList autoFocusItem={open} id="menu-list-grow" onKeyDown={handleListKeyDown}>
-                  <MenuItem onClick={handleClose}>Desativar</MenuItem>
+                  <MenuItem onClick={changeStatus}>Desativar</MenuItem>
                 </MenuList>
               </ClickAwayListener>
             </Paper>
