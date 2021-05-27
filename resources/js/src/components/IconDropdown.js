@@ -8,6 +8,7 @@ import MenuList from '@material-ui/core/MenuList';
 import { makeStyles } from '@material-ui/core/styles';
 import { IconButton } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
+import api from '../api/student';
 
 const useStyles = makeStyles((theme) => ({
   menu: {
@@ -28,7 +29,7 @@ export default function IconDropdown() {
     if (anchorRef.current && anchorRef.current.contains(event.target)) {
       return;
     }
-
+    changeStatus(row.id);
     setOpen(false);
   };
 
@@ -38,6 +39,11 @@ export default function IconDropdown() {
       setOpen(false);
     }
   }
+  useEffect(() => {
+    api.changeStatus().then(res => {
+        const result = res.data.data;
+    })
+}, []);
 
   // return focus to the button when we transitioned from !open -> open
   const prevOpen = React.useRef(open);

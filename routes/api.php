@@ -23,6 +23,7 @@ Route::group(['prefix' => 'v1', 'namespace' => 'API'], function () {
 
     Route::apiResource('posts', 'PostController');
     Route::get('student', 'StudentController@index');
+    Route::put('student/{id}', 'StudentController@changeStatus');
     Route::get('professor', 'ProfessorController@index');
     Route::get('course', 'CourseController@index');
     Route::get('subject', 'SubjectController@index');
