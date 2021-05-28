@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom'
 import Header from './components/Header';
 import Section from './components/Section';
 import api from '../../api/profile';
@@ -12,6 +13,7 @@ const useStyles = makeStyles({
 export default function Profile() {
     const classes = useStyles();
     
+    const history = useHistory();
     const [profile, setProfile] = React.useState([]);
     const fetchProfile = () => {
         api.getProfile().then(res => {

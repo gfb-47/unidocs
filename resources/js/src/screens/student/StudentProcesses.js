@@ -98,7 +98,7 @@ function EnhancedTableHead(props) {
         ))}
         <TableCell align='right' padding='default'>
           Ações
-                </TableCell>
+        </TableCell>
       </TableRow>
     </TableHead>
   );
@@ -131,6 +131,13 @@ const useToolbarStyles = makeStyles((theme) => ({
   title: {
     flex: '1 1 100%',
   },
+  button: {
+    color: "#0d47a1 !important",
+    '&:hover': {
+      color: "white !important",
+      backgroundColor: "#0d47a1 !important",
+    }
+  }
 }));
 //----FIM DA Sessão 4----
 
@@ -145,7 +152,7 @@ const EnhancedTableToolbar = (props) => {
       <Typography className={classes.title} variant="h6" id="tableTitle" component="div">
         Meus Processos
       </Typography>
-      <IconButton color="primary" href="/unidocs/process">
+      <IconButton color="secondary" className={classes.button} href="/unidocs/process">
         <AddIcon />
       </IconButton>
     </Toolbar>

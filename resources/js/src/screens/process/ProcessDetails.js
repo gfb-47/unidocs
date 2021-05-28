@@ -1,31 +1,16 @@
 import React from 'react'
 import api from '../../api/process';
 import { useParams } from 'react-router-dom';
-
 import { makeStyles } from "@material-ui/core/styles";
 import {
-  Avatar,
   Button,
-  Checkbox,
-  Chip,
-  Container,
   Divider,
-  FormControl,
-  FormControlLabel,
-  FormGroup,
-  FormHelperText,
-  FormLabel,
   Grid,
   IconButton,
-  InputLabel,
   List,
   ListItem,
-  ListItemIcon,
   ListItemText,
-  MenuItem,
   Paper,
-  Select,
-  TextField,
   Typography
 } from '@material-ui/core';
 import CreateIcon from '@material-ui/icons/Create';
@@ -33,7 +18,7 @@ import AssignmentIcon from '@material-ui/icons/Assignment';
 
 const useStyles = makeStyles((theme) => ({
   margin: {
-    margin: '0 8px',
+    margin: '4px 8px',
   },
   container: {
     width: '100%',
@@ -246,6 +231,46 @@ export default function ProcessDetails() {
                 className={classes.margin}
               >
                 Rejeitar Orientação
+              </Button>
+              <Button
+                href='#'
+                variant='contained'
+                color='primary'
+                className={classes.margin}
+              >
+                Aceitar Orientação
+              </Button>
+              <Button
+                href='#'
+                variant='contained'
+                color='primary'
+                className={classes.margin}
+              >
+                Gerar Ata De Apresentação
+              </Button>
+              <Button
+                href='#'
+                variant='contained'
+                color='primary'
+                className={classes.margin}
+              >
+                Avaliar Defesa
+              </Button>
+              <Button
+                href='#'
+                variant='contained'
+                color='primary'
+                className={classes.margin}
+              >
+                Apto Para Defesa
+              </Button>
+              <Button
+                href='#'
+                variant='contained'
+                color='primary'
+                className={classes.margin}
+              >
+                Indicar Orientador
               </Button>
               <Button
                 href={`/unidocs/process/documents/${id}`}

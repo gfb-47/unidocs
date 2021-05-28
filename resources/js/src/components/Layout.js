@@ -52,14 +52,20 @@ const useStyles = makeStyles((theme) => ({
         left: 0,
         bottom: 0,
         width: '100%',
-    }
+    },
+    menuItem: {
+        textDecoration: "none",
+        '&:hover': {
+            color: "black !important"
+        }
+    },
 }));
 
 export default function Layout({ children }) {
     const classes = useStyles();
     const [topBar, setTopBar] = React.useState(false);
     const [bottomBarGerenciar, setBottomBarGerenciar] = React.useState(false);
-    const [bottomBarProjetos, setBottomBarProjetos] = React.useState(false);
+    const [bottomBarProcessos, setBottomBarProcessos] = React.useState(false);
     const [open, setOpen] = React.useState(false);
     const anchorRef = React.useRef(null);
 
@@ -98,11 +104,11 @@ export default function Layout({ children }) {
 
     const handleBottomBarGerenciar = (event, newValue) => {
         setBottomBarGerenciar(newValue);
-        setBottomBarProjetos(false);
+        setBottomBarProcessos(false);
     };
 
-    const handleBottomBarProjetos = (event, newValue) => {
-        setBottomBarProjetos(newValue);
+    const handleBottomBarProcessos = (event, newValue) => {
+        setBottomBarProcessos(newValue);
         setBottomBarGerenciar(false);
     };
 
@@ -120,7 +126,7 @@ export default function Layout({ children }) {
                         <Tab label="Aluno" to='/unidocs/students' component={Link} />
                         <Tab label="Professor" to='/unidocs/professors' component={Link} />
                         <Tab label="Semestre" to='/unidocs/semesters' component={Link} />
-                        <Tab label="Áreas do Conhecimento" to='/unidocs/knowladgeareas' component={Link} />
+                        {/* <Tab label="Áreas do Conhecimento" to='/unidocs/knowladgeareas' component={Link} /> */}
                         <Tab label="Disciplina" to='/unidocs/subjects' component={Link} />
                         <Tab label="Curso" to='/unidocs/courses' component={Link} />
                     </Tabs>
@@ -130,13 +136,13 @@ export default function Layout({ children }) {
                 return (
                     <Tabs
                         variant="fullWidth"
-                        value={bottomBarProjetos}
-                        onChange={handleBottomBarProjetos}
+                        value={bottomBarProcessos}
+                        onChange={handleBottomBarProcessos}
                         className={classes.tabs}
                     >
                         <Tab label="Bancas" to='/unidocs/professor/semesterjury' component={Link} />
-                        <Tab label="Meus Projetos" to='/unidocs/student/processes' component={Link} />
-                        <Tab label="Projetos Vinculados" to='/unidocs/professor/processes' component={Link} />
+                        <Tab label="Meus Processos" to='/unidocs/student/processes' component={Link} />
+                        <Tab label="Processos Vinculados" to='/unidocs/professor/processes' component={Link} />
                         <Tab label="Semestre Ativo" to='/unidocs/professor/semesterprocesses' component={Link} />
                     </Tabs>
                 )
@@ -188,7 +194,7 @@ export default function Layout({ children }) {
                         centered
                     >
                         <Tab label="Gerenciar" />
-                        <Tab label="Projetos" />
+                        <Tab label="Processos" />
                         <Tab label="Relatórios" to='/unidocs/professor/reports' component={Link} />
                     </Tabs>
 
@@ -199,7 +205,7 @@ export default function Layout({ children }) {
                         aria-haspopup="true"
                         onClick={handleToggle}
                     >
-                        <AccountCircleIcon fontSize="large" className={classes.icon}/>
+                        <AccountCircleIcon fontSize="large" className={classes.icon} />
                     </IconButton>
                     <Popper className={classes.menu} open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
                         {({ TransitionProps, placement }) => (
@@ -210,9 +216,20 @@ export default function Layout({ children }) {
                                 <Paper >
                                     <ClickAwayListener onClickAway={handleClose}>
                                         <MenuList autoFocusItem={open} id="menu-list-grow" onKeyDown={handleListKeyDown}>
-                                            <MenuItem onClick={handleClose}>Profile</MenuItem>
-                                            <MenuItem onClick={handleClose}>My account</MenuItem>
-                                            <MenuItem onClick={handleClose}>Logout</MenuItem>
+                                            <MenuItem
+                                                className={classes.menuItem}
+                                                onClick={handleClose}
+                                                to='/unidocs/profile'
+                                                component={Link}
+                                            >
+                                                Perfil
+                                            </MenuItem>
+                                            <MenuItem
+                                                className={classes.menuItem}
+                                                onClick={handleClose}
+                                            >
+                                                Sair
+                                            </MenuItem>
                                         </MenuList>
                                     </ClickAwayListener>
                                 </Paper>
@@ -242,15 +259,15 @@ export default function Layout({ children }) {
                 </AppBar>
             </div>
             <ToastContainer
-            position="top-right"
-            autoClose={5000}
-            hideProgressBar={false}
-            newestOnTop={false}
-            closeOnClick
-            rtl={false}
-            pauseOnFocusLoss
-            draggable
-            pauseOnHover
+                position="top-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
             />
         </div>
     );

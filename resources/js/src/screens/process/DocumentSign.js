@@ -1,7 +1,7 @@
 import React from 'react'
 import WebViewer from '@pdftron/webviewer';
 import { useLocation, useHistory } from 'react-router-dom';
-import './Document.css';
+import '../../styles/document_style.css';
 
 export default function DocumentSign() {
   const history = useHistory();

@@ -162,9 +162,6 @@ export default function Process(props) {
     }
   };
 
-
-
-
   return (
     <div>
 
@@ -176,7 +173,7 @@ export default function Process(props) {
             </Avatar>
             <div className={classes.headerTitle}>
               <Typography variant="h4">
-                Criar Novo Projeto
+                Criar Novo Processo
               </Typography>
               <Typography variant="subtitle1">
                 Preencha os campos abaixo
@@ -195,13 +192,13 @@ export default function Process(props) {
                     <TextField
                       variant="outlined"
                       id="title"
+                      fullWidth
                       error={!!error}
                       helperText={error ? error.message : null}
                       name="Título"
                       label="Título"
                       value={value}
                       onChange={onChange}
-                      fullWidth
                     />
                   )}
                 />
@@ -216,7 +213,6 @@ export default function Process(props) {
                   render={({ field: { onChange }, fieldState: { error } }) => (
                     <Autocomplete
                       id="asynchronous-demo"
-                      style={{ width: 300 }}
                       open={open}
                       onOpen={() => {
                         setOpen(true);
@@ -235,6 +231,7 @@ export default function Process(props) {
                           {...params}
                           label="Professores"
                           variant="outlined"
+                          fullWidth
                           error={!!error}
                           helperText={error ? error.message : null}
 
@@ -264,6 +261,7 @@ export default function Process(props) {
                     <TextField
                       id="content"
                       label="Semestre"
+                      fullWidth
                       select
                       rows={4}
                       error={!!error}
@@ -271,7 +269,6 @@ export default function Process(props) {
                       value={value}
                       onChange={onChange}
                       variant="outlined"
-                      fullWidth
                     >
                       <MenuItem value="">
                         <em>Selecione</em>
@@ -294,6 +291,7 @@ export default function Process(props) {
                     <TextField
                       id="content"
                       label="Descrição"
+                      fullWidth
                       multiline
                       rows={4}
                       error={!!error}
@@ -301,7 +299,6 @@ export default function Process(props) {
                       value={value}
                       onChange={onChange}
                       variant="outlined"
-                      fullWidth
                     />
 
                   )}
@@ -348,7 +345,7 @@ export default function Process(props) {
                 variant="contained"
                 color="primary"
               >
-                Criar Projeto
+                Criar Processo
             </Button>
             </div>
           </form>

@@ -8,10 +8,10 @@ body {
   background-color: #f1f1f1;
 }
 
-a {
-  text-decoration: none !important;
-}
-
 a:hover {
   color: white !important;
+}
+
+a {
+  text-decoration: none !important;
 }

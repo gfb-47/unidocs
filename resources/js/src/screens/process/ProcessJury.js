@@ -9,7 +9,7 @@ import Typography from '@material-ui/core/Typography';
 import { blue, grey } from '@material-ui/core/colors';
 import SchoolIcon from '@material-ui/icons/School';
 import 'date-fns';
-import FormControl from '@material-ui/core/FormControl';  
+import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
@@ -17,17 +17,17 @@ import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead'; 
+import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import Paper from '@material-ui/core/Paper';
 import Checkbox from '@material-ui/core/Checkbox';
-import { MuiPickersUtilsProvider, KeyboardDatePicker, KeyboardTimePicker} from '@material-ui/pickers';
+import { MuiPickersUtilsProvider, KeyboardDatePicker, KeyboardTimePicker } from '@material-ui/pickers';
 import Grid from '@material-ui/core/Grid';
 import DateFnsUtils from '@date-io/date-fns';
 import { ptBR } from "date-fns/locale";
-import { Avatar, Chip,} from '@material-ui/core';
+import { Avatar, Chip, Container, } from '@material-ui/core';
 
 function createData(name, professorEmail, course, knowladgeArea, color) {
   return { name, professorEmail, course, knowladgeArea, color };
@@ -35,8 +35,8 @@ function createData(name, professorEmail, course, knowladgeArea, color) {
 
 const rows = [
   createData('Alex Coelho', 'alex@unitins.br', 'Sistemas de Informação', '', '#F40909'),
-  createData('Silvano','silvano@unitins.br', 'Direito', '', '#E47B09'),
-  createData('Fredson','fredson@unitins.br', 'Agronomia', '', '#358DF5'),
+  createData('Silvano', 'silvano@unitins.br', 'Direito', '', '#E47B09'),
+  createData('Fredson', 'fredson@unitins.br', 'Agronomia', '', '#358DF5'),
 ];
 
 function descendingComparator(a, b, orderBy) {
@@ -79,16 +79,10 @@ const useStyles = makeStyles((theme) => ({
   },
   root: {
     '& .MuiTextField-root': {
-        margin: theme.spacing(4),
-        width: 322,
-        marginLeft: 10,
+      margin: theme.spacing(4),
+      width: 322,
+      marginLeft: 10,
     },
-  },
-  divCard: {
-    marginTop: 50,
-    marginLeft: 50,
-    maxWidth: 1225,
-    borderRadius: 20
   },
   card: {
     borderRadius: 10,
@@ -97,7 +91,7 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: 40.5,
     marginLeft: 5,
     marginTop: 10,
-    marginBottom:5,
+    marginBottom: 5,
     borderRadius: 100,
     background: 'lightGrey'
   },
@@ -106,11 +100,11 @@ const useStyles = makeStyles((theme) => ({
     marginTop: -50,
   },
   typography: {
-      fontSize: 12,
-      fontWeight: 600,
-      marginTop: 10,
-      marginBottom: -15,
-    },
+    fontSize: 12,
+    fontWeight: 600,
+    marginTop: 10,
+    marginBottom: -15,
+  },
   divButton: {
     position: "relative",
     marginTop: 180,
@@ -156,28 +150,43 @@ const useStyles = makeStyles((theme) => ({
     position: 'absolute',
     top: 20,
     width: 1,
-  }, 
+  },
   divTimePicker: {
     marginTop: -45,
   },
-  }));
+  header: {
+    display: 'flex',
+    alignItems: 'center',
+    marginBottom: theme.spacing(2),
+  },
+  headerTitle: {
+    paddingLeft: 16,
+  },
+  large: {
+    width: theme.spacing(7),
+    height: theme.spacing(7),
+  },
+  container: {
+    marginTop: theme.spacing(5),
+  },
+}));
 
-  
-  function EnhancedTableHead(props) {
-    const { classes, onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
-    const createSortHandler = (property) => (event) => {
-      onRequestSort(event, property);
-    };
-  
-    return (
-      <TableHead>
+
+function EnhancedTableHead(props) {
+  const { classes, onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
+  const createSortHandler = (property) => (event) => {
+    onRequestSort(event, property);
+  };
+
+  return (
+    <TableHead>
       <TableRow>
         <TableCell padding="checkbox">
           <Checkbox
             indeterminate={numSelected > 0 && numSelected < rowCount}
             checked={rowCount > 0 && numSelected === rowCount}
             onChange={onSelectAllClick}
-            style={{color: blue[600]}}
+            style={{ color: blue[600] }}
             inputProps={{ 'aria-label': 'select all desserts' }}
           />
         </TableCell>
@@ -204,301 +213,303 @@ const useStyles = makeStyles((theme) => ({
         ))}
       </TableRow>
     </TableHead>
-    );
-  }
-  
-  EnhancedTableHead.propTypes = {
-    classes: PropTypes.object.isRequired,
-    numSelected: PropTypes.number.isRequired,
-    onRequestSort: PropTypes.func.isRequired,
-    onSelectAllClick: PropTypes.func.isRequired,
-    order: PropTypes.oneOf(['asc', 'desc']).isRequired,
-    orderBy: PropTypes.string.isRequired,
-    rowCount: PropTypes.number.isRequired,
+  );
+}
+
+EnhancedTableHead.propTypes = {
+  classes: PropTypes.object.isRequired,
+  numSelected: PropTypes.number.isRequired,
+  onRequestSort: PropTypes.func.isRequired,
+  onSelectAllClick: PropTypes.func.isRequired,
+  order: PropTypes.oneOf(['asc', 'desc']).isRequired,
+  orderBy: PropTypes.string.isRequired,
+  rowCount: PropTypes.number.isRequired,
+};
+
+export default function ProfessorProfile() {
+  const classes = useStyles();
+
+  const [selectedDate, setSelectedDate] = React.useState(new Date());
+  const handleDateChange = (date) => {
+    setSelectedDate(date);
   };
 
-  export default function ProfessorProfile() {
-    const classes = useStyles();
+  const [alignment, setAlignment] = React.useState('left');
 
-    const [selectedDate, setSelectedDate] = React.useState(new Date());
-    const handleDateChange = (date) => {
-      setSelectedDate(date);
-    };
+  const handleFormat = (event, newFormats) => {
+    if (newFormats.length) {
+      setFormats(newFormats);
+    }
+  };
 
-    const [alignment, setAlignment] = React.useState('left');
-
-    const handleFormat = (event, newFormats) => {
-      if (newFormats.length) {
-        setFormats(newFormats);
-      }
-    };
-  
-    const handleAlignment = (event, newAlignment) => {
-      if (newAlignment !== null) {
-        setAlignment(newAlignment);
-      }
-    };
+  const handleAlignment = (event, newAlignment) => {
+    if (newAlignment !== null) {
+      setAlignment(newAlignment);
+    }
+  };
 
   const [age, setAge] = React.useState('');
 
-    const handleChange = (event) => {
-      setAge(event.target.value);
+  const handleChange = (event) => {
+    setAge(event.target.value);
 
-    };
+  };
 
-    const [order, setOrder] = React.useState('asc');
-    const [orderBy, setOrderBy] = React.useState('calories');
-    const [selected, setSelected] = React.useState([]);
-    const [page, setPage] = React.useState(0);
-    const [dense, setDense] = React.useState(false);
-    const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [order, setOrder] = React.useState('asc');
+  const [orderBy, setOrderBy] = React.useState('calories');
+  const [selected, setSelected] = React.useState([]);
+  const [page, setPage] = React.useState(0);
+  const [dense, setDense] = React.useState(false);
+  const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
-    const handleRequestSort = (event, property) => {
-      const isAsc = orderBy === property && order === 'asc';
-      setOrder(isAsc ? 'desc' : 'asc');
-      setOrderBy(property);
-    };
-  
-    const handleSelectAllClick = (event) => {
-      if (event.target.checked) {
-        const newSelecteds = rows.map((n) => n.name);
-        setSelected(newSelecteds);
-        return;
-      }
-      setSelected([]);
-    };
+  const handleRequestSort = (event, property) => {
+    const isAsc = orderBy === property && order === 'asc';
+    setOrder(isAsc ? 'desc' : 'asc');
+    setOrderBy(property);
+  };
 
-    const handleClick = (event, name) => {
-      const selectedIndex = selected.indexOf(name);
-      let newSelected = [];
-  
-      if (selectedIndex === -1) {
-        newSelected = newSelected.concat(selected, name);
-      } else if (selectedIndex === 0) {
-        newSelected = newSelected.concat(selected.slice(1));
-      } else if (selectedIndex === selected.length - 1) {
-        newSelected = newSelected.concat(selected.slice(0, -1));
-      } else if (selectedIndex > 0) {
-        newSelected = newSelected.concat(
-          selected.slice(0, selectedIndex),
-          selected.slice(selectedIndex + 1),
-        );
-      }
-  
-      setSelected(newSelected);
-    };
-  
-    const handleChangePage = (event, newPage) => {
-      setPage(newPage);
-    };
-  
-    const handleChangeRowsPerPage = (event) => {
-      setRowsPerPage(parseInt(event.target.value, 10));
-      setPage(0);
-    };
-    
-    const handleChangeDense = (event) => {
-      setDense(event.target.checked);
-    };
-  
-    const isSelected = (name) => selected.indexOf(name) !== -1;
-  
-    const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
+  const handleSelectAllClick = (event) => {
+    if (event.target.checked) {
+      const newSelecteds = rows.map((n) => n.name);
+      setSelected(newSelecteds);
+      return;
+    }
+    setSelected([]);
+  };
 
-    return (
-        <div className={classes.divCard}>
-            <Card className={classes.card}>
-              <CardContent >
-                <div className={classes.schoolIcon}>
-                  <SchoolIcon style={{color: grey[600], fontSize: 40 }} />
-                </div>
+  const handleClick = (event, name) => {
+    const selectedIndex = selected.indexOf(name);
+    let newSelected = [];
 
-                <div className={classes.cardContent}>
-                <Typography component={'span'} variant="h5" component="h2">
-                    Banca
-                  </Typography>
+    if (selectedIndex === -1) {
+      newSelected = newSelected.concat(selected, name);
+    } else if (selectedIndex === 0) {
+      newSelected = newSelected.concat(selected.slice(1));
+    } else if (selectedIndex === selected.length - 1) {
+      newSelected = newSelected.concat(selected.slice(0, -1));
+    } else if (selectedIndex > 0) {
+      newSelected = newSelected.concat(
+        selected.slice(0, selectedIndex),
+        selected.slice(selectedIndex + 1),
+      );
+    }
 
-                  <Typography component={'span'} className={classes.title} color="textSecondary" gutterBottom>
-                    Escolha os participantes que farão parte da banca.
-                  </Typography>
-                </div>
+    setSelected(newSelected);
+  };
 
-                <div className={classes.divEsquerdaBanca}>
-                  <Paper className={classes.paper}> 
-                    <TableContainer>
-                      <Table
-                          className={classes.table}
-                          aria-labelledby="tableTitle"
-                          size={dense ? 'small' : 'medium'}
-                          aria-label="enhanced table"
-                        >
-                        <EnhancedTableHead
-                          classes={classes}
-                          numSelected={selected.length}
-                          order={order}
-                          orderBy={orderBy}
-                          onSelectAllClick={handleSelectAllClick}
-                          onRequestSort={handleRequestSort}
-                          rowCount={rows.length}
-                        />
-                        <TableBody>
-                          {stableSort(rows, getComparator(order, orderBy))
-                            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                            .map((row, index) => {
-                              const isItemSelected = isSelected(row.name);
-                              const labelId = `enhanced-table-checkbox-${index}`;
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
 
-                              return (
-                                <TableRow
-                                  hover
-                                  onClick={(event) => handleClick(event, row.name)}
-                                  role="checkbox"
-                                  aria-checked={isItemSelected}
-                                  tabIndex={-1}
-                                  key={row.name}
-                                  selected={isItemSelected}
-                                >
-                                  <TableCell padding="checkbox">
-                                    <Checkbox
-                                      checked={isItemSelected}
-                                      inputProps={{ 'aria-labelledby': labelId }}
-                                      style={{color: blue[600]}}
-                                    />
-                                  </TableCell>
-                                  
-                                  <TableCell component="th" id={labelId} align="left" scope="row" padding="none">
-                                    <div className={classes.userCell}>
-                                      <Avatar
-                                        style={{
-                                          marginRight: "1rem",
-                                          color: `${row.color}`,
-                                          backgroundColor: `${row.color}50`,
-                                        }}
-                                      >
-                                        {row.name[0]}
-                                      </Avatar>
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
 
-                                      <div>
-                                        <b>{row.name}</b> <br />
-                                        <span className={classes.subItem}>{row.professorEmail}</span>
-                                      </div>
-                                    </div>
-                                  </TableCell>
+  const handleChangeDense = (event) => {
+    setDense(event.target.checked);
+  };
 
-                                  <TableCell align="left">
-                                    {row.course}
-                                  </TableCell>
+  const isSelected = (name) => selected.indexOf(name) !== -1;
 
-                                  <TableCell align="left">
-                                    <Chip
-                                      label="Inteligência Artificial"
-                                      variant="outlined"
-                                      style={{
-                                        fontWeight: 600,
-                                        borderRadius: 4,
-                                        color: '#f44336',
-                                        border: '1px solid #f4433666',
-                                        margin: '4px',
-                                      }}
-                                    />
-                                    <Chip
-                                      label="Java"
-                                      variant="outlined"
-                                      style={{
-                                        fontWeight: 600,
-                                        borderRadius: 4,
-                                        color: '#E038FF',
-                                        border: '1px solid #812094',
-                                        margin: '4px',
-                                      }}
-                                    />
-                                  </TableCell>
+  const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
-                                </TableRow>
-                              );
-                            })}
-                          {emptyRows > 0 && (
-                            <TableRow style={{ height: (dense ? 33 : 53) * emptyRows }}>
-                              <TableCell colSpan={6} />
-                            </TableRow>
-                          )}
-                        </TableBody>
-                      </Table>
-                    </TableContainer>
-                    <TablePagination
-                      rowsPerPageOptions={[5, 10, 25]}
-                      component="div"
-                      count={rows.length}
-                      rowsPerPage={rowsPerPage}
-                      page={page}
-                      onChangePage={handleChangePage}
-                      onChangeRowsPerPage={handleChangeRowsPerPage}
+  return (
+    <div>
+      <Container className={classes.container}>
+        <Card className={classes.card}>
+          <CardContent >
+            <div className={classes.header}>
+              <Avatar className={classes.large}>
+                <SchoolIcon fontSize="large" />
+              </Avatar>
+              <div className={classes.headerTitle}>
+                <Typography variant="h4">
+                  Formar Banca
+                </Typography>
+                <Typography variant="subtitle1">
+                  Escolha os participantes que farão parte da banca.
+                </Typography>
+              </div>
+            </div>
+
+            <div className={classes.divEsquerdaBanca}>
+              <Paper className={classes.paper}>
+                <TableContainer>
+                  <Table
+                    className={classes.table}
+                    aria-labelledby="tableTitle"
+                    size={dense ? 'small' : 'medium'}
+                    aria-label="enhanced table"
+                  >
+                    <EnhancedTableHead
+                      classes={classes}
+                      numSelected={selected.length}
+                      order={order}
+                      orderBy={orderBy}
+                      onSelectAllClick={handleSelectAllClick}
+                      onRequestSort={handleRequestSort}
+                      rowCount={rows.length}
                     />
-                  </Paper>
-                </div>
+                    <TableBody>
+                      {stableSort(rows, getComparator(order, orderBy))
+                        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                        .map((row, index) => {
+                          const isItemSelected = isSelected(row.name);
+                          const labelId = `enhanced-table-checkbox-${index}`;
 
-                <div className= {classes.divDireitaBanca}>
-                <MuiPickersUtilsProvider utils={DateFnsUtils}  locale={ptBR}>
-                    <Grid container justify="space-around">
-                      <FormControl className={classes.root}>
-                          <KeyboardDatePicker
-                            variant="inline"
-                            inputVariant="outlined"
-                            format="dd/MM/yyyy"
-                            minDate= {new Date()}
-                            id="standard-required"
-                            label="Data da Banca"
-                            value={selectedDate}
-                            onChange={handleDateChange}
-                            KeyboardButtonProps={{
-                              'aria-label': 'change date',
-                            }}
-                          />
-                          <div className={classes.divTimePicker}>
-                            <KeyboardTimePicker
-                              margin="normal"
-                              inputVariant="outlined"
-                              variant="inline"
-                              id="time-picker"
-                              ampm={false}
-                              label="Horário da Banca"
-                              value={selectedDate}
-                              onChange={handleDateChange}
-                              KeyboardButtonProps={{
-                                'aria-label': 'change time',
-                              }}
-                            />
-                          </div>
-                        </FormControl>
-                      </Grid>
-                    </MuiPickersUtilsProvider>
+                          return (
+                            <TableRow
+                              hover
+                              onClick={(event) => handleClick(event, row.name)}
+                              role="checkbox"
+                              aria-checked={isItemSelected}
+                              tabIndex={-1}
+                              key={row.name}
+                              selected={isItemSelected}
+                            >
+                              <TableCell padding="checkbox">
+                                <Checkbox
+                                  checked={isItemSelected}
+                                  inputProps={{ 'aria-labelledby': labelId }}
+                                  style={{ color: blue[600] }}
+                                />
+                              </TableCell>
+
+                              <TableCell component="th" id={labelId} align="left" scope="row" padding="none">
+                                <div className={classes.userCell}>
+                                  <Avatar
+                                    style={{
+                                      marginRight: "1rem",
+                                      color: `${row.color}`,
+                                      backgroundColor: `${row.color}50`,
+                                    }}
+                                  >
+                                    {row.name[0]}
+                                  </Avatar>
+
+                                  <div>
+                                    <b>{row.name}</b> <br />
+                                    <span className={classes.subItem}>{row.professorEmail}</span>
+                                  </div>
+                                </div>
+                              </TableCell>
+
+                              <TableCell align="left">
+                                {row.course}
+                              </TableCell>
+
+                              <TableCell align="left">
+                                <Chip
+                                  label="Inteligência Artificial"
+                                  variant="outlined"
+                                  style={{
+                                    fontWeight: 600,
+                                    borderRadius: 4,
+                                    color: '#f44336',
+                                    border: '1px solid #f4433666',
+                                    margin: '4px',
+                                  }}
+                                />
+                                <Chip
+                                  label="Java"
+                                  variant="outlined"
+                                  style={{
+                                    fontWeight: 600,
+                                    borderRadius: 4,
+                                    color: '#E038FF',
+                                    border: '1px solid #812094',
+                                    margin: '4px',
+                                  }}
+                                />
+                              </TableCell>
+
+                            </TableRow>
+                          );
+                        })}
+                      {emptyRows > 0 && (
+                        <TableRow style={{ height: (dense ? 33 : 53) * emptyRows }}>
+                          <TableCell colSpan={6} />
+                        </TableRow>
+                      )}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+                <TablePagination
+                  rowsPerPageOptions={[5, 10, 25]}
+                  component="div"
+                  count={rows.length}
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                  onChangePage={handleChangePage}
+                  onChangeRowsPerPage={handleChangeRowsPerPage}
+                />
+              </Paper>
+            </div>
+
+            <div className={classes.divDireitaBanca}>
+              <MuiPickersUtilsProvider utils={DateFnsUtils} locale={ptBR}>
+                <Grid container justify="space-around">
+                  <FormControl className={classes.root}>
+                    <KeyboardDatePicker
+                      variant="inline"
+                      inputVariant="outlined"
+                      format="dd/MM/yyyy"
+                      minDate={new Date()}
+                      id="standard-required"
+                      label="Data da Banca"
+                      value={selectedDate}
+                      onChange={handleDateChange}
+                      KeyboardButtonProps={{
+                        'aria-label': 'change date',
+                      }}
+                    />
                     <div className={classes.divTimePicker}>
-                      <FormControl variant="outlined" className={classes.formControl}>
-                          <InputLabel id="demo-simple-select-outlined-label">Escolha um campus</InputLabel>
-                          <Select
-                              labelId="demo-simple-select-outlined-label"
-                              id="demo-simple-select-outlined"
-                              value={age}
-                              onChange={handleChange}
-                              label="Escolha um campus"
-                          >
-                          <MenuItem value={10}>Campus Augistinópolis</MenuItem>
-                          <MenuItem value={20}>Campus Araguatins</MenuItem>
-                          <MenuItem value={30}>Campus Palmas</MenuItem>
-                          <MenuItem value={40}>Campus Paraíso</MenuItem>
-                        </Select>
-                      </FormControl>
-                    </div>          
-                  <CardActions>
-                    <div className={classes.divButton}>
-                      <Button variant="contained" color="primary" className={classes.typography}>
-                          Fechar Banca
-                      </Button>
+                      <KeyboardTimePicker
+                        margin="normal"
+                        inputVariant="outlined"
+                        variant="inline"
+                        id="time-picker"
+                        ampm={false}
+                        label="Horário da Banca"
+                        value={selectedDate}
+                        onChange={handleDateChange}
+                        KeyboardButtonProps={{
+                          'aria-label': 'change time',
+                        }}
+                      />
                     </div>
-                  </CardActions>
+                  </FormControl>
+                </Grid>
+              </MuiPickersUtilsProvider>
+              <div className={classes.divTimePicker}>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="demo-simple-select-outlined-label">Escolha um campus</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-outlined-label"
+                    id="demo-simple-select-outlined"
+                    value={age}
+                    onChange={handleChange}
+                    label="Escolha um campus"
+                  >
+                    <MenuItem value={10}>Campus Augistinópolis</MenuItem>
+                    <MenuItem value={20}>Campus Araguatins</MenuItem>
+                    <MenuItem value={30}>Campus Palmas</MenuItem>
+                    <MenuItem value={40}>Campus Paraíso</MenuItem>
+                  </Select>
+                </FormControl>
+              </div>
+              <CardActions>
+                <div className={classes.divButton}>
+                  <Button variant="contained" color="primary" className={classes.typography}>
+                    Fechar Banca
+                      </Button>
                 </div>
-              </CardContent>
-            </Card>
-          </div>
-    )
+              </CardActions>
+            </div>
+          </CardContent>
+        </Card>
+      </Container>
+    </div>
+  )
 };

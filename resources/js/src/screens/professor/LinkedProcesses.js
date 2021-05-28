@@ -28,7 +28,7 @@ function createData(name, email, title, semester, status, color) {
 
 //Preencha a função createData() com o mesmo numero de variaveis que voce colocou acima.
 const rows = [
-  createData('Bruno Richard', 'brich@unitins.br', 'O ensino básico através dos jogos', '2021.1/TCC', 'Em Desenvolvimento','#9c27b0'),
+  createData('Bruno Richard', 'brich@unitins.br', 'O ensino básico através dos jogos', '2021.1/TCC', 'Em Desenvolvimento', '#9c27b0'),
 ];
 //----FIM DA Sessão 1----
 
@@ -81,8 +81,6 @@ function EnhancedTableHead(props) {
   return (
     <TableHead>
       <TableRow>
-        <TableCell padding="default">
-        </TableCell>
 
         {headCells.map((headCell) => (
           <TableCell
@@ -252,7 +250,7 @@ export default function LinkedProcesses() {
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, processes.length - page * rowsPerPage);
 
   {/* Return que envia o HTML com os componentes */ }
-  
+
   return (
     <div className={classes.root}>
       <Container>
@@ -288,13 +286,6 @@ export default function LinkedProcesses() {
                         tabIndex={-1}
                         key={row.title}
                       >
-
-                        {/* Não mexa nesse TableCell*/}
-                        <TableCell padding="default">
-                        </TableCell>
-                        {/* Não mexa nesse TableCell*/}
-
-
                         <TableCell align="left">
                           <span>{row.title}</span>
                         </TableCell>
@@ -315,19 +306,6 @@ export default function LinkedProcesses() {
                               <span className={classes.subItem}>{row.student.user.email}</span>
                             </div>
                           </div>
-                        </TableCell>
-                        <TableCell align="left">
-                          {/* <Chip
-                            label="Inteligência Artificial"
-                            variant="outlined"
-                            style={{
-                              fontWeight: 600,
-                              borderRadius: 4,
-                              color: '#f44336',
-                              border: '1px solid #f4433666',
-                              margin: '4px',
-                            }}
-                          /> */}
                         </TableCell>
                         <TableCell align="left">
                           <span>{row.semester.name}</span>
@@ -362,7 +340,6 @@ export default function LinkedProcesses() {
                             onClose={handleClose}
                           >
                             <MenuItem onClick={() => showProcess(row.id)}>Visualizar Processo</MenuItem>
-                            <MenuItem onClick={handleClose}>Alguma Opção do Menu</MenuItem>
                           </Menu>
                         </TableCell>
                       </TableRow>

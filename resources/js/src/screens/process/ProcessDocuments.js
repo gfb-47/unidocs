@@ -128,6 +128,13 @@ const useToolbarStyles = makeStyles((theme) => ({
   title: {
     flex: '1 1 100%',
   },
+  button: {
+    color: "#0d47a1 !important",
+    '&:hover': {
+      color: "white !important",
+      backgroundColor: "#0d47a1 !important",
+    }
+  }
 }));
 
 const EnhancedTableToolbar = (props) => {
@@ -140,10 +147,10 @@ const EnhancedTableToolbar = (props) => {
       <Typography className={classes.title} variant="h6" id="tableTitle" component="div">
         Documentos
       </Typography>
-      <IconButton color="primary">
+      <IconButton color="secondary" className={classes.button}>
         <AddIcon />
       </IconButton>
-      <IconButton color="primary">
+      <IconButton color="secondary" className={classes.button}>
         <ArrowBackIcon />
       </IconButton>
 
@@ -186,7 +193,11 @@ const useStyles = makeStyles((theme) => ({
   itemInactive: {
     color: theme.palette.error.main,
   },
+  menu: {
+    zIndex: 1101,
+  }
 }));
+
 export default function ProcessDocuments() {
   const classes = useStyles();
   const { id } = useParams();
