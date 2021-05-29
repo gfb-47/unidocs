@@ -4,8 +4,6 @@ const BASE_URL = `${getUrl()}/api/v1`
 export default {
   getAllStudents: () => axios.get(`${BASE_URL}/student`),
 
-  changeStatus: (id) => axios.put(`${BASE_URL}/student/${id}`)
-
   // getOnePost: (id) => axios.get(`${BASE_URL}/students/${id}/edit`),
 
   // addPost: (post) => axios.post(`${BASE_URL}/students`, post),

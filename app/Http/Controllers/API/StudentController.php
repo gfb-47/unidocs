@@ -6,7 +6,6 @@ use App\Http\Controllers\BaseController as BaseController;
 use App\Models\Student;
 use App\Models\User;
 use Exception;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class StudentController extends BaseController
@@ -32,7 +31,9 @@ class StudentController extends BaseController
         try {
             DB::beginTransaction();
             $data = User::with('Student')->find($id);
-            $data->active=0;
+
+            $data->active = !($data->active);
+
             $data->save();
             DB::commit();
             return $this->sendResponse($data, 'Usuario desativado com Sucesso');

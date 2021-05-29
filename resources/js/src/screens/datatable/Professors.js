@@ -243,8 +243,8 @@ export default function Professors() {
               />
 
               {/* Dentro do TableBody é preenchido atraves de um .map
-                            todos os dados que apareceram na tabela. Altere os 
-                            <TableCell/> dentro de <TableRoll/> para que eles se 
+                            todos os dados que apareceram na tabela. Altere os
+                            <TableCell/> dentro de <TableRoll/> para que eles se
                             alinhem com a listagem que voce gostaria de fazer */}
               <TableBody>
                 {stableSort(professors, getComparator(order, orderBy))
@@ -303,10 +303,10 @@ export default function Professors() {
                           <span>{row.active == 1 ? 'ativo' : 'inativo'}</span>
                         </TableCell>
 
-                        {/* Esse <TableCell/> representa o <IconButton/> 
+                        {/* Esse <TableCell/> representa o <IconButton/>
                          que todas as linhas precisam ter */}
                         <TableCell align="right">
-                          <IconDropdown />
+                            <IconDropdown id={row.id} onClose={fetchProfessors} type='professor'/>
                         </TableCell>
                       </TableRow>
                     );

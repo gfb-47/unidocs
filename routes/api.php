@@ -25,6 +25,7 @@ Route::group(['prefix' => 'v1', 'namespace' => 'API'], function () {
     Route::get('student', 'StudentController@index');
     Route::put('student/{id}', 'StudentController@changeStatus');
     Route::get('professor', 'ProfessorController@index');
+    Route::put('professor/{id}', 'ProfessorController@changeStatus');
     Route::get('course', 'CourseController@index');
     Route::get('subject', 'SubjectController@index');
     Route::get('semester', 'SemesterController@index');
