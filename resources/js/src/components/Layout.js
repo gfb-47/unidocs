@@ -12,7 +12,6 @@ import { Link } from "react-router-dom";
 import { Button, ClickAwayListener, Grow, MenuItem, MenuList, Paper, Popper } from '@material-ui/core';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
 const useStyles = makeStyles((theme) => ({
     root: {
 
@@ -227,6 +226,8 @@ export default function Layout({ children }) {
                                             <MenuItem
                                                 className={classes.menuItem}
                                                 onClick={handleClose}
+                                                href='logout'
+                                                component="a"
                                             >
                                                 Sair
                                             </MenuItem>

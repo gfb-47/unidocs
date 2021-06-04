@@ -20,4 +20,9 @@ Route::get('/', function () {
 
 Auth::routes(['register' => false]);
 
+Route::get('/logout', function () {
+    Auth::logout();
+    return redirect('/');
+});
+
 Route::get('/unidocs/{any?}', 'HomeController@index')->where('any', '^(?!api).*$')->middleware('auth')->name('home');
