@@ -9,10 +9,10 @@
 <div id="app"></div>
 @endsection
 @push('js')
-<script src="{{asset('js/app.js')}}"></script>
 <script type="text/javascript">
   window.Laravel = {
       jsPermissions: {!! auth()->check()?auth()->user()->jsPermissions():null !!}
   }
 </script> 
+<script src="{{asset('js/app.js')}}"></script>
 @endpush

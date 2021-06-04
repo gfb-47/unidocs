@@ -10,6 +10,8 @@ import IconButton from '@material-ui/core/IconButton';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import { Link } from "react-router-dom";
 import { Button, ClickAwayListener, Grow, MenuItem, MenuList, Paper, Popper } from '@material-ui/core';
+import { is } from '../utils/permissions';
+
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 const useStyles = makeStyles((theme) => ({
@@ -86,7 +88,6 @@ export default function Layout({ children }) {
             setOpen(false);
         }
     }
-
     // return focus to the button when we transitioned from !open -> open
     const prevOpen = React.useRef(open);
     React.useEffect(() => {
@@ -192,7 +193,7 @@ export default function Layout({ children }) {
                         onChange={handleTopBar}
                         centered
                     >
-                        <Tab label="Gerenciar" />
+                        {is('administrador') && <Tab label="Gerenciar" />}
                         <Tab label="Processos" />
                         <Tab label="Relatórios" to='/unidocs/professor/reports' component={Link} />
                     </Tabs>

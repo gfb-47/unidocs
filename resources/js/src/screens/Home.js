@@ -38,9 +38,9 @@ export default function Home() {
                         </Typography>
 
                         {/*Map de cada projeto ativo*/}
-                        <ProcessCard/>
-                        
-                        <ProcessCard/>
+                        <ProcessCard />
+
+                        <ProcessCard />
 
                     </Container>
                 </Paper>
