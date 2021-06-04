@@ -41,10 +41,13 @@ class PopulateUsers extends Seeder
                 $createdUser = User::create($user);
                 if ($key < 49) {
                     Professor::create(['user_id' => $createdUser->id]);
+                    $createdUser->assignRole('professor_orientador');
                 } else {
                     $student = factory(Student::class)->make()->toArray();
                     $student['user_id'] = $createdUser->id;
                     Student::create($student);
+                    $createdUser->assignRole('estudante');
+
                 }
                 DB::commit();
             } catch (\Exception $e) {
