@@ -24,9 +24,10 @@ class ProcessController extends BaseController
             ->orderBy("processes.title")
             ->where(function ($q) use ($user) {
                 if ($user->student != null) {
-                    $q->where('student_id', $user->student->id);
+                    $q->where('processes.student_id', $user->student->id);
                 } else {
-                    $q->where('advise_professor_id', $user->professor->id);
+                    $q->where('semesters.professor_id', $user->professor->id);
+                    $q->orWhere('processes.advise_professor_id', $user->professor->id);
                 }
             })
             ->get();
@@ -49,13 +50,21 @@ class ProcessController extends BaseController
 
     public function show(Request $request, $id)
     {
-        $user = User::with('student')->find($request->header()['user'][0]);
+        $user = User::with('student', 'professor')->find($request->header()['user'][0]);
 
-        $item = Process::select("processes.*")
+        $item = Process::select("processes.*", "semesters.professor_id")
             ->with('adviseProfessor.user', 'semester', 'knowledgeAreas', 'jury')
+            ->join('semesters', 'semesters.id', '=', 'processes.semester_id')
             ->orderBy("processes.title")
-            ->where('id', $id)
-            ->where('student_id', $user->student->id)
+            ->where('processes.id', $id)
+            ->where(function ($q) use ($user) {
+                if ($user->student != null) {
+                    $q->where('processes.student_id', $user->student->id);
+                } else {
+                    $q->where('semesters.professor_id', $user->professor->id);
+                    $q->orWhere('processes.advise_professor_id', $user->professor->id);
+                }
+            })
             ->first();
         return $this->sendResponse($item);
     }

@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Database\Seeder;
 use App\Models\Semester;
 use App\Models\Student;
+use Illuminate\Database\Seeder;
 
 class SemesterSeeder extends Seeder
 {
@@ -17,8 +17,8 @@ class SemesterSeeder extends Seeder
             'name' => '2020.2 PCC',
             'subject_id' => 1,
             'course_id' => 4,
-            'professor_id' => 2,
-            'active' => false
+            'professor_id' => 3,
+            'active' => false,
         ]);
 
         $desactivedSemesterStudents = Student::where('id', '<', '25')->get();
@@ -30,7 +30,7 @@ class SemesterSeeder extends Seeder
             'name' => '2021.1',
             'subject_id' => 2,
             'course_id' => 7,
-            'professor_id' => 3
+            'professor_id' => 3,
         ]);
         $activedSemesterStudents = Student::where('id', '>=', '25')->get();
         foreach ($activedSemesterStudents as $student) {
