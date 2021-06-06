@@ -4,7 +4,6 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\BaseController as BaseController;
 use App\Models\Process;
-use App\Models\Semester;
 use App\Models\Term;
 use App\Models\User;
 use File;
@@ -53,7 +52,7 @@ class ProcessController extends BaseController
         $user = User::with('student')->find($request->header()['user'][0]);
 
         $item = Process::select("processes.*")
-            ->with('adviseProfessor.user', 'semester', 'knowledgeAreas')
+            ->with('adviseProfessor.user', 'semester', 'knowledgeAreas', 'jury')
             ->orderBy("processes.title")
             ->where('id', $id)
             ->where('student_id', $user->student->id)

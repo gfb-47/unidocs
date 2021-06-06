@@ -18,6 +18,10 @@ class Process extends Model
     {
         return $this->belongsTo(Student::class, 'student_id');
     }
+    public function jury()
+    {
+        return $this->hasOne(Jury::class);
+    }
     public function adviseProfessor()
     {
         return $this->belongsTo(Professor::class, 'advise_professor_id');
@@ -46,8 +50,9 @@ class Process extends Model
             1 => 'Sob Análise do Responsável da Disciplina',
             'Sob Análise do Orientador',
             'Em desenvolvimento',
-            'Aprovado',
-            'Reprovado',
+            'Apto para Defesa',
+            'Sob Correção',
+            'Finalizado',
         ];
     }
 

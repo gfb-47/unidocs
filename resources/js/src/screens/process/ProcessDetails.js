@@ -15,7 +15,7 @@ import {
 } from '@material-ui/core';
 import CreateIcon from '@material-ui/icons/Create';
 import AssignmentIcon from '@material-ui/icons/Assignment';
-
+import { is } from '../../utils/permissions';
 const useStyles = makeStyles((theme) => ({
   margin: {
     margin: '4px 8px',
@@ -157,7 +157,7 @@ export default function ProcessDetails() {
                 <Divider light />
                 <ListItem >
                   <ListItemText primary="Nota" className={classes.dataTitle} />
-                  <ListItemText primary="-" className={classes.data} />
+                  <ListItemText primary={processShow?.rating} className={classes.data} />
                 </ListItem>
                 <Divider light />
               </List>
@@ -166,7 +166,7 @@ export default function ProcessDetails() {
             <br />
             <br />
 
-            <div className={classes.dataWrapper}>
+            {processShow?.jury && <div className={classes.dataWrapper}>
               <div className={classes.dataHeader}>
                 <Typography variant="h5">
                   Dados da Banca
@@ -199,7 +199,7 @@ export default function ProcessDetails() {
                 </ListItem>
                 <Divider light />
               </List>
-            </div>
+            </div>}
           </Grid>
 
           <Divider orientation="vertical" flexItem />
@@ -224,53 +224,77 @@ export default function ProcessDetails() {
           </Grid>
           <Grid item xs={12}>
             <div className={classes.footer}>
-              <Button
+              {is('administrador | professor_orientador') && processShow?.status == 2 && <Button
                 href='#'
                 variant='contained'
                 color='primary'
                 className={classes.margin}
               >
                 Rejeitar Orientação
-              </Button>
-              <Button
+              </Button>}
+              {is('administrador | professor_orientador') && processShow?.status == 2 && <Button
                 href='#'
                 variant='contained'
                 color='primary'
                 className={classes.margin}
               >
                 Aceitar Orientação
-              </Button>
-              <Button
+              </Button>}
+              {is('administrador | professor_disciplina') && processShow?.status == 4 && processShow?.jury != null && <Button
                 href='#'
                 variant='contained'
                 color='primary'
                 className={classes.margin}
               >
                 Gerar Ata De Apresentação
-              </Button>
-              <Button
+              </Button>}
+              {is('administrador | professor_orientador') && processShow?.status == 4 && processShow?.jury != null && <Button
                 href='#'
                 variant='contained'
                 color='primary'
                 className={classes.margin}
               >
                 Avaliar Defesa
-              </Button>
-              <Button
+              </Button>}
+              {is('administrador | professor_orientador') && processShow?.status == 3 && <Button
                 href='#'
                 variant='contained'
                 color='primary'
                 className={classes.margin}
               >
                 Apto Para Defesa
-              </Button>
-              <Button
+              </Button>}
+              {is('administrador | professor_disciplina') && processShow?.status == 1 && <Button
                 href='#'
                 variant='contained'
                 color='primary'
                 className={classes.margin}
               >
                 Indicar Orientador
+              </Button>}
+              {is('administrador | professor_orientador') && processShow?.status == 4 && processShow?.jury == null && <Button
+                href='jury'
+                variant='contained'
+                color='primary'
+                className={classes.margin}
+              >
+                Formar Banca
+              </Button>}
+              {is('administrador | professor_orientador') && processShow?.status == 5 && <Button
+                href='workplan'
+                variant='contained'
+                color='primary'
+                className={classes.margin}
+              >
+                Finalizar Projeto
+              </Button>}
+              <Button
+                href='workplan'
+                variant='contained'
+                color='primary'
+                className={classes.margin}
+              >
+                Plano de Trabalho
               </Button>
               <Button
                 href={`/unidocs/process/documents/${id}`}
@@ -279,22 +303,6 @@ export default function ProcessDetails() {
                 className={classes.margin}
               >
                 Meus Documentos
-              </Button>
-              <Button
-                href='jury'
-                variant='contained'
-                color='primary'
-                className={classes.margin}
-              >
-                Formar Banca
-              </Button>
-              <Button
-                href='workplan'
-                variant='contained'
-                color='primary'
-                className={classes.margin}
-              >
-                Plano de Trabalho
               </Button>
             </div>
           </Grid>

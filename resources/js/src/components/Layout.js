@@ -115,7 +115,7 @@ export default function Layout({ children }) {
 
     function renderTabs(handleTopBar) {
         switch (handleTopBar) {
-            case 0:
+            case 1:
                 return (
                     <Tabs
                         variant="fullWidth"
@@ -132,7 +132,7 @@ export default function Layout({ children }) {
                     </Tabs>
                 )
 
-            case 1:
+            case 2:
                 return (
                     <Tabs
                         variant="fullWidth"
@@ -140,10 +140,10 @@ export default function Layout({ children }) {
                         onChange={handleBottomBarProcessos}
                         className={classes.tabs}
                     >
-                        <Tab label="Bancas" to='/unidocs/professor/semesterjury' component={Link} />
-                        <Tab label="Meus Processos" to='/unidocs/student/processes' component={Link} />
-                        <Tab label="Processos Vinculados" to='/unidocs/professor/processes' component={Link} />
-                        <Tab label="Semestre Ativo" to='/unidocs/professor/semesterprocesses' component={Link} />
+                        {is('administrador | professor_disciplina') && <Tab label="Bancas" to='/unidocs/professor/semesterjury' component={Link} />}
+                        {is('administrador | estudante') && <Tab label="Meus Processos" to='/unidocs/student/processes' component={Link} />}
+                        {is('administrador | professor_orientador | professor_disciplina') && <Tab label="Processos Vinculados" to='/unidocs/professor/processes' component={Link} />}
+                        {is('administrador | professor_disciplina') && <Tab label="Semestre Ativo" to='/unidocs/professor/semesterprocesses' component={Link} />}
                     </Tabs>
                 )
             default:
@@ -193,9 +193,9 @@ export default function Layout({ children }) {
                         onChange={handleTopBar}
                         centered
                     >
-                        {is('administrador') && <Tab label="Gerenciar" />}
-                        <Tab label="Processos" />
-                        <Tab label="Relatórios" to='/unidocs/professor/reports' component={Link} />
+                        {is('administrador') && <Tab label="Gerenciar" value={1} />}
+                        <Tab label="Processos" value={2} />
+                        {is('administrador | professor_orientador | professor_disciplina') && <Tab label="Relatórios" to='/unidocs/professor/reports' component={Link} value={3} />}
                     </Tabs>
 
 
@@ -227,7 +227,7 @@ export default function Layout({ children }) {
                                             <MenuItem
                                                 className={classes.menuItem}
                                                 onClick={handleClose}
-                                                href='logout'
+                                                href='/logout'
                                                 component="a"
                                             >
                                                 Sair
