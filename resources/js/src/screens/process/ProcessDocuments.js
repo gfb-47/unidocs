@@ -25,6 +25,8 @@ import DescriptionIcon from '@material-ui/icons/Description';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import { useParams, useHistory } from 'react-router-dom';
 import api from '../../api/process';
+import { setLoading } from '../../utils/actions';
+import { Context } from '../../components/Store';
 
 function createData(id, document, createdAt, signList) {
   return { id, document, createdAt, signList };
@@ -209,11 +211,17 @@ export default function ProcessDocuments() {
   const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef([]);
   const history = useHistory();
+  const [, dispatch] = React.useContext(Context);
+
 
   React.useEffect(() => {
+    dispatch(setLoading(true));
+
     api.getTerms(id).then(res => {
       const result = res.data.data;
       setTerms(result);
+      dispatch(setLoading(false));
+
     });
   }, []);
 

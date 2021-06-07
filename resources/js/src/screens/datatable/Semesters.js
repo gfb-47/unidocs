@@ -15,6 +15,8 @@ import Paper from '@material-ui/core/Paper';
 import { Avatar, Container } from '@material-ui/core';
 import api from '../../api/semester';
 import IconDropdown from '../../components/IconDropdown'
+import { setLoading } from '../../utils/actions';
+import { Context } from '../../components/Store';
 
 //Sessão 2 - Aqui será definidas quais serãos as Colunas dos dados. Vincule os nomes com seus dados para facilitar o entendimento
 //id = identificador da variavel, label = nome da coluna na tabela
@@ -191,10 +193,16 @@ export default function Semesters() {
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
     //BUSCANDO NO BANCO DE DADOS
     const [semesters, setSemesters] = React.useState([]);
+    const [, dispatch] = React.useContext(Context);
+
     const fetchSemesters = () => {
+        dispatch(setLoading(true));
+
         api.getAllSemesters().then(res => {
             const result = res.data.data;
             setSemesters(result);
+            dispatch(setLoading(false));
+
         });
     };
     React.useEffect(() => {
@@ -225,7 +233,7 @@ export default function Semesters() {
     const handleClose = () => {
         setAnchorEl(null);
     };
-    
+
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, semesters.length - page * rowsPerPage);
 
     {/* Return que envia o HTML com os componentes */ }
@@ -264,8 +272,8 @@ export default function Semesters() {
                                                 tabIndex={-1}
                                                 key={row.id}
                                             >
-                                                
-                                              
+
+
 
                                                 <TableCell padding="left">
                                                     <span>{row.identificationCode}</span>

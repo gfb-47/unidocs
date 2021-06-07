@@ -10,6 +10,8 @@ import api from '../../api/process';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { useHistory } from 'react-router'
 import { toast } from 'react-toastify';
+import { Context } from '../../components/Store';
+import { setLoading } from '../../utils/actions';
 
 const useStyles = makeStyles((theme) => ({
   margin: {
@@ -69,6 +71,8 @@ export default function Process(props) {
   const { handleSubmit, control, reset } = useForm();
   const [professor, setProfessor] = React.useState('');
   const [semester, setSemester] = React.useState('');
+  const [, dispatch] = React.useContext(Context);
+
   const [state, setState] = React.useState({
     gilad: true,
     jason: false,
@@ -131,6 +135,7 @@ export default function Process(props) {
 
   const onSubmit = async data => {
     try {
+      dispatch(setLoading(true))
       await api.addProcess(data);
       toast.success('👍 Cadastrado Com Sucesso', {
         position: "top-right",
@@ -158,7 +163,9 @@ export default function Process(props) {
         draggable: true,
         progress: undefined,
       });
-      console.log('error');
+    } finally {
+      dispatch(setLoading(false))
+
     }
   };
 

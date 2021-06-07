@@ -16,6 +16,9 @@ import {
 import CreateIcon from '@material-ui/icons/Create';
 import AssignmentIcon from '@material-ui/icons/Assignment';
 import { is } from '../../utils/permissions';
+import { setLoading } from '../../utils/actions';
+import { Context } from '../../components/Store';
+
 const useStyles = makeStyles((theme) => ({
   margin: {
     margin: '4px 8px',
@@ -86,12 +89,17 @@ const useStyles = makeStyles((theme) => ({
 export default function ProcessDetails() {
   const classes = useStyles();
   const { id } = useParams();
+  const [, dispatch] = React.useContext(Context);
 
   const [processShow, setProcess] = React.useState(null);
   React.useEffect(() => {
+    dispatch(setLoading(true));
+
     api.showProcess(id).then(res => {
       const result = res.data.data;
       setProcess(result);
+      dispatch(setLoading(false));
+
     });
   }, []);
   const handleChange = (event) => {

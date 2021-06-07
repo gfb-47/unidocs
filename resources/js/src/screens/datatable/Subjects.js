@@ -15,6 +15,8 @@ import Paper from '@material-ui/core/Paper';
 import { Container } from '@material-ui/core';
 import IconDropdown from '../../components/IconDropdown'
 import api from '../../api/subject';
+import { setLoading } from '../../utils/actions';
+import { Context } from '../../components/Store';
 
 //Sessão 2 - Aqui será definidas quais serãos as Colunas dos dados. Vincule os nomes com seus dados para facilitar o entendimento
 //id = identificador da variavel, label = nome da coluna na tabela
@@ -185,13 +187,18 @@ export default function Subjects() {
     const [orderBy, setOrderBy] = React.useState('active');
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
-    
+    const [, dispatch] = React.useContext(Context);
+
     //BUSCANDO NO BANCO DE DADOS
     const [subject, setSubjects] = React.useState([]);
     const fetchSubjects = () => {
+        dispatch(setLoading(true));
+
         api.getAllSubjects().then(res => {
             const result = res.data.data;
             setSubjects(result);
+            dispatch(setLoading(false));
+
         });
     };
     React.useEffect(() => {

@@ -17,6 +17,8 @@ import MenuIcon from '@material-ui/icons/Menu';
 import { Avatar, Container, Menu, MenuItem } from '@material-ui/core';
 import api from '../../api/process';
 import { useHistory } from 'react-router'
+import { setLoading } from '../../utils/actions';
+import { Context } from '../../components/Store';
 
 //Sessão 1 - Area de Criação de Dados para preechimento. Será subistituido pela API do banco - NÃO SERÁ MANTIDO
 //Para os testes, mude as variaveis abaixo para o numero de variaveis que haverão na sua tabela.
@@ -205,14 +207,19 @@ export default function SemesterProcesses() {
   const [orderBy, setOrderBy] = React.useState('active');
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [, dispatch] = React.useContext(Context);
 
   const [processes, setProcesses] = React.useState([]);
   const history = useHistory();
 
   const fetchProcesses = () => {
+    dispatch(setLoading(true));
+
     api.getSemesterProcesses().then(res => {
       const result = res.data.data;
       setProcesses(result);
+      dispatch(setLoading(false));
+
     });
   };
   React.useEffect(() => {

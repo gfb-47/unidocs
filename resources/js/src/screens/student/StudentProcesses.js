@@ -18,8 +18,8 @@ import AddIcon from '@material-ui/icons/Add';
 import { Avatar, Chip, Container, Menu, MenuItem, Button } from '@material-ui/core';
 import api from '../../api/process';
 import { useHistory } from 'react-router'
-
-
+import { Context } from '../../components/Store';
+import { setLoading } from '../../utils/actions';
 //----FIM DA Sessão 1----
 
 //Sessão 2 - Aqui será definidas quais serãos as Colunas dos dados. Vincule os nomes com seus dados para facilitar o entendimento
@@ -203,12 +203,16 @@ export default function StudentProcesses() {
   {/* Variaveis sendo inicializadas */ }
   const [processes, setProcesses] = React.useState([]);
   const history = useHistory();
+  const [, dispatch] = React.useContext(Context);
 
   const fetchProcesses = () => {
+    dispatch(setLoading(true));
     api.getProcesses().then(res => {
       const result = res.data.data;
       setProcesses(result);
+      dispatch(setLoading(false));
     });
+
   };
   React.useEffect(() => {
     fetchProcesses();

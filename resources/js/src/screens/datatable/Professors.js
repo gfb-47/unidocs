@@ -18,6 +18,8 @@ import api from '../../api/professor';
 import { formatDistance, format } from 'date-fns';
 import ptBR from 'date-fns/locale/pt-BR';
 import IconDropdown from '../../components/IconDropdown'
+import { Context } from '../../components/Store';
+import { setLoading } from '../../utils/actions';
 
 //Sessão 2 - Aqui será definidas quais serãos as Colunas dos dados. Vincule os nomes com seus dados para facilitar o entendimento
 //id = identificador da variavel, label = nome da coluna na tabela
@@ -167,8 +169,8 @@ const useStyles = makeStyles((theme) => ({
     width: 1,
   },
   userCell: {
-      marginLeft: theme.spacing(2),
-      display: 'flex',
+    marginLeft: theme.spacing(2),
+    display: 'flex',
   },
   subItem: {
     fontSize: "0.75rem !important",
@@ -190,12 +192,17 @@ export default function Professors() {
   const [orderBy, setOrderBy] = React.useState('active');
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [, dispatch] = React.useContext(Context);
+
   //BUSCANDO NO BANCO DE DADOS
   const [professors, setProfessors] = React.useState([]);
   const fetchProfessors = () => {
+    dispatch(setLoading(true));
     api.getAllProfessors().then(res => {
       const result = res.data.data;
       setProfessors(result);
+      dispatch(setLoading(false));
+
     });
   };
   React.useEffect(() => {
@@ -306,7 +313,7 @@ export default function Professors() {
                         {/* Esse <TableCell/> representa o <IconButton/>
                          que todas as linhas precisam ter */}
                         <TableCell align="right">
-                            <IconDropdown id={row.id} onClose={fetchProfessors} type='professor'/>
+                          <IconDropdown id={row.id} onClose={fetchProfessors} type='professor' />
                         </TableCell>
                       </TableRow>
                     );
