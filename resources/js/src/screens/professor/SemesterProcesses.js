@@ -387,7 +387,6 @@ export default function SemesterProcesses() {
                             onClose={handleClose}
                           >
                             <MenuItem onClick={() => showProcess(row.id)}>Visualizar Processo</MenuItem>
-                            <MenuItem onClick={handleClose}>Alguma Opção do Menu</MenuItem>
                           </Menu>
                         </TableCell>
                       </TableRow>

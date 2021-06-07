@@ -27,7 +27,7 @@ import { MuiPickersUtilsProvider, KeyboardDatePicker, KeyboardTimePicker } from 
 import Grid from '@material-ui/core/Grid';
 import DateFnsUtils from '@date-io/date-fns';
 import { ptBR } from "date-fns/locale";
-import { Avatar, Chip, Container, } from '@material-ui/core';
+import { Avatar, Chip, Container, TextField, } from '@material-ui/core';
 
 function createData(name, professorEmail, course, knowladgeArea, color) {
   return { name, professorEmail, course, knowladgeArea, color };
@@ -484,19 +484,13 @@ export default function ProfessorProfile() {
               </MuiPickersUtilsProvider>
               <div className={classes.divTimePicker}>
                 <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="demo-simple-select-outlined-label">Escolha um campus</InputLabel>
-                  <Select
-                    labelId="demo-simple-select-outlined-label"
-                    id="demo-simple-select-outlined"
-                    value={age}
-                    onChange={handleChange}
-                    label="Escolha um campus"
-                  >
-                    <MenuItem value={10}>Campus Augistinópolis</MenuItem>
-                    <MenuItem value={20}>Campus Araguatins</MenuItem>
-                    <MenuItem value={30}>Campus Palmas</MenuItem>
-                    <MenuItem value={40}>Campus Paraíso</MenuItem>
-                  </Select>
+                  <TextField
+                    variant="outlined"
+                    id="local"
+                    fullWidth
+                    name="Local"
+                    label="Local"
+                  />
                 </FormControl>
               </div>
               <CardActions>
