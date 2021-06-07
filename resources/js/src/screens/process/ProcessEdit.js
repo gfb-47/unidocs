@@ -63,7 +63,7 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
-export default function Process(props) {
+export default function ProcessEdit(props) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const [options, setOptions] = React.useState([]);
@@ -180,7 +180,7 @@ export default function Process(props) {
             </Avatar>
             <div className={classes.headerTitle}>
               <Typography variant="h4">
-                Criar Novo Processo
+                Alterar Processo
               </Typography>
               <Typography variant="subtitle1">
                 Preencha os campos abaixo
@@ -209,84 +209,6 @@ export default function Process(props) {
                     />
                   )}
                 />
-
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <Controller
-                  name="advise_professor_id"
-                  control={control}
-                  defaultValue=""
-                  rules={validation.autoCompleteValidation}
-                  render={({ field: { onChange }, fieldState: { error } }) => (
-                    <Autocomplete
-                      id="asynchronous-demo"
-                      open={open}
-                      onOpen={() => {
-                        setOpen(true);
-                      }}
-                      onClose={() => {
-                        setOpen(false);
-                      }}
-                      onChange={(e, options) => options ? onChange(options.id) : onChange(undefined)}
-                      getOptionSelected={(option, value) => option.name === value.name}
-                      getOptionLabel={(option) => option.name}
-                      options={options}
-                      loading={loading}
-                      renderInput={(params) => (
-
-                        <TextField
-                          {...params}
-                          label="Professores"
-                          variant="outlined"
-                          fullWidth
-                          error={!!error}
-                          helperText={error ? error.message : null}
-
-                          InputProps={{
-                            ...params.InputProps,
-                            endAdornment: (
-                              <React.Fragment>
-                                {loading ? <CircularProgress color="inherit" size={20} /> : null}
-                                {params.InputProps.endAdornment}
-                              </React.Fragment>
-                            ),
-                          }}
-                        />
-                      )}
-                    />
-                  )}
-                />
-              </Grid>
-
-              <Grid item xs={12} sm={6}>
-                <Controller
-                  name="semester_id"
-                  control={control}
-                  defaultValue=""
-                  rules={validation.descriptionValidation}
-                  render={({ field: { onChange, value }, fieldState: { error } }) => (
-                    <TextField
-                      id="content"
-                      label="Semestre"
-                      fullWidth
-                      select
-                      rows={4}
-                      error={!!error}
-                      helperText={error ? error.message : null}
-                      value={value}
-                      onChange={onChange}
-                      variant="outlined"
-                    >
-                      <MenuItem value="">
-                        <em>Selecione</em>
-                      </MenuItem>
-                      <MenuItem value={1}>2020.2 PCC</MenuItem>
-                      <MenuItem value={2}>2021.1</MenuItem>
-                    </TextField>
-
-                  )}
-                />
-
               </Grid>
               <Grid item xs={12}>
                 <Controller
@@ -300,7 +222,7 @@ export default function Process(props) {
                       label="Descrição"
                       fullWidth
                       multiline
-                      rows={12}
+                      rows={16}
                       error={!!error}
                       helperText={error ? error.message : null}
                       value={value}
@@ -354,7 +276,7 @@ export default function Process(props) {
                 variant="contained"
                 color="primary"
               >
-                Criar Processo
+                Alterar Processo
             </Button>
             </div>
           </form>

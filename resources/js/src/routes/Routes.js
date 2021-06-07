@@ -32,6 +32,7 @@ import ProfileProfessor from '../screens/profiles/ProfessorProfile'
 import ModalProfessorProfile from '../screens/profiles/ModalProfessorProfile'
 
 import Layout from '../components/Layout'
+import ProcessEdit from '../screens/process/ProcessEdit';
 
 const Path = "/unidocs"
 
@@ -121,10 +122,14 @@ const App = () => {
 
                             <Route path={`${Path}/professor/reports`}>
                                 <Report />
-                            </Route>
+                            </Route>~
 
                             <Route exact path={`${Path}/process`}>
                                 <Process />
+                            </Route>
+
+                            <Route exact path={`${Path}/process/edit`}>
+                                <ProcessEdit />
                             </Route>
 
                             <Route exact path={`${Path}/process/details/:id`}>
