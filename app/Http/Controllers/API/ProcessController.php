@@ -21,13 +21,13 @@ class ProcessController extends BaseController
 
         $data = Process::select("processes.*")
             ->with('adviseProfessor.user', 'semester', 'knowledgeAreas', 'student.user')
+
             ->orderBy("processes.title")
             ->where(function ($q) use ($user) {
                 if ($user->student != null) {
                     $q->where('processes.student_id', $user->student->id);
                 } else {
-                    $q->where('semesters.professor_id', $user->professor->id);
-                    $q->orWhere('processes.advise_professor_id', $user->professor->id);
+                    $q->where('processes.advise_professor_id', $user->professor->id);
                 }
             })
             ->get();
@@ -90,7 +90,10 @@ class ProcessController extends BaseController
 
             $process = Process::create($inputs);
             $unique = uniqid($process->id);
-            $directory = "process/{$unique}/{$process->title}";
+            $source = array('/', '\\', '?', '*', '<', '>', '"', ':', '|');
+            $replace = array('-', '-', '-', '-', '-', '-', '-', '-', '-');
+            $folder_name = str_replace($source, $replace, $process->title);
+            $directory = "process/{$unique}/{$folder_name}";
             Storage::disk('public')->makeDirectory($directory);
 
             foreach ($files as $file) {
@@ -98,7 +101,7 @@ class ProcessController extends BaseController
                 Storage::disk('public')->put("$directory/{$file->getFileName()}", file_get_contents($file->getRealPath()));
                 Term::create([
                     'name' => $file->getFileName(),
-                    'directory' => "$directory/{$file->getFileName()}",
+                    'original_directory' => "$directory/{$file->getFileName()}",
                     'process_id' => $process->id,
                 ]);
             }

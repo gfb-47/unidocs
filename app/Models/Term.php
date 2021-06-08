@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Term extends Model
 {
-    protected $fillable = ['name', 'directory', 'process_id'];
+    protected $fillable = ['name', 'original_directory', 'file_directory', 'process_id'];
 
     protected $appends = ['full_link'];
 

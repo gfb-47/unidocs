@@ -6,6 +6,8 @@ use App\Http\Controllers\BaseController as BaseController;
 use App\Models\Term;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class TermController extends BaseController
 {
@@ -14,6 +16,7 @@ class TermController extends BaseController
         $user = User::with('student', 'professor')->find($request->header()['user'][0]);
 
         $data = Term::select('terms.*')
+            ->with('sign')
             ->join('processes', 'processes.id', '=', 'terms.process_id')
             ->where('terms.process_id', $process_id)
             ->where(function ($q) use ($user) {
@@ -26,5 +29,36 @@ class TermController extends BaseController
             ->get();
 
         return $this->sendResponse($data);
+    }
+
+    public function signDocument(Request $request)
+    {
+        $user_id = $request->header()['user'][0];
+        try {
+            DB::beginTransaction();
+
+            if ($request->hasFile('file')) {
+                $term = Term::with(['sign' => function ($q) use ($user_id) {
+                    $q->where('user_id', $user_id);
+                }])->find($request->term_id);
+                if ($term->file_directory) {
+                    Storage::disk('public')->delete($term->file_directory);
+                }
+                $folder = substr($term->original_directory, 0, strrpos($term->original_directory, '/'));
+                $link = $request->file->store($folder, 'public');
+                $term->fill(['file_directory' => $link])->save();
+                if (!$term->sign || isset($term->sign)) {
+                    $term->sign()->attach($user_id);
+                }
+            }
+            DB::commit();
+
+            return $this->sendResponse([], 'Saved With Sucess');
+        } catch (Exception $e) {
+            DB::rollback();
+
+            return $this->sendError($e->getMessage());
+
+        }
     }
 }

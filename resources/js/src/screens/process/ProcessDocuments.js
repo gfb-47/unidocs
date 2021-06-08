@@ -27,10 +27,8 @@ import { useParams, useHistory } from 'react-router-dom';
 import api from '../../api/process';
 import { setLoading } from '../../utils/actions';
 import { Context } from '../../components/Store';
-
-function createData(id, document, createdAt, signList) {
-  return { id, document, createdAt, signList };
-}
+import { formatDistance, format } from 'date-fns';
+import ptBR from 'date-fns/locale/pt-BR';
 
 
 const headCells = [
@@ -95,6 +93,9 @@ function EnhancedTableHead(props) {
             </TableSortLabel>
           </TableCell>
         ))}
+        <TableCell align='left' padding='default'>
+          Última Atualização
+                </TableCell>
         <TableCell align='right' padding='default'>
           Ações
                 </TableCell>
@@ -136,6 +137,9 @@ const useToolbarStyles = makeStyles((theme) => ({
       color: "white !important",
       backgroundColor: "#0d47a1 !important",
     }
+  },
+  input: {
+    display: 'none'
   }
 }));
 
@@ -149,9 +153,18 @@ const EnhancedTableToolbar = (props) => {
       <Typography className={classes.title} variant="h6" id="tableTitle" component="div">
         Documentos
       </Typography>
-      <IconButton color="secondary" className={classes.button}>
-        <AddIcon />
-      </IconButton>
+      <input
+        accept="application/pdf"
+        className={classes.input}
+        id="contained-button-file"
+        multiple
+        type="file"
+      />
+      <label htmlFor="contained-button-file">
+        <IconButton color="secondary" className={classes.button} component="span">
+          <AddIcon />
+        </IconButton>
+      </label>
       <IconButton color="secondary" className={classes.button}>
         <ArrowBackIcon />
       </IconButton>
@@ -202,6 +215,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function ProcessDocuments() {
   const classes = useStyles();
+  /**@type {{id:number}} */
   const { id } = useParams();
   const [terms, setTerms] = React.useState([]);
   const [order, setOrder] = React.useState('asc');
@@ -266,8 +280,8 @@ export default function ProcessDocuments() {
     }
   }, [open]);
 
-  const sign = (link) => {
-    history.push('/unidocs/process/documentsign', { link })
+  const sign = (link, name, process_id, term_id) => {
+    history.push('/unidocs/process/documentsign', { link, name, processId: process_id, termId: term_id })
   }
 
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, terms.length - page * rowsPerPage);
@@ -321,7 +335,18 @@ export default function ProcessDocuments() {
                           </div>
                         </TableCell>
                         <TableCell align="left">
-                          <span> {row.signList}</span>
+                          <span> {row.sign.map((subRow, index) => {
+                            let signer = subRow.name + ', ';
+                            if (row.sign[row.sign.length - 1] == row.sign[index]) {
+                              signer = subRow.name;
+                            }
+                            return signer
+                          })}</span>
+                        </TableCell>
+                        <TableCell align="left">
+                          <span>
+                            {formatDistance(new Date(row.updated_at), new Date(), { locale: ptBR })}
+                          </span>
                         </TableCell>
                         <TableCell align="right">
                           <IconButton
@@ -342,7 +367,7 @@ export default function ProcessDocuments() {
                                 <Paper>
                                   <ClickAwayListener onClickAway={handleClose}>
                                     <MenuList autoFocusItem={open !== false} id="menu-list-grow" onKeyDown={handleListKeyDown}>
-                                      <MenuItem onClick={() => sign(row.directory)}>Assinar</MenuItem>
+                                      <MenuItem onClick={() => sign(row.file_directory || row.original_directory, row.name, id, row.id)}>Assinar</MenuItem>
                                       <MenuItem onClick={handleClose}>Desativar</MenuItem>
                                       <Divider light />
                                       <MenuItem onClick={handleClose}>Excluir</MenuItem>

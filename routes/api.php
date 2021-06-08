@@ -31,8 +31,8 @@ Route::group(['prefix' => 'v1', 'namespace' => 'API'], function () {
     Route::get('semester', 'SemesterController@index');
 
     //Use Este Padrão para caso seja CRUD's
-    Route::apiResource('knowledgearea', 'KnowledgeAreaController')->except(['create', 'edit']);
-    Route::apiResource('process', 'ProcessController')->except(['create', 'edit']);
+    Route::apiResource('knowledgearea', 'KnowledgeAreaController');
+    Route::apiResource('process', 'ProcessController');
     Route::get('process2', 'ProcessController@indexProcessSemesters');
     Route::apiResource('jury', 'JuryController')->except(['create', 'edit']);
 
@@ -43,6 +43,7 @@ Route::group(['prefix' => 'v1', 'namespace' => 'API'], function () {
         Route::put('changestatus/{id}/approved', 'StatusController@approved');
         Route::put('changestatus/{id}/rejected', 'StatusController@rejected');
         Route::get('terms/{process_id}', 'TermController@index');
+        Route::post('documentsign/document', 'TermController@signDocument');
     });
     Route::group(['prefix' => 'public'], function () {
         Route::get('search/professor', 'PublicController@searchProfessors');

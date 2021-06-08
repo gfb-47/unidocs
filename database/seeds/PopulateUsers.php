@@ -22,7 +22,6 @@ class PopulateUsers extends Seeder
             "#f44336",
             "#00bcd4",
             "#e91e63",
-            "#673ab7",
             "#2196f3",
             "#03a9f4",
             "#009688",
@@ -42,10 +41,8 @@ class PopulateUsers extends Seeder
                 if ($key < 49) {
                     Professor::create(['user_id' => $createdUser->id]);
                     $createdUser->assignRole('professor_orientador');
-                } else {
-                    $student = factory(Student::class)->make()->toArray();
-                    $student['user_id'] = $createdUser->id;
-                    Student::create($student);
+                } else {           
+                    Student::create(['user_id' => $createdUser->id]);
                     $createdUser->assignRole('estudante');
 
                 }

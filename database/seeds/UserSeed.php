@@ -18,30 +18,30 @@ class UserSeed extends Seeder
             'name' => 'Admin',
             'email' => 'unitins@unitins.br',
             'color' => '#673ab7',
+            'cpf' => '000.000.000-00',
             'phone' => '(63) 90000-0000',
             'password' => bcrypt('unitins2021'),
         ]);
         $studentadmin = Student::create([
-            'cpf' => '000.000.000-00',
             'user_id' => $user->id,
         ]);
         $professor = Professor::create([
             'user_id' => $user->id,
         ]);
 
-        $user->assignRole('administrador');      
+        $user->assignRole('administrador');
 
         ////////////////////////////////////////////////////////////
         $student = User::create([
             'name' => 'Estutante',
             'email' => 'estudante@unitins.br',
             'color' => '#673ab7',
+            'cpf' => '000.000.000-01',
             'phone' => '(63) 69696-0000',
             'password' => bcrypt('unitins2021'),
         ]);
         $student->assignRole('estudante');
         $student = Student::create([
-            'cpf' => '000.000.000-01',
             'user_id' => $student->id,
         ]);
 
@@ -51,8 +51,9 @@ class UserSeed extends Seeder
             'email' => 'disciplina@unitins.br',
             'color' => '#673ab7',
             'phone' => '(63) 66666-9999',
+            'cpf' => '000.000.000-02',
             'password' => bcrypt('unitins2021'),
-            ]);
+        ]);
         $professor_disciplina->assignRole('professor_disciplina');
         $professor_disciplina = Professor::create([
             'user_id' => $professor_disciplina->id,
@@ -61,8 +62,9 @@ class UserSeed extends Seeder
         ////////////////////////////////////////////////////////////
         $professor_orientador = User::create([
             'name' => 'Orientador',
-            'email' => 'orientado@unitins.br',
+            'email' => 'orientador@unitins.br',
             'color' => '#673ab7',
+            'cpf' => '000.000.000-03',
             'phone' => '(63) 99999-6666',
             'password' => bcrypt('unitins2021'),
         ]);
