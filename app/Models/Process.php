@@ -9,7 +9,7 @@ class Process extends Model
     protected $table = 'processes';
 
     protected $fillable = [
-        'title', 'content', 'status', 'rating', 'student_id', 'advise_professor_id', 'semester_id',
+        'title', 'content', 'status', 'rating', 'student_id', 'advise_professor_id', 'semester_id', 'folder',
     ];
 
     protected $appends = ['status_name'];

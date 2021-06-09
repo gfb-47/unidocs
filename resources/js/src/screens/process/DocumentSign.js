@@ -16,11 +16,14 @@ export default function DocumentSign() {
   const fileName = location.state.name;
   const processId = location.state.processId;
   const termId = location.state.termId;
+  const username = location.state.username;
   React.useEffect(() => {
+
     WebViewer(
       {
         path: '/pdfsign/lib',
         initialDoc: `/storage/${link}`,
+        annotationUser: username
       },
       viewer.current,
     ).then((instance) => {
@@ -33,7 +36,6 @@ export default function DocumentSign() {
 
           onClick: async () => {
             try {
-
               dispatch(setLoading(true));
               const doc = docViewer.getDocument();
               const xfdfString = await annotManager.exportAnnotations();

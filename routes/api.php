@@ -44,8 +44,10 @@ Route::group(['prefix' => 'v1', 'namespace' => 'API'], function () {
         Route::put('changestatus/{id}/rejected', 'StatusController@rejected');
         Route::get('terms/{process_id}', 'TermController@index');
         Route::post('documentsign/document', 'TermController@signDocument');
+        Route::post('documentsend/file', 'TermController@sendDocument');
     });
     Route::group(['prefix' => 'public'], function () {
         Route::get('search/professor', 'PublicController@searchProfessors');
+        Route::get('/getusername', 'PublicController@getUsername');
     });
 });

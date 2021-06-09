@@ -29,6 +29,7 @@ import { setLoading } from '../../utils/actions';
 import { Context } from '../../components/Store';
 import { formatDistance, format } from 'date-fns';
 import ptBR from 'date-fns/locale/pt-BR';
+import axios from 'axios';
 
 
 const headCells = [
@@ -143,7 +144,8 @@ const useToolbarStyles = makeStyles((theme) => ({
   }
 }));
 
-const EnhancedTableToolbar = (props) => {
+
+const EnhancedTableToolbar = ({ onFileChanged }) => {
   const classes = useToolbarStyles();
 
   return (
@@ -158,6 +160,7 @@ const EnhancedTableToolbar = (props) => {
         className={classes.input}
         id="contained-button-file"
         multiple
+        onChange={onFileChanged}
         type="file"
       />
       <label htmlFor="contained-button-file">
@@ -218,6 +221,7 @@ export default function ProcessDocuments() {
   /**@type {{id:number}} */
   const { id } = useParams();
   const [terms, setTerms] = React.useState([]);
+  const [username, setUsername] = React.useState('');
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('active');
   const [page, setPage] = React.useState(0);
@@ -227,16 +231,22 @@ export default function ProcessDocuments() {
   const history = useHistory();
   const [, dispatch] = React.useContext(Context);
 
+  const fetchDocuments = async () => {
+    try {
+      dispatch(setLoading(true));
+      const username = await api.getUserName();
+      const terms = await api.getTerms(id);
+      setTerms(terms.data.data);
+      setUsername(username.data.name);
+    } catch (err) {
+      console.log(err)
+    } finally {
+      dispatch(setLoading(false));
+    }
+  }
 
   React.useEffect(() => {
-    dispatch(setLoading(true));
-
-    api.getTerms(id).then(res => {
-      const result = res.data.data;
-      setTerms(result);
-      dispatch(setLoading(false));
-
-    });
+    fetchDocuments()
   }, []);
 
   const handleRequestSort = (event, property) => {
@@ -273,6 +283,21 @@ export default function ProcessDocuments() {
     }
   }
 
+  const sendDocument = async (event) => {
+    let selectedFile = event.target.files[0];
+    try {
+      const formData = new FormData();
+      formData.set("file", selectedFile);
+      formData.append("process_id", id);
+      await axios.post(`${getUrl()}/api/v1/process/documentsend/file`, formData)
+    } catch (err) {
+      console.log(err)
+    } finally {
+      selectedFile = null;
+      fetchDocuments()
+    }
+  }
+
   // return focus to the button when we transitioned from !open -> open
   React.useEffect(() => {
     if (open !== false) {
@@ -280,8 +305,8 @@ export default function ProcessDocuments() {
     }
   }, [open]);
 
-  const sign = (link, name, process_id, term_id) => {
-    history.push('/unidocs/process/documentsign', { link, name, processId: process_id, termId: term_id })
+  const sign = (link, name, process_id, term_id, username) => {
+    history.push('/unidocs/process/documentsign', { link, name, processId: process_id, termId: term_id, username })
   }
 
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, terms.length - page * rowsPerPage);
@@ -290,7 +315,7 @@ export default function ProcessDocuments() {
     <div className={classes.root}>
       <Container>
         <Paper className={classes.paper}>
-          <EnhancedTableToolbar />
+          <EnhancedTableToolbar onFileChanged={sendDocument} />
           <TableContainer>
             <Table
               className={classes.table}
@@ -305,6 +330,7 @@ export default function ProcessDocuments() {
                 onRequestSort={handleRequestSort}
                 rowCount={terms.length}
               />
+
 
               <TableBody>
                 {stableSort(terms, getComparator(order, orderBy))
@@ -367,7 +393,7 @@ export default function ProcessDocuments() {
                                 <Paper>
                                   <ClickAwayListener onClickAway={handleClose}>
                                     <MenuList autoFocusItem={open !== false} id="menu-list-grow" onKeyDown={handleListKeyDown}>
-                                      <MenuItem onClick={() => sign(row.file_directory || row.original_directory, row.name, id, row.id)}>Assinar</MenuItem>
+                                      <MenuItem onClick={() => sign(row.file_directory || row.original_directory, row.name, id, row.id, username)}>Assinar</MenuItem>
                                       <MenuItem onClick={handleClose}>Desativar</MenuItem>
                                       <Divider light />
                                       <MenuItem onClick={handleClose}>Excluir</MenuItem>

@@ -3,12 +3,14 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Professor;
+use App\Models\User;
+use Illuminate\Http\Request;
 
 class PublicController extends Controller
 {
-    public function searchProfessors(Request $request) {
+    public function searchProfessors(Request $request)
+    {
         $query = Professor::join('users', 'users.id', '=', 'professors.user_id')
             ->orderBy('name', 'asc');
 
@@ -19,5 +21,12 @@ class PublicController extends Controller
         $cities = $query->select('professors.id', 'users.name')->get();
 
         return response()->json($cities, 200);
+    }
+
+    public function getUsername(Request $request)
+    {
+        $user = User::select('name')->find($request->header()['user'][0]);
+        return response()->json($user, 200);
+
     }
 }

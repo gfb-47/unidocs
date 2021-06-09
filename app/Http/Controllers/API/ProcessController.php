@@ -88,12 +88,13 @@ class ProcessController extends BaseController
         DB::transaction(function () use ($inputs) {
             $files = File::files(public_path() . '/defaultdocs');
 
-            $process = Process::create($inputs);
-            $unique = uniqid($process->id);
+            $unique = uniqid(rand());
             $source = array('/', '\\', '?', '*', '<', '>', '"', ':', '|');
             $replace = array('-', '-', '-', '-', '-', '-', '-', '-', '-');
-            $folder_name = str_replace($source, $replace, $process->title);
+            $folder_name = str_replace($source, $replace, $inputs['title']);
             $directory = "process/{$unique}/{$folder_name}";
+            $inputs['folder'] = $directory;
+            $process = Process::create($inputs);
             Storage::disk('public')->makeDirectory($directory);
 
             foreach ($files as $file) {

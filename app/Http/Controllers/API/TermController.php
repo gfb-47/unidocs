@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\BaseController as BaseController;
+use App\Models\Process;
 use App\Models\Term;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -47,10 +48,33 @@ class TermController extends BaseController
                 $folder = substr($term->original_directory, 0, strrpos($term->original_directory, '/'));
                 $link = $request->file->store($folder, 'public');
                 $term->fill(['file_directory' => $link])->save();
-                if (!$term->sign || isset($term->sign)) {
+                if ($term->sign == null || isset($term->sign)) {
                     $term->sign()->attach($user_id);
                 }
             }
+            DB::commit();
+
+            return $this->sendResponse([], 'Saved With Sucess');
+        } catch (Exception $e) {
+            DB::rollback();
+
+            return $this->sendError($e->getMessage());
+
+        }
+    }
+
+    public function sendDocument(Request $request)
+    {
+
+        try {
+            DB::beginTransaction();
+            $process = Process::find($request->process_id);
+            $link = $request->file->store($process->folder, 'public');
+            Term::create([
+                'name' => $request->file->getClientOriginalName(),
+                'original_directory' => $link,
+                'process_id' => $request->process_id,
+            ]);
             DB::commit();
 
             return $this->sendResponse([], 'Saved With Sucess');

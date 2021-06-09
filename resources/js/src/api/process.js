@@ -14,4 +14,6 @@ export default {
 
   updateProcess: (post, id) => axios.put(`${BASE_URL}/process/${id}`, post),
 
+  getUserName: () => axios.get(`${BASE_URL}/public/getusername`)
+
 }
