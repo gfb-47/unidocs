@@ -56,6 +56,16 @@ export const lastnameValidation = {
   required: 'O campo sobrenome não pode ficar vazio.'
 }
 
+export const justifyValidation = {
+  required: 'O campo justificativa não pode ficar vazio.'
+}
+
+export const ratingValidation = {
+  required: 'O campo nota não pode ficar vazio.',
+  min: 0,
+  max: 10
+}
+
 export const passwordValidation = {
   required: 'Informe uma senha.',
   minLength: {

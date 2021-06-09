@@ -25,6 +25,9 @@ import { is } from '../../utils/permissions';
 import { setLoading } from '../../utils/actions';
 import { Context } from '../../components/Store';
 import { Controller, useForm } from 'react-hook-form'
+import Input from '@material-ui/core/Input';
+import * as validation from '../../utils/validation';
+import { toast } from 'react-toastify';
 
 const useStyles = makeStyles((theme) => ({
   margin: {
@@ -96,13 +99,17 @@ const useStyles = makeStyles((theme) => ({
 export default function ProcessDetails() {
   const classes = useStyles();
   const [openAcceptOrientation, setOpenAcceptOrientation] = React.useState(false);
+  const [openDefenseDialog, setOpenDefenseDialog] = React.useState(false);
   const [openRejectOrientation, setOpenRejectOrientation] = React.useState(false);
+  const [openFinishOrientation, setOpenFinishOrientation] = React.useState(false);
   const [openChangeGrade, setOpenChangeGrade] = React.useState(false);
   const { id } = useParams();
   const [, dispatch] = React.useContext(Context);
+  const { handleSubmit, control, reset } = useForm();
 
   const [processShow, setProcess] = React.useState(null);
-  React.useEffect(() => {
+
+  const fetchProcessDetails = () => {
     dispatch(setLoading(true));
 
     api.showProcess(id).then(res => {
@@ -111,10 +118,11 @@ export default function ProcessDetails() {
       dispatch(setLoading(false));
 
     });
+  }
+
+  React.useEffect(() => {
+    fetchProcessDetails()
   }, []);
-  const handleChange = (event) => {
-    setState({ ...state, [event.target.name]: event.target.checked });
-  };
 
   const [chipData, setChipData] = React.useState([
     { key: 0, label: 'Angular', color: '#673ab7' },
@@ -136,6 +144,14 @@ export default function ProcessDetails() {
     setOpenRejectOrientation(true);
   };
 
+  const handleOpenDefenseDialog = () => {
+    setOpenDefenseDialog(true);
+  };
+
+  const handleCloseDefenseDialog = () => {
+    setOpenDefenseDialog(false);
+  };
+
   const handleCloseRejectOrientation = () => {
     setOpenRejectOrientation(false);
   };
@@ -147,6 +163,181 @@ export default function ProcessDetails() {
   const handleCloseChangeGrade = () => {
     setOpenChangeGrade(false);
   };
+
+  const handleOpenFinishOrientation = () => {
+    setOpenFinishOrientation(true);
+  };
+
+  const handleCloseFinishOrientation = () => {
+    setOpenFinishOrientation(false);
+  };
+
+  const onAcceptSubmit = async data => {
+    try {
+      dispatch(setLoading(true))
+      await api.acceptOrientation(data, id);
+      toast.success('👍 Orientação confirmada Com Sucesso', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      reset({ confirmed: '' });
+
+    } catch (e) {
+      toast.error('❌ Erro ao confirmar Orientação', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    } finally {
+      dispatch(setLoading(false))
+      fetchProcessDetails()
+      handleCloseAcceptOrientation()
+
+    }
+  }
+
+  const onRejectSubmit = async data => {
+    try {
+      dispatch(setLoading(true))
+      await api.rejectOrientation(data, id);
+      toast.success('👍 Orientação rejeitada Com Sucesso', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      reset({ justify: '' });
+
+    } catch (e) {
+      toast.error('❌ Erro ao rejeitar Orientação', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    } finally {
+      dispatch(setLoading(false))
+      fetchProcessDetails()
+      handleCloseRejectOrientation()
+
+    }
+  }
+
+  const onDefenseSubmit = async data => {
+    try {
+      dispatch(setLoading(true))
+      await api.processToDefense(data, id);
+      toast.success('👍 Processo Enviado para defesa', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      reset({ justify: '' });
+
+    } catch (e) {
+      toast.error('❌ Erro ao enviar processo para Defesa', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    } finally {
+      dispatch(setLoading(false))
+      fetchProcessDetails()
+      handleCloseDefenseDialog()
+
+    }
+  }
+
+  const onRatingSubmit = async data => {
+    try {
+      dispatch(setLoading(true))
+      data.rating = parseInt(data.rating, 10);
+      await api.processRating(data, id);
+      toast.success('👍 Processo Enviado para defesa', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      reset({ justify: '' });
+
+    } catch (e) {
+      toast.error('❌ Erro ao enviar processo para Defesa', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    } finally {
+      dispatch(setLoading(false))
+      fetchProcessDetails()
+      handleCloseChangeGrade()
+
+    }
+  }
+
+  const onFinishSubmit = async data => {
+    try {
+      dispatch(setLoading(true))
+      data.rating = parseInt(data.rating, 10);
+      await api.processFinish(data, id);
+      toast.success('👍 Processo Enviado para defesa', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      reset({ justify: '' });
+
+    } catch (e) {
+      toast.error('❌ Erro ao enviar processo para Defesa', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    } finally {
+      dispatch(setLoading(false))
+      fetchProcessDetails()
+      handleCloseFinishOrientation()
+
+    }
+  }
 
   return (
     <div className={classes.container}>
@@ -304,6 +495,7 @@ export default function ProcessDetails() {
                 variant='contained'
                 color='primary'
                 className={classes.margin}
+                onClick={handleOpenDefenseDialog}
               >
                 Apto Para Defesa
               </Button>}
@@ -324,7 +516,7 @@ export default function ProcessDetails() {
                 Formar Banca
               </Button>}
               {is('administrador | professor_orientador') && processShow?.status == 5 && <Button
-                href='workplan'
+                onClick={handleOpenFinishOrientation}
                 variant='contained'
                 color='primary'
                 className={classes.margin}
@@ -360,32 +552,22 @@ export default function ProcessDetails() {
         <DialogTitle id="form-dialog-title">Aceitar Orientação</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Preencha os campos abaixo para aceitar fazer a orientação
+            <span style={{ color: 'red' }} >Atenção, esta ação é irreversível, tem certeza que deseja confirmar a orientação para este processo?</span>
           </DialogContentText>
-          <TextField
-            id="email"
-            className={classes.margin}
-            autoFocus
-            variant="outlined"
-            label="E-mail"
-            fullWidth
-          />
-          <TextField
-            id="password"
-            className={classes.margin}
-            variant="outlined"
-            label="Nova Senha"
-            fullWidth
-          />
+
+          <DialogActions>
+            <Button onClick={handleCloseAcceptOrientation} color="secondary">
+              Cancelar
+          </Button>
+            <Button onClick={() => onAcceptSubmit({ confirmed: true })} color="primary" type="button">
+              Aceitar Orientação
+          </Button>
+
+          </DialogActions>
+
         </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseAcceptOrientation} color="secondary">
-            Cancelar
-          </Button>
-          <Button onClick={handleCloseAcceptOrientation} color="primary" type="button">
-            Aceitar Orientação
-          </Button>
-        </DialogActions>
+
+
       </Dialog>
 
       <Dialog
@@ -398,25 +580,65 @@ export default function ProcessDetails() {
           <DialogContentText>
             Preencha o campo abaixo para rejeitar a orientação
           </DialogContentText>
-          <TextField
-            id="reason"
-            className={classes.margin}
-            autoFocus
-            multiline
-            rows={8}
-            variant="outlined"
-            label="Justificativa"
-            fullWidth
+          <Controller
+            name="justify"
+            control={control}
+            defaultValue=""
+            rules={validation.justifyValidation}
+            render={({ field: { onChange, value }, fieldState: { error } }) => (
+              <TextField
+                id="reason"
+                className={classes.margin}
+                autoFocus
+                multiline
+                rows={8}
+                error={!!error}
+                helperText={error ? error.message : null}
+                variant="outlined"
+                label="Justificativa"
+                fullWidth
+                value={value}
+                onChange={onChange}
+              />
+            )}
           />
+
+
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseRejectOrientation} color="secondary">
             Cancelar
           </Button>
-          <Button onClick={handleCloseRejectOrientation} color="primary" type="button">
+          <Button onClick={handleSubmit(onRejectSubmit)} color="primary" type="button">
             Rejeitar Orientação
           </Button>
         </DialogActions>
+      </Dialog>
+
+      <Dialog
+        open={openDefenseDialog}
+        onClose={handleCloseDefenseDialog}
+        aria-labelledby="form-dialog-title"
+      >
+        <DialogTitle id="form-dialog-title">Enviar para defesa</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            <span style={{ color: 'red' }} >Atenção, esta ação é irreversível. Tem certeza que deseja enviar o processo do aluno para criação das bancas</span>
+          </DialogContentText>
+
+          <DialogActions>
+            <Button onClick={handleCloseDefenseDialog} color="secondary">
+              Cancelar
+          </Button>
+            <Button onClick={() => onDefenseSubmit({ confirmed: true })} color="primary" type="button">
+              Enviar para defesa do processo
+          </Button>
+
+          </DialogActions>
+
+        </DialogContent>
+
+
       </Dialog>
 
       <Dialog
@@ -429,24 +651,67 @@ export default function ProcessDetails() {
           <DialogContentText>
             Preencha a nota do processo
           </DialogContentText>
-          <TextField
-            id="grade"
-            className={classes.margin}
-            autoFocus
-            variant="outlined"
-            label="Nota"
-            fullWidth
+          <Controller
+            name="rating"
+            control={control}
+            defaultValue=""
+            rules={validation.ratingValidation}
+            render={({ field: { onChange, value }, fieldState: { error } }) => (
+              <Input
+                className={classes.margin}
+                autoFocus
+                error={!!error}
+                variant="outlined"
+                placeholder="Nota"
+                fullWidth
+                value={value}
+                onChange={onChange}
+                inputProps={{
+                  step: 0.1,
+                  min: 0,
+                  max: 10,
+                  type: 'number',
+                }}
+              />
+            )}
           />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseChangeGrade} color="secondary">
             Cancelar
           </Button>
-          <Button onClick={handleCloseChangeGrade} color="primary" type="button">
+          <Button onClick={handleSubmit(onRatingSubmit)} color="primary" type="button">
             Confirmar
           </Button>
         </DialogActions>
       </Dialog>
+
+      <Dialog
+        open={openFinishOrientation}
+        onClose={handleCloseFinishOrientation}
+        aria-labelledby="form-dialog-title"
+      >
+        <DialogTitle id="form-dialog-title">Finalizar Processo</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            <span style={{ color: 'red' }} >Atenção, esta ação é irreversível. Tem certeza que deseja finalizar o processo deste aluno?</span>
+          </DialogContentText>
+
+          <DialogActions>
+            <Button onClick={handleCloseFinishOrientation} color="secondary">
+              Cancelar
+          </Button>
+            <Button onClick={() => onFinishSubmit({ confirmed: true })} color="primary" type="button">
+              Finalizar Processo
+          </Button>
+
+          </DialogActions>
+
+        </DialogContent>
+
+
+      </Dialog>
+
     </div>
 
   )

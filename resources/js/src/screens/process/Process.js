@@ -107,19 +107,11 @@ export default function Process(props) {
     }
   }, [open]);
 
-  const handleChange = (event) => {
-    setState({ ...state, [event.target.name]: event.target.checked });
-  };
+  
 
   const { termAcceptance, termPlagiarism, termReponsability } = state;
 
-  const handleSemester = (event) => {
-    setSemester(event.target.value);
-  };
-
-  const handleProfessor = (event) => {
-    setProfessor(event.target.value);
-  };
+ 
 
   const [chipData, setChipData] = React.useState([
     { key: 0, label: 'Angular', color: '#673ab7' },

@@ -14,6 +14,17 @@ export default {
 
   updateProcess: (post, id) => axios.put(`${BASE_URL}/process/${id}`, post),
 
-  getUserName: () => axios.get(`${BASE_URL}/public/getusername`)
+  acceptOrientation: (data, id) => axios.put(`${BASE_URL}/process/changestatus/${id}/acceptorientation`, data),
+
+  rejectOrientation: (data, id) => axios.put(`${BASE_URL}/process/changestatus/${id}/rejectorientation`, data),
+
+  processToDefense: (data, id) => axios.put(`${BASE_URL}/process/changestatus/${id}/todefense`, data),
+
+  processRating: (data, id) => axios.put(`${BASE_URL}/process/changestatus/${id}/ratingprocess`, data),
+
+  processFinish: (data, id) => axios.put(`${BASE_URL}/process/changestatus/${id}/finalizeprocess`, data),
+
+  getUserName: () => axios.get(`${BASE_URL}/public/getusername`),
+
 
 }
