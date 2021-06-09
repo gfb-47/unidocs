@@ -37,11 +37,12 @@ Route::group(['prefix' => 'v1', 'namespace' => 'API'], function () {
     Route::apiResource('jury', 'JuryController')->except(['create', 'edit']);
 
     Route::group(['prefix' => 'process'], function () {
-        Route::put('changestatus/{id}/semester_professor', 'StatusController@toSemesterProfessor');
-        Route::put('changestatus/{id}/advise_professor', 'StatusController@toAdviseProfessor');
-        Route::put('changestatus/{id}/development', 'StatusController@toDevelopment');
-        Route::put('changestatus/{id}/approved', 'StatusController@approved');
-        Route::put('changestatus/{id}/rejected', 'StatusController@rejected');
+        Route::put('changestatus/{id}/semesterprofessor', 'StatusController@toSemesterProfessor');
+        Route::put('changestatus/{id}/acceptorientation', 'StatusController@acceptOrientation');
+        Route::put('changestatus/{id}/rejectOrientation', 'StatusController@rejectOrientation');
+        Route::put('changestatus/{id}/todefense', 'StatusController@toDefense');
+        Route::put('changestatus/{id}/ratingprocess', 'StatusController@ratingProcess');
+        Route::put('changestatus/{id}/finalizeprocess', 'StatusController@finalizeProcess');
         Route::get('terms/{process_id}', 'TermController@index');
         Route::post('documentsign/document', 'TermController@signDocument');
         Route::post('documentsend/file', 'TermController@sendDocument');
