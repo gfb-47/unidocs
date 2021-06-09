@@ -39,7 +39,7 @@ Route::group(['prefix' => 'v1', 'namespace' => 'API'], function () {
     Route::group(['prefix' => 'process'], function () {
         Route::put('changestatus/{id}/semesterprofessor', 'StatusController@toSemesterProfessor');
         Route::put('changestatus/{id}/acceptorientation', 'StatusController@acceptOrientation');
-        Route::put('changestatus/{id}/rejectOrientation', 'StatusController@rejectOrientation');
+        Route::put('changestatus/{id}/rejectorientation', 'StatusController@rejectOrientation');
         Route::put('changestatus/{id}/todefense', 'StatusController@toDefense');
         Route::put('changestatus/{id}/ratingprocess', 'StatusController@ratingProcess');
         Route::put('changestatus/{id}/finalizeprocess', 'StatusController@finalizeProcess');
