@@ -26,3 +26,5 @@ Route::get('/logout', function () {
 });
 
 Route::get('/unidocs/{any?}', 'HomeController@index')->where('any', '^(?!api).*$')->middleware('auth')->name('home');
+
+Route::get('/report/minute/{id}', 'WEB\MinutePresentationReportController')->middleware('auth');
