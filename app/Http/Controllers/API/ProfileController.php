@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\API;
 
-use Exception;
 use App\Http\Controllers\BaseController as BaseController;
 use App\Models\User;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -12,11 +12,10 @@ use Illuminate\Support\Facades\Validator;
 class ProfileController extends BaseController
 {
 
-
     public function show(Request $request)
     {
 
-        $item = User::with('professor.knowledges', 'student')->findOrFail($request->header()['user'][0]);
+        $item = User::with('professor.knowledges', 'student')->findOrFail(auth()->id());
         return $this->sendResponse($item);
     }
 
@@ -61,7 +60,7 @@ class ProfileController extends BaseController
 
         try {
             $inputs = $request->except('knowledgeareas');
-            $item = User::with('professor')->findOrFail($request->header()['user'][0]);
+            $item = User::with('professor')->findOrFail(auth()->id());
             $item->fill($inputs);
             $item->save();
 
@@ -89,7 +88,7 @@ class ProfileController extends BaseController
 
         try {
             $inputs['password'] = bcrypt($inputs['data']['password']);
-            $item = User::with('professor')->findOrFail($request->header()['user'][0]);
+            $item = User::with('professor')->findOrFail(auth()->id());
             $item->fill($inputs);
             $item->save();
 

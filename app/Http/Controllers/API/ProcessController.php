@@ -17,7 +17,7 @@ class ProcessController extends BaseController
 
     public function index(Request $request)
     {
-        $user = User::with('student')->find($request->header()['user'][0]);
+        $user = User::with('student')->find(auth()->id());
 
         $data = Process::select("processes.*")
             ->with('adviseProfessor.user', 'semester', 'knowledgeAreas', 'student.user')
@@ -36,7 +36,7 @@ class ProcessController extends BaseController
 
     public function indexProcessSemesters(Request $request)
     {
-        $user = User::with('student')->find($request->header()['user'][0]);
+        $user = User::with('student')->find(auth()->id());
 
         $data = Process::select("processes.*")
             ->with('adviseProfessor.user', 'semester', 'knowledgeAreas', 'student.user')
@@ -50,7 +50,7 @@ class ProcessController extends BaseController
 
     public function show(Request $request, $id)
     {
-        $user = User::with('student', 'professor')->find($request->header()['user'][0]);
+        $user = User::with('student', 'professor')->find(auth()->id());
 
         $item = Process::select("processes.*", "semesters.professor_id")
             ->with('adviseProfessor.user', 'semester', 'knowledgeAreas', 'jury')
@@ -83,7 +83,7 @@ class ProcessController extends BaseController
         }
 
         $inputs = $request->all();
-        $user = User::with('student')->find($request->header()['user'][0]);
+        $user = User::with('student')->find(auth()->id());
         $inputs['student_id'] = $user->student->id;
         DB::transaction(function () use ($inputs) {
             $files = File::files(public_path() . '/defaultdocs');

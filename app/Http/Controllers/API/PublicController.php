@@ -25,7 +25,7 @@ class PublicController extends Controller
 
     public function getUsername(Request $request)
     {
-        $user = User::select('name')->find($request->header()['user'][0]);
+        $user = User::select('name')->find(auth()->id());
         return response()->json($user, 200);
 
     }

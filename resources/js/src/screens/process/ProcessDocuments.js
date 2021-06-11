@@ -96,10 +96,10 @@ function EnhancedTableHead(props) {
         ))}
         <TableCell align='left' padding='default'>
           Última Atualização
-                </TableCell>
+        </TableCell>
         <TableCell align='right' padding='default'>
           Ações
-                </TableCell>
+        </TableCell>
       </TableRow>
     </TableHead>
   );
@@ -371,7 +371,7 @@ export default function ProcessDocuments() {
                         </TableCell>
                         <TableCell align="left">
                           <span>
-                            {formatDistance(new Date(row.updated_at), new Date(), { locale: ptBR })}
+                            {formatDistance(new Date(row.updated_at), new Date(), { locale: ptBR })} atrás
                           </span>
                         </TableCell>
                         <TableCell align="right">

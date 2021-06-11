@@ -14,7 +14,7 @@ class TermController extends BaseController
 {
     public function index(Request $request, $process_id)
     {
-        $user = User::with('student', 'professor')->find($request->header()['user'][0]);
+        $user = User::with('student', 'professor')->find(auth()->id());
 
         $data = Term::select('terms.*')
             ->with('sign')
@@ -34,7 +34,7 @@ class TermController extends BaseController
 
     public function signDocument(Request $request)
     {
-        $user_id = $request->header()['user'][0];
+        $user_id = auth()->id();
         try {
             DB::beginTransaction();
 
@@ -48,9 +48,11 @@ class TermController extends BaseController
                 $folder = substr($term->original_directory, 0, strrpos($term->original_directory, '/'));
                 $link = $request->file->store($folder, 'public');
                 $term->fill(['file_directory' => $link])->save();
-                if ($term->sign == null || isset($term->sign)) {
+
+                if (sizeof($term->sign) == 0) {
                     $term->sign()->attach($user_id);
                 }
+
             }
             DB::commit();
 

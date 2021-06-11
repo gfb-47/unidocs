@@ -62,7 +62,7 @@ class StatusController extends BaseController
 
             $student = User::select('users.email', 'users.name')->join('students', 'students.user_id', '=', 'users.id')->where('students.id', $process->student_id)->first();
 
-            $advise_professor = User::select('users.email', 'users.name')->where('id', $request->header()['user'][0])->first();
+            $advise_professor = User::select('users.email', 'users.name')->where('id', auth()->id())->first();
 
             $semester_professor = User::select('users.email', 'users.name')
                 ->join('professors', 'professors.user_id', '=', 'users.id')
@@ -97,7 +97,7 @@ class StatusController extends BaseController
 
             $student = User::select('users.email', 'users.name')->join('students', 'students.user_id', '=', 'users.id')->where('students.id', $process->student_id)->first();
 
-            $advise_professor = User::select('users.email', 'users.name')->where('id', $request->header()['user'][0])->first();
+            $advise_professor = User::select('users.email', 'users.name')->where('id', auth()->id())->first();
 
             $semester_professor = User::select('users.email', 'users.name')
                 ->join('professors', 'professors.user_id', '=', 'users.id')
@@ -132,7 +132,7 @@ class StatusController extends BaseController
 
             $student = User::select('users.email', 'users.name')->join('students', 'students.user_id', '=', 'users.id')->where('students.id', $process->student_id)->first();
 
-            $advise_professor = User::select('users.email', 'users.name')->where('id', $request->header()['user'][0])->first();
+            $advise_professor = User::select('users.email', 'users.name')->where('id', auth()->id())->first();
 
             $semester_professor = User::select('users.email', 'users.name')
                 ->join('professors', 'professors.user_id', '=', 'users.id')
@@ -166,7 +166,7 @@ class StatusController extends BaseController
             $process->rating = $request->rating;
             $student = User::select('users.email', 'users.name')->join('students', 'students.user_id', '=', 'users.id')->where('students.id', $process->student_id)->first();
 
-            $advise_professor = User::select('users.email', 'users.name')->where('id', $request->header()['user'][0])->first();
+            $advise_professor = User::select('users.email', 'users.name')->where('id', auth()->id())->first();
 
             $semester_professor = User::select('users.email', 'users.name')
                 ->join('professors', 'professors.user_id', '=', 'users.id')
@@ -200,7 +200,7 @@ class StatusController extends BaseController
 
             $student = User::select('users.email', 'users.name')->join('students', 'students.user_id', '=', 'users.id')->where('students.id', $process->student_id)->first();
 
-            $advise_professor = User::select('users.email', 'users.name')->where('id', $request->header()['user'][0])->first();
+            $advise_professor = User::select('users.email', 'users.name')->where('id', auth()->id())->first();
 
             $semester_professor = User::select('users.email', 'users.name')
                 ->join('professors', 'professors.user_id', '=', 'users.id')
