@@ -2,6 +2,7 @@ import React from 'react'
 import api from '../../api/process';
 import { useParams } from 'react-router-dom';
 import { makeStyles } from "@material-ui/core/styles";
+import ModalAdvisor from "./ModalAdvisor";
 import {
   Button,
   Dialog,
@@ -108,6 +109,17 @@ export default function ProcessDetails() {
   const { handleSubmit, control, reset } = useForm();
 
   const [processShow, setProcess] = React.useState(null);
+  
+  const [openAdvisor, setOpenAdvisor] = React.useState(false);
+  
+  const handleOpenAdvisor = () => {
+    setOpenAdvisor(true);
+  };
+
+  const handleCloseAdvisor = () => {
+    setOpenAdvisor(false);
+  };
+
 
   const fetchProcessDetails = () => {
     dispatch(setLoading(true));
@@ -501,6 +513,7 @@ export default function ProcessDetails() {
               </Button>}
               {is('administrador | professor_disciplina') && processShow?.status == 1 && <Button
                 href='#'
+                onClick={handleOpenAdvisor}
                 variant='contained'
                 color='primary'
                 className={classes.margin}
@@ -711,7 +724,33 @@ export default function ProcessDetails() {
 
 
       </Dialog>
-
+      <Dialog
+        open={openAdvisor}
+        onClose={handleCloseAdvisor}
+        aria-labelledby="form-dialog-title"
+        fullWidth = 'false'
+        maxWidth = 'lg'
+      >
+        <DialogTitle id="form-dialog-title">Selecionar Professor Orientador</DialogTitle>
+        <DialogContent>
+          <Grid
+            container
+            direction="row"
+            justify="space-between"
+            alignItems="center"
+          >
+          <TextField
+          id="standard-helperText"
+          label="Nome do Professor"
+          helperText="Filtre o professor pelo nome"
+          />
+          <Button variant="contained" color="primary">
+            Finalizar Seleção
+          </Button>
+          </Grid>
+          <ModalAdvisor></ModalAdvisor>
+        </DialogContent>
+      </Dialog>
     </div>
 
   )
