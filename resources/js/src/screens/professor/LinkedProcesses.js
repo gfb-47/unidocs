@@ -201,8 +201,8 @@ const useStyles = makeStyles((theme) => ({
 export default function LinkedProcesses() {
   {/* Variaveis sendo inicializadas */ }
   const classes = useStyles();
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const open = Boolean(anchorEl);
+  const anchorRef = React.useRef([]);
+  const [open, setOpen] = React.useState(false);
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('active');
   const [page, setPage] = React.useState(0);
@@ -241,12 +241,12 @@ export default function LinkedProcesses() {
   };
 
 
-  const handleMenu = (event) => {
-    setAnchorEl(event.currentTarget);
+  const handleMenu = (index) => {
+    setOpen(index);
   };
 
   const handleClose = () => {
-    setAnchorEl(null);
+    setOpen(false);
   };
 
   const showProcess = (id) => {
@@ -326,13 +326,14 @@ export default function LinkedProcesses() {
                          que todas as linhas precisam ter */}
                         <TableCell align="right">
                           <IconButton
-                            onClick={handleMenu}
+                            onClick={() => handleMenu(index)}
+                            ref={ref => anchorRef.current[index] = ref}
                           >
                             <MenuIcon />
                           </IconButton>
                           <Menu
                             id="item-menu"
-                            anchorEl={anchorEl}
+                            anchorEl={anchorRef.current[index]}
                             anchorOrigin={{
                               vertical: 'top',
                               horizontal: 'right',
@@ -342,8 +343,8 @@ export default function LinkedProcesses() {
                               vertical: 'top',
                               horizontal: 'right',
                             }}
-                            open={open}
-                            onClose={handleClose}
+                            open={open === index}
+                            onClose={() => handleClose()}
                           >
                             <MenuItem onClick={() => showProcess(row.id)}>Visualizar Processo</MenuItem>
                           </Menu>
