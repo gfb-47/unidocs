@@ -487,7 +487,8 @@ export default function ProcessDetails() {
                 Aceitar Orientação
               </Button>}
               {is('administrador | professor_disciplina') && processShow?.status == 4 && processShow?.jury != null && <Button
-                href='#'
+                href={`/report/minute/${id}`}
+                target="_blank"
                 variant='contained'
                 color='primary'
                 className={classes.margin}

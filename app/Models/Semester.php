@@ -7,18 +7,26 @@ use Illuminate\Database\Eloquent\Model;
 class Semester extends Model
 {
     protected $fillable = [
-        'name', 'active', 'subject_id','course_id', 'professor_id'
+        'name', 'active', 'subject_id', 'course_id', 'professor_id',
     ];
 
-    public function students() {
+    public function students()
+    {
         return $this->belongsToMany(Student::class, 'semester_students', 'semester_id', 'student_id');
     }
-    
-    public function professor() {
+
+    public function professor()
+    {
         return $this->belongsTo(Professor::class, 'professor_id');
     }
-    
-    public function process() {
+
+    public function course()
+    {
+        return $this->belongsTo(Course::class, 'course_id');
+    }
+
+    public function process()
+    {
         return $this->hasMany(Process::class);
     }
 }
