@@ -109,9 +109,9 @@ export default function ProcessDetails() {
   const { handleSubmit, control, reset } = useForm();
 
   const [processShow, setProcess] = React.useState(null);
-  
+
   const [openAdvisor, setOpenAdvisor] = React.useState(false);
-  
+
   const handleOpenAdvisor = () => {
     setOpenAdvisor(true);
   };
@@ -184,6 +184,38 @@ export default function ProcessDetails() {
     setOpenFinishOrientation(false);
   };
 
+  const onOrientationSubmit = async data => {
+    try {
+      dispatch(setLoading(true))
+      await api.orientationSet(data, id);
+      toast.success('👍 Professor Orientador definido com Sucesso', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      reset({ confirmed: '' });
+
+    } catch (e) {
+      toast.error('❌ Erro ao confirmar Professor Orientador', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    } finally {
+      dispatch(setLoading(false))
+      fetchProcessDetails()
+      handleCloseAdvisor()
+
+    }
+  }
   const onAcceptSubmit = async data => {
     try {
       dispatch(setLoading(true))
@@ -366,7 +398,7 @@ export default function ProcessDetails() {
           </Typography>
           <Typography className={classes.subtitle}>
             Última atualização: September 14, 2016
-            </Typography>
+          </Typography>
         </div>
 
         <Divider light />
@@ -504,7 +536,6 @@ export default function ProcessDetails() {
                 Avaliar Defesa
               </Button>}
               {is('administrador | professor_orientador') && processShow?.status == 3 && <Button
-                href='#'
                 variant='contained'
                 color='primary'
                 className={classes.margin}
@@ -513,7 +544,6 @@ export default function ProcessDetails() {
                 Apto Para Defesa
               </Button>}
               {is('administrador | professor_disciplina') && processShow?.status == 1 && <Button
-                href='#'
                 onClick={handleOpenAdvisor}
                 variant='contained'
                 color='primary'
@@ -572,10 +602,10 @@ export default function ProcessDetails() {
           <DialogActions>
             <Button onClick={handleCloseAcceptOrientation} color="secondary">
               Cancelar
-          </Button>
+            </Button>
             <Button onClick={() => onAcceptSubmit({ confirmed: true })} color="primary" type="button">
               Aceitar Orientação
-          </Button>
+            </Button>
 
           </DialogActions>
 
@@ -643,10 +673,10 @@ export default function ProcessDetails() {
           <DialogActions>
             <Button onClick={handleCloseDefenseDialog} color="secondary">
               Cancelar
-          </Button>
+            </Button>
             <Button onClick={() => onDefenseSubmit({ confirmed: true })} color="primary" type="button">
               Enviar para defesa do processo
-          </Button>
+            </Button>
 
           </DialogActions>
 
@@ -714,10 +744,10 @@ export default function ProcessDetails() {
           <DialogActions>
             <Button onClick={handleCloseFinishOrientation} color="secondary">
               Cancelar
-          </Button>
+            </Button>
             <Button onClick={() => onFinishSubmit({ confirmed: true })} color="primary" type="button">
               Finalizar Processo
-          </Button>
+            </Button>
 
           </DialogActions>
 
@@ -729,27 +759,13 @@ export default function ProcessDetails() {
         open={openAdvisor}
         onClose={handleCloseAdvisor}
         aria-labelledby="form-dialog-title"
-        fullWidth = 'false'
-        maxWidth = 'lg'
+        fullWidth={false}
+        maxWidth='lg'
       >
         <DialogTitle id="form-dialog-title">Selecionar Professor Orientador</DialogTitle>
         <DialogContent>
-          <Grid
-            container
-            direction="row"
-            justify="space-between"
-            alignItems="center"
-          >
-          <TextField
-          id="standard-helperText"
-          label="Nome do Professor"
-          helperText="Filtre o professor pelo nome"
-          />
-          <Button variant="contained" color="primary">
-            Finalizar Seleção
-          </Button>
-          </Grid>
-          <ModalAdvisor></ModalAdvisor>
+
+          <ModalAdvisor professor={processShow?.professor_id} handleProfessorChange={onOrientationSubmit} />
         </DialogContent>
       </Dialog>
     </div>

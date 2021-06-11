@@ -196,6 +196,7 @@ export default function Professors() {
 
   //BUSCANDO NO BANCO DE DADOS
   const [professors, setProfessors] = React.useState([]);
+  
   const fetchProfessors = () => {
     dispatch(setLoading(true));
     api.getAllProfessors().then(res => {
@@ -313,7 +314,7 @@ export default function Professors() {
                         {/* Esse <TableCell/> representa o <IconButton/>
                          que todas as linhas precisam ter */}
                         <TableCell align="right">
-                          <IconDropdown id={row.id} onClose={fetchProfessors} type='professor' />
+                          <IconDropdown id={row.user_id} onClose={fetchProfessors} type='professor' />
                         </TableCell>
                       </TableRow>
                     );

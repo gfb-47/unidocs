@@ -14,6 +14,8 @@ export default {
 
   updateProcess: (post, id) => axios.put(`${BASE_URL}/process/${id}`, post),
 
+  orientationSet: (data, id) => axios.put(`${BASE_URL}/process/changestatus/${id}/semesterprofessor`, data),
+
   acceptOrientation: (data, id) => axios.put(`${BASE_URL}/process/changestatus/${id}/acceptorientation`, data),
 
   rejectOrientation: (data, id) => axios.put(`${BASE_URL}/process/changestatus/${id}/rejectorientation`, data),

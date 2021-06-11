@@ -10,7 +10,10 @@ import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
-import { Avatar, Container } from '@material-ui/core';
+import {
+  Avatar, Container, Grid, TextField,
+  Button,
+} from '@material-ui/core';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
@@ -18,21 +21,12 @@ import Checkbox from '@material-ui/core/Checkbox';
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
 import Chip from '@material-ui/core/Chip';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Switch from '@material-ui/core/Switch';
 import DeleteIcon from '@material-ui/icons/Delete';
 import FilterListIcon from '@material-ui/icons/FilterList';
+import api from '../../api/professor';
+import { Context } from '../../components/Store';
+import { setLoading } from '../../utils/actions';
 
-function createData(professores, knowladgeArea, courses, active) {
-  return { professores, knowladgeArea, courses, active };
-}
-
-const rows = [
-  createData('Alex Silva', 'JAVA', 'Direito', 1),
-  createData('Janio Junior', 'JAVA', 'Sistemas de Informação', 0),
-  createData('Fredson Costa', 'JAVA', 'Direito', 1),
-  createData('Bruna Lima', 'JAVA', 'Engenharia Agrônomica', 0),
-];
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -77,12 +71,7 @@ function EnhancedTableHead(props) {
     <TableHead>
       <TableRow>
         <TableCell padding="checkbox">
-          <Checkbox
-            indeterminate={numSelected > 0 && numSelected < rowCount}
-            checked={rowCount > 0 && numSelected === rowCount}
-            onChange={onSelectAllClick}
-            inputProps={{ 'aria-label': 'select all desserts' }}
-          />
+          #
         </TableCell>
         {headCells.map((headCell) => (
           <TableCell
@@ -132,13 +121,13 @@ const useToolbarStyles = makeStyles((theme) => ({
   highlight:
     theme.palette.type === 'light'
       ? {
-          color: theme.palette.secondary.main,
-          backgroundColor: lighten(theme.palette.secondary.light, 0.85),
-        }
+        color: theme.palette.secondary.main,
+        backgroundColor: lighten(theme.palette.secondary.light, 0.85),
+      }
       : {
-          color: theme.palette.text.primary,
-          backgroundColor: theme.palette.secondary.dark,
-        },
+        color: theme.palette.text.primary,
+        backgroundColor: theme.palette.secondary.dark,
+      },
   title: {
     flex: '1 1 100%',
   },
@@ -173,7 +162,7 @@ const EnhancedTableToolbar = (props) => {
       ) : (
         <Tooltip title="Filter list">
           <IconButton aria-label="filter list">
-            <FilterListIcon color="primary"/>
+            <FilterListIcon color="primary" />
           </IconButton>
         </Tooltip>
       )}
@@ -194,7 +183,7 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: theme.spacing(2),
   },
   userCell: {
-    alignItems:'center',
+    alignItems: 'center',
     marginLeft: theme.spacing(2),
     display: 'flex',
   },
@@ -220,48 +209,36 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function EnhancedTable() {
+export default function ModalAdvisor({ professor, handleProfessorChange = () => { } }) {
   const classes = useStyles();
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
-  const [selected, setSelected] = React.useState([]);
+  const [selected, setSelected] = React.useState(null);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [professors, setProfessors] = React.useState([]);
+  const [, dispatch] = React.useContext(Context);
 
-  const handleRequestSort = (event, property) => {
-    const isAsc = orderBy === property && order === 'asc';
-    setOrder(isAsc ? 'desc' : 'asc');
-    setOrderBy(property);
+
+  const fetchProfessors = () => {
+    dispatch(setLoading(true));
+    api.getAllProfessors().then(res => {
+      const result = res.data.data;
+      setProfessors(result);
+      dispatch(setLoading(false));
+
+    });
   };
 
-  const handleSelectAllClick = (event) => {
-    if (event.target.checked) {
-      const newSelecteds = rows.map((n) => n.name);
-      setSelected(newSelecteds);
-      return;
-    }
-    setSelected([]);
-  };
+  React.useEffect(() => {
+    fetchProfessors();
+    setSelected(professor)
+  }, []);
 
   const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
-    let newSelected = [];
 
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1),
-      );
-    }
-
-    setSelected(newSelected);
+    setSelected(name);
   };
 
   const handleChangePage = (event, newPage) => {
@@ -273,18 +250,33 @@ export default function EnhancedTable() {
     setPage(0);
   };
 
-  const handleChangeDense = (event) => {
-    setDense(event.target.checked);
-  };
+  const handleFinish = () => {
 
-  const isSelected = (name) => selected.indexOf(name) !== -1;
+    handleProfessorChange({ professor_id: selected })
+  }
 
-  const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
+  const isSelected = (name) => selected === name;
+
+  const emptyRows = rowsPerPage - Math.min(rowsPerPage, professors.length - page * rowsPerPage);
 
   return (
     <div className={classes.root}>
       <Paper className={classes.paper}>
-        <EnhancedTableToolbar numSelected={selected.length} />
+        <Grid
+          container
+          direction="row"
+          justify="space-between"
+          alignItems="center"
+        >
+          <TextField
+            id="standard-helperText"
+            label="Nome do Professor"
+            helperText="Filtre o professor pelo nome"
+          />
+          <Button variant="contained" onClick={handleFinish} color="primary">
+            Finalizar Seleção
+          </Button>
+        </Grid>
         <TableContainer>
           <Table
             className={classes.table}
@@ -292,30 +284,23 @@ export default function EnhancedTable() {
             size={dense ? 'small' : 'medium'}
             aria-label="enhanced table"
           >
-            <EnhancedTableHead
-              classes={classes}
-              numSelected={selected.length}
-              order={order}
-              orderBy={orderBy}
-              onSelectAllClick={handleSelectAllClick}
-              onRequestSort={handleRequestSort}
-              rowCount={rows.length}
-            />
+
             <TableBody>
-              {stableSort(rows, getComparator(order, orderBy))
+              {stableSort(professors, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
-                  const isItemSelected = isSelected(row.professores);
+                  const isItemSelected = isSelected(row.id);
                   const labelId = `enhanced-table-checkbox-${index}`;
 
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleClick(event, row.professores)}
+                      onClick={(event) => handleClick(event, row.id)}
                       role="checkbox"
                       aria-checked={isItemSelected}
+
                       tabIndex={-2}
-                      key={row.professores}
+                      key={row.id}
                       selected={isItemSelected}
                     >
                       <TableCell padding="checkbox">
@@ -325,42 +310,42 @@ export default function EnhancedTable() {
                         />
                       </TableCell>
                       <TableCell component="th" id={labelId} align="left" scope="row" padding="none">
-                          <div className={classes.userCell}>
-                            <Avatar
-                              style={{
-                                marginRight: "1rem",
-                                color: '#0E4DA4',
-                                backgroundColor: '#87CEFA',
-                              }}
-                            >
-                              {row.professores[0]}
-                            </Avatar>
-
-                            <div>
-                              <b>{row.professores}</b> <br />
-                            </div>
-                          </div>
-                    </TableCell>
-                    <TableCell align="left">
-                          <Chip
-                            label="Inteligência Artificial"
-                            variant="outlined"
+                        <div className={classes.userCell}>
+                          <Avatar
                             style={{
-                              fontWeight: 600,
-                              borderRadius: 4,
-                              color: '#f44336',
-                              border: '1px solid #f4433666',
-                              margin: '4px',
+                              marginRight: "1rem",
+                              color: `${row.color}`,
+                              backgroundColor: `${row.color}50`,
                             }}
-                          />
-                        </TableCell>
+                          >
+                            {row.name[0]}
+                          </Avatar>
+
+                          <div>
+                            <b>{row.name}</b> <br />
+                          </div>
+                        </div>
+                      </TableCell>
+                      <TableCell align="left">
+                        <Chip
+                          label="Inteligência Artificial"
+                          variant="outlined"
+                          style={{
+                            fontWeight: 600,
+                            borderRadius: 4,
+                            color: '#f44336',
+                            border: '1px solid #f4433666',
+                            margin: '4px',
+                          }}
+                        />
+                      </TableCell>
                       <TableCell>{row.courses}</TableCell>
                       <TableCell
-                          align="left"
-                          className={row.active == 1 ? classes.itemActive : classes.itemInactive}
-                        >
-                          <span>{row.active == 1 ? 'Ativo' : 'Inativo'}</span>
-                        </TableCell>
+                        align="left"
+                        className={row.active == 1 ? classes.itemActive : classes.itemInactive}
+                      >
+                        <span>{row.active == 1 ? 'ativo' : 'inativo'}</span>
+                      </TableCell>
                     </TableRow>
                   );
                 })}
@@ -375,7 +360,7 @@ export default function EnhancedTable() {
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={rows.length}
+          count={professors.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onChangePage={handleChangePage}
