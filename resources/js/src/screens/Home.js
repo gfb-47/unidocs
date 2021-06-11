@@ -7,6 +7,9 @@ import api from '../api/mainIndex';
 import { is } from '../utils/permissions';
 import { setLoading } from '../utils/actions';
 import { Context } from '../components/Store';
+import axios from 'axios';
+import cheerio from 'cheerio';
+
 const useStyles = makeStyles((theme) => ({
     divimg: {
         height: 'auto',
@@ -32,7 +35,28 @@ const useStyles = makeStyles((theme) => ({
 export default function Home() {
     const classes = useStyles();
     const [processes, setProcesses] = React.useState([]);
+    const [img, setImg] = React.useState([]);
     const [, dispatch] = React.useContext(Context);
+
+    const fetchImages = async () => {
+        const { data } = await axios.get('https://www.unitins.br/nPortal/', {
+            transformRequest: (data, headers) => {
+                delete headers.common['Authorization'];
+                delete headers.common['X-CSRF-TOKEN'];
+                delete headers.common['X-Requested-With'];
+                return data;
+            }
+        });
+        const $ = cheerio.load(data)
+        const images = []
+        $('div.carousel-item').each((index, element) => {
+            const src = $(element).find('img').attr('src');
+            images.push(src);
+        });
+        setImg(images)
+
+
+    }
 
     const fetchStudents = async () => {
         try {
@@ -41,6 +65,7 @@ export default function Home() {
             const response = await api.getStudentMainProcess();
             const result = response.data.data;
             setProcesses(result)
+            await fetchImages()
             dispatch(setLoading(false))
 
         } catch (error) {
@@ -54,6 +79,8 @@ export default function Home() {
             const response = await api.getProfessorMainProcess();
             const result = response.data.data;
             setProcesses(result)
+            fetchImages()
+
             dispatch(setLoading(false))
 
         } catch (error) {
@@ -68,6 +95,8 @@ export default function Home() {
             const result = response.data.data;
 
             setProcesses(result)
+            fetchImages()
+
             dispatch(setLoading(false))
 
         } catch (error) {
@@ -91,9 +120,7 @@ export default function Home() {
             <Container>
                 <div className={classes.divimg}>
                     <Carousel navButtonsAlwaysVisible={true}>
-                        <img className={classes.img} src={`${asset('img/banner.png')}`} />
-                        <img className={classes.img} src={`${asset('img/banner1.png')}`} />
-                        <img className={classes.img} src={`${asset('img/banner2.jpg')}`} />
+                        {img.map((src, index) => <img className={classes.img} key={index} src={src} />)}
                     </Carousel>
                 </div>
                 <Paper className={classes.paper}>
