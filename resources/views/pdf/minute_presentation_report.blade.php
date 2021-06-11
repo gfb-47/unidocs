@@ -41,13 +41,13 @@
         TOCANTINS - UNITINS</h5>
 
     <p>Aos 19 dias do mês de Junho de 2020, reuniu-se na Fundação Universidade do Tocantins, às 19 horas, sob a
-        Coordenação do Professor <strong>{{ $data->adviseProfessor->user->name }}</strong>, a banca examinadora de
+        Coordenação do Professor(a) <strong>{{ $data->adviseProfessor->user->name }}</strong>, a banca examinadora de
         Trabalho de Conclusão de
         Curso em Sistemas de
-        Informação, composta pelos examinadores Professor <strong>{{ $data->adviseProfessor->user->name }}</strong>
-        (Orientador), Professor
+        Informação, composta pelos examinadores Professor(a) <strong>{{ $data->jury->professors[0]->user->name }}</strong>
+        (Orientador), Professor(a)
         <strong>{{ $data->jury->professors[1]->user->name }}</strong> e
-        Professor <strong>{{ $data->jury->professors[2]->user->name }}</strong>, para avaliação da defesa do trabalho
+        Professor(a) <strong>{{ $data->jury->professors[2]->user->name }}</strong>, para avaliação da defesa do trabalho
         intitulado
         <strong>“{{ $data->title }}”</strong> do acadêmico <strong>{{ $data->student->user->name }}</strong> como
         requisito para aprovação na disciplina
