@@ -52,6 +52,11 @@
         @yield('content')
     </main>
     <script>
+        function asset(path) {
+            let base_path = '{{asset('')}}' || '';
+            return base_path + path;
+        }
+
         function getUrl() {
             return document.getElementById("baseurl").value;
         }

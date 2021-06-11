@@ -31,6 +31,11 @@ Route::group(['prefix' => 'v1', 'namespace' => 'API'], function () {
         Route::get('subject', 'SubjectController@index');
         Route::get('semester', 'SemesterController@index');
 
+        // Essas Rotas dizem respeito a tela inicial
+        Route::get('student/process/main', 'IndexController@mainStudentProcess');
+        Route::get('professor/process/main', 'IndexController@mainAdviseProfessorProcess');
+        Route::get('main/process', 'IndexController@mainAdminProcess');
+
         //Use Este Padrão para caso seja CRUD's
         Route::apiResource('knowledgearea', 'KnowledgeAreaController');
         Route::apiResource('process', 'ProcessController');
