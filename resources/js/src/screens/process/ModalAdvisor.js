@@ -56,7 +56,6 @@ function stableSort(array, comparator) {
 
 const headCells = [
   { id: 'professores', label: 'Professores' },
-  { id: 'knowladgeArea', label: 'Areas de Conhecimento' },
   { id: 'courses', label: 'Curso' },
   { id: 'active', label: 'Status' },
 ];
@@ -326,19 +325,7 @@ export default function ModalAdvisor({ professor, handleProfessorChange = () => 
                           </div>
                         </div>
                       </TableCell>
-                      <TableCell align="left">
-                        <Chip
-                          label="Inteligência Artificial"
-                          variant="outlined"
-                          style={{
-                            fontWeight: 600,
-                            borderRadius: 4,
-                            color: '#f44336',
-                            border: '1px solid #f4433666',
-                            margin: '4px',
-                          }}
-                        />
-                      </TableCell>
+
                       <TableCell>{row.courses}</TableCell>
                       <TableCell
                         align="left"

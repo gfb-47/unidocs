@@ -36,9 +36,8 @@ class ProcessController extends BaseController
 
     public function indexProcessSemesters(Request $request)
     {
-        $user = User::with('student')->find(auth()->id());
-
-        $data = Process::select("processes.*")
+        $user = User::with('professor')->find(auth()->id());
+        $data = Process::select("processes.*", 'semesters.professor_id')
             ->with('adviseProfessor.user', 'semester', 'knowledgeAreas', 'student.user')
             ->join('semesters', 'semesters.id', '=', 'processes.semester_id')
             ->orderBy("processes.title")
