@@ -53,10 +53,10 @@ Route::group(['prefix' => 'v1', 'namespace' => 'API'], function () {
             Route::post('documentsign/document', 'TermController@signDocument');
             Route::post('documentsend/file', 'TermController@sendDocument');
         });
-        Route::group(['prefix' => 'public'], function () {
-            Route::get('search/professor', 'PublicController@searchProfessors');
-            Route::get('/getusername', 'PublicController@getUsername');
-        });
-
+        
+    });
+    Route::group(['prefix' => 'public'], function () {
+        Route::get('search/professor', 'PublicController@searchProfessors');
+        Route::get('/getusername', 'PublicController@getUsername');
     });
 });

@@ -12,6 +12,7 @@ import { useHistory } from 'react-router'
 import { toast } from 'react-toastify';
 import { Context } from '../../components/Store';
 import { setLoading } from '../../utils/actions';
+import { useParams } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   margin: {
@@ -63,15 +64,15 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
-export default function ProcessEdit(props) {
+export default function ProcessEdit() {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const [options, setOptions] = React.useState([]);
   const loading = open && options.length === 0;
-  const { handleSubmit, control, reset } = useForm();
-  const [professor, setProfessor] = React.useState('');
-  const [semester, setSemester] = React.useState('');
+  const { handleSubmit, control, reset, setValue } = useForm();
   const [, dispatch] = React.useContext(Context);
+  const { id } = useParams();
+  const [processShow, setProcess] = React.useState(null);
 
   const [state, setState] = React.useState({
     gilad: true,
@@ -79,7 +80,27 @@ export default function ProcessEdit(props) {
     antoine: false,
   });
 
+
   const history = useHistory();
+
+  React.useEffect(() => {
+    fetchProcessDetails()
+  }, []);
+
+  async function fetchProcessDetails() {
+    try {
+      setLoading(true)
+
+      const { data } = await api.showProcess(id);
+      setProcess(data.data);
+
+      reset();
+
+      Object.entries(data.data).forEach(([key, value]) => setValue(key, value))
+    } finally {
+      setLoading(false)
+    }
+  }
 
   React.useEffect(() => {
     let active = true;
@@ -136,8 +157,9 @@ export default function ProcessEdit(props) {
   const onSubmit = async data => {
     try {
       dispatch(setLoading(true))
-      await api.addProcess(data);
-      toast.success('👍 Cadastrado Com Sucesso', {
+      console.log(id);
+      await api.updateProcess(data, id);
+      toast.success('👍 Atualizado Com Sucesso', {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
@@ -152,7 +174,7 @@ export default function ProcessEdit(props) {
         semester_id: '',
         content: '',
       });
-      history.push('student/processes');
+      history.push('/unidocs/student/processes');
     } catch (e) {
       toast.error('❌ Erro ao Salvar o Processo', {
         position: "top-right",
@@ -171,7 +193,6 @@ export default function ProcessEdit(props) {
 
   return (
     <div>
-
       <Container>
         <Paper className={classes.card}>
           <div className={classes.header}>
@@ -193,7 +214,7 @@ export default function ProcessEdit(props) {
                 <Controller
                   name="title"
                   control={control}
-                  defaultValue=""
+                  defaultValue={processShow?.title || ''}
                   rules={validation.titleValidation}
                   render={({ field: { onChange, value }, fieldState: { error } }) => (
                     <TextField
@@ -214,7 +235,7 @@ export default function ProcessEdit(props) {
                 <Controller
                   name="content"
                   control={control}
-                  defaultValue=""
+                  defaultValue={processShow?.content || ''}
                   rules={validation.descriptionValidation}
                   render={({ field: { onChange, value }, fieldState: { error } }) => (
                     <TextField
@@ -235,39 +256,6 @@ export default function ProcessEdit(props) {
 
 
               </Grid>
-              {/* 
-              <Grid item xs={12}>
-                <div className={classes.knowladgeArea}>
-                  <Typography className={classes.border} variant="h6">
-                    Areas de Conhecimento
-                </Typography>
-
-                  <IconButton className={classes.border} color="primary">
-                    <AddIcon />
-                  </IconButton>
-                </div>
-                <div className={classes.chips}>
-                  {chipData.map((data) => {
-                    return (
-                      <Chip
-                        key={data.key}
-                        label={data.label}
-                        variant="outlined"
-                        onDelete={handleDelete(data)}
-                        style={{
-                          fontWeight: 600,
-                          borderRadius: 4,
-                          color: `${data.color}`,
-                          border: '1px solid',
-                          borderColor: `${data.color}66`,
-                          margin: '4px',
-                        }}
-                      />
-                    );
-                  })}
-                </div>
-              </Grid>
-            */}
             </Grid>
             <div className={classes.footer}>
               <Button
@@ -277,7 +265,7 @@ export default function ProcessEdit(props) {
                 color="primary"
               >
                 Alterar Processo
-            </Button>
+              </Button>
             </div>
           </form>
         </Paper>

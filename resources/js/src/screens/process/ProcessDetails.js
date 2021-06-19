@@ -29,6 +29,7 @@ import { Controller, useForm } from 'react-hook-form'
 import Input from '@material-ui/core/Input';
 import * as validation from '../../utils/validation';
 import { toast } from 'react-toastify';
+import { useHistory } from 'react-router'
 
 const useStyles = makeStyles((theme) => ({
   margin: {
@@ -383,6 +384,11 @@ export default function ProcessDetails() {
     }
   }
 
+  const history = useHistory();
+  const showProcess = () => {
+    history.push(`/unidocs/process/edit/${id}`);
+  };
+
   return (
     <div className={classes.container}>
       <Paper className={classes.card}>
@@ -411,9 +417,11 @@ export default function ProcessDetails() {
                   Dados do Projeto
                 </Typography>
 
-                <IconButton color="primary">
+                { is("estudante | administrador") && processShow?.status !== 6 && 
+                  <IconButton color="primary" onClick={() => showProcess()}>
                   <CreateIcon />
                 </IconButton>
+                }
               </div>
 
               <List component="nav">

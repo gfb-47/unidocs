@@ -128,7 +128,7 @@ const App = () => {
                                 <Process />
                             </Route>
 
-                            <Route exact path={`${Path}/process/edit`}>
+                            <Route exact path={`${Path}/process/edit/:id`}>
                                 <ProcessEdit />
                             </Route>
 
