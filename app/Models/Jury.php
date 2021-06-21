@@ -6,7 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Jury extends Model
 {
+
     protected $fillable = ['local', 'hour', 'date', 'rating', 'approved', 'note', 'process_id'];
+
+    public function scopeInfo($query){
+        return $query->select('*');
+    }
 
     public function professors()
     {

@@ -122,7 +122,7 @@ const App = () => {
 
                             <Route path={`${Path}/professor/reports`}>
                                 <Report />
-                            </Route>~
+                            </Route>
 
                             <Route exact path={`${Path}/process`}>
                                 <Process />

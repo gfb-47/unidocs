@@ -55,8 +55,8 @@ class PermissionSeeder extends Seeder
         ]);
 
         $admin->permissions()->sync(Permission::all());
-        $professor_disciplina->permissions()->sync([1,2,3,4,5,8,10,13,14,15,16,17]);
-        $professor_orientador->permissions()->sync([1,2,3,4,5,6,7,9]);
+        $professor_disciplina->permissions()->sync([1,2,3,4,5,8,10,13,14,15,16,17,18]);
+        $professor_orientador->permissions()->sync([1,2,3,4,5,6,7,9,18]);
         $student->permissions()->sync([1,5,10,11,12]);
         
         $this->command->info('Full Permissions sucessfull added');

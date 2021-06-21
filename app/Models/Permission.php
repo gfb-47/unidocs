@@ -45,6 +45,9 @@ class Permission extends \Spatie\Permission\Models\Permission
             array('name' => 'semester_view', 'description' => 'Visualiza semestre'),
             //professor disciplina
             array('name' => 'subject_view', 'description' => 'Visualiza disciplina'),
+
+            //professor orientador
+            array('name' => 'report_juries', 'description' => 'Visualizar relatório de bancas'),
         ];
     }
 }
