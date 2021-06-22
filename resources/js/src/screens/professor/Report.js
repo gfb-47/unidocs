@@ -245,7 +245,6 @@ export default function Report() {
                       inputVariant="outlined"
                       format="dd/MM/yyyy"
                       minDate={selectedStartDate}
-                      maxDate={new Date()}
                       minDateMessage="Escolha uma Data Posterior à Data de Início"
                       locale='ptBR'
                       id="date-picker-inline"
