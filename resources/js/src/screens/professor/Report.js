@@ -98,29 +98,43 @@ const useStyles = makeStyles((theme) => ({
 export default function Report() {
   const classes = useStyles();
 
-  const [selectedDate, setSelectedDate] = React.useState(new Date());
-  const [selectValue, setSelectedValue] = React.useState(new Date());
+  const [selectedStartDate, setSelectedStartDate] = React.useState(new Date());
+  const [selectedEndDate, setSelectedEndDate] = React.useState(new Date());
 
   const handleDateChange = (date) => {
-    setSelectedDate(date);
+    setSelectedStartDate(date);
   };
   const handleDateChange1 = (date) => {
-    setSelectedValue(date);
+    setSelectedEndDate(date);
   };
 
   const [alignment, setAlignment] = React.useState('left');
-
-  const handleFormat = (event, newFormats) => {
-    if (newFormats.length) {
-      setFormats(newFormats);
-    }
-  };
 
   const handleAlignment = (event, newAlignment) => {
     if (newAlignment !== null) {
       setAlignment(newAlignment);
     }
   };
+  
+  const getReport = () => {
+    const startDate = formatDate(selectedStartDate);
+    const endDate = formatDate(selectedEndDate);
+    window.open( `${getUrl()}/report/juries?start=${startDate}&end=${endDate}`, '_blank');
+  };
+
+  function formatDate(date) {
+    var d = new Date(date),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+
+    if (month.length < 2) 
+        month = '0' + month;
+    if (day.length < 2) 
+        day = '0' + day;
+
+    return [year, month, day].join('-');
+}
 
 
   return (
@@ -216,7 +230,7 @@ export default function Report() {
                       maxDate={new Date()}
                       id="standard-required"
                       label="Data de Início do Relatório"
-                      value={selectedDate}
+                      value={selectedStartDate}
                       onChange={handleDateChange}
                       KeyboardButtonProps={{
                         'aria-label': 'change date',
@@ -230,13 +244,13 @@ export default function Report() {
                       variant="inline"
                       inputVariant="outlined"
                       format="dd/MM/yyyy"
-                      minDate={selectedDate}
+                      minDate={selectedStartDate}
                       maxDate={new Date()}
                       minDateMessage="Escolha uma Data Posterior à Data de Início"
                       locale='ptBR'
                       id="date-picker-inline"
                       label="Data de Fim do Relatório"
-                      value={selectValue}
+                      value={selectedEndDate}
                       onChange={handleDateChange1}
                       KeyboardButtonProps={{
                         'aria-label': 'change date',
@@ -248,7 +262,7 @@ export default function Report() {
             </CardContent>
             <CardActions>
               <div className={classes.divButton}>
-                <Button variant="contained" color="primary" className={classes.typography}>
+                <Button onClick={() => getReport()} variant="contained" color="primary" className={classes.typography}>
                   Gerar Relatório
                 </Button>
               </div>

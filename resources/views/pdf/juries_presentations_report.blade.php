@@ -1,9 +1,8 @@
 <html>
 
 <head>
-    <link rel='stylesheet'
-        href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.0/css/bootstrap.min.css' />
-    <title>Ata de Apresentação</title>
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.0/css/bootstrap.min.css' />
+    <title>Apresentações da Banca</title>
     <style type="text/css">
         @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,700;1,300;1,700&display=swap');
 
@@ -64,7 +63,7 @@
         </tr>
         @empty
         <tr>
-            <td colspan="9" style="text-align:center">
+            <td colspan="7" style="text-align:center">
                 Não foram encontrados registros
             </td>
         </tr>
