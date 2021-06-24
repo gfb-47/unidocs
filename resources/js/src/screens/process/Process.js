@@ -38,10 +38,6 @@ const useStyles = makeStyles((theme) => ({
   headerTitle: {
     paddingLeft: 16,
   },
-  knowladgeArea: {
-    display: 'flex',
-    alignItems: 'center',
-  },
   chips: {
     borderStyle: 'solid',
     borderWidth: 1,

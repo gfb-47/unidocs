@@ -27,7 +27,7 @@ import { setLoading } from '../../utils/actions';
 const headCells = [
   { id: 'title', label: 'Título' },
   { id: 'professorSemester', label: 'Professor Responsável' },
-  { id: 'knowladgeArea', label: 'Áreas do Conhecimento' },
+  //{ id: 'knowladgeArea', label: 'Áreas do Conhecimento' },
   { id: 'semester', label: 'Semestre' },
   { id: 'status', label: 'Status' },
 ];
@@ -315,8 +315,8 @@ export default function StudentProcesses() {
                             </div>
                           </div>
                         </TableCell>
-                        <TableCell align="left">
-                          {/* <Chip
+                        {/*<TableCell align="left">
+                           <Chip
                             label="Inteligência Artificial"
                             variant="outlined"
                             style={{
@@ -326,8 +326,8 @@ export default function StudentProcesses() {
                               border: '1px solid #f4433666',
                               margin: '4px',
                             }}
-                          /> */}
-                        </TableCell>
+                          /> 
+                        </TableCell>*/}
                         <TableCell align="left">
                           <span>{row.semester.name}</span>
                         </TableCell>

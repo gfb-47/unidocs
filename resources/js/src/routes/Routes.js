@@ -77,11 +77,11 @@ const App = () => {
                             <Route path={`${Path}/semesters`}>
                                 <Semesters />
                             </Route>
-
+                            {/*
                             <Route path={`${Path}/knowladgeareas`}>
                                 <KnowladgeAreas />
                             </Route>
-
+                            */}
                             <Route path={`${Path}/subjects`}>
                                 <Subjects />
                             </Route>

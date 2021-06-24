@@ -29,8 +29,8 @@ import DateFnsUtils from '@date-io/date-fns';
 import { ptBR } from "date-fns/locale";
 import { Avatar, Chip, Container, TextField, } from '@material-ui/core';
 
-function createData(name, professorEmail, course, knowladgeArea, color) {
-  return { name, professorEmail, course, knowladgeArea, color };
+function createData(name, professorEmail, course,knowladgeArea, color) {
+  return { name, professorEmail, course,knowladgeArea, color };
 }
 
 const rows = [
@@ -68,7 +68,7 @@ function stableSort(array, comparator) {
 const headCells = [
   { id: 'professorName', disablePadding: false, label: 'Professores' },
   { id: 'course', disablePadding: true, label: 'Curso' },
-  { id: 'knowladgeArea', disablePadding: true, label: 'Áreas do Conhecimento' },
+  //{ id: 'knowladgeArea', disablePadding: true, label: 'Áreas do Conhecimento' },
 ];
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -117,7 +117,7 @@ const useStyles = makeStyles((theme) => ({
   },
   divDireitaBanca: {
     marginLeft: 855,
-    marginTop: -483,
+    marginTop: -423,
   },
   textField: {
     marginLeft: theme.spacing(1),
@@ -315,6 +315,7 @@ export default function ProfessorProfile() {
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
   return (
+    
     <div>
       <Container className={classes.container}>
         <Card className={classes.card}>
@@ -332,7 +333,7 @@ export default function ProfessorProfile() {
                 </Typography>
               </div>
             </div>
-
+            
             <div className={classes.divEsquerdaBanca}>
               <Paper className={classes.paper}>
                 <TableContainer>
@@ -398,7 +399,7 @@ export default function ProfessorProfile() {
                               <TableCell align="left">
                                 {row.course}
                               </TableCell>
-
+                               {/* 
                               <TableCell align="left">
                                 <Chip
                                   label="Inteligência Artificial"
@@ -422,7 +423,7 @@ export default function ProfessorProfile() {
                                     margin: '4px',
                                   }}
                                 />
-                              </TableCell>
+                                </TableCell>*/}
 
                             </TableRow>
                           );
@@ -446,7 +447,7 @@ export default function ProfessorProfile() {
                 />
               </Paper>
             </div>
-
+            
             <div className={classes.divDireitaBanca}>
               <MuiPickersUtilsProvider utils={DateFnsUtils} locale={ptBR}>
                 <Grid container justify="space-around">

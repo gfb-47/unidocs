@@ -27,7 +27,7 @@ const headCells = [
   { id: 'name', label: 'Professores' },
   { id: 'updatedAtDate', label: 'Última Alteração' },
   { id: 'course', label: 'Cursos' },
-  { id: 'knowladgeArea', label: 'Áreas do Conhecimento' },
+  //{ id: 'knowladgeArea', label: 'Áreas do Conhecimento' },
   { id: 'active', label: 'Status' },
 ];
 //----FIM DA Sessão 2----
@@ -291,7 +291,7 @@ export default function Professors() {
                         <TableCell align="left">
                           <span>{row.course}</span>
                         </TableCell>
-                        <TableCell align="left">
+                        {/*<TableCell align="left">
                           <Chip
                             label="Inteligência Artificial"
                             variant="outlined"
@@ -303,7 +303,7 @@ export default function Professors() {
                               margin: '4px',
                             }}
                           />
-                        </TableCell>
+                          </TableCell>*/}
                         <TableCell
                           align="left"
                           className={row.active == 1 ? classes.itemActive : classes.itemInactive}

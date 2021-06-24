@@ -5,6 +5,7 @@ export default function KnowladgeAreaBadge(props) {
 
   return (
     <div>
+      {/*
       <Chip
         label={props.knowladgeArea}
         variant="outlined"
@@ -16,6 +17,7 @@ export default function KnowladgeAreaBadge(props) {
           margin: '4px',
         }}
       />
+      */}
     </div>
   );
 }

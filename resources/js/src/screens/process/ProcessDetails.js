@@ -430,10 +430,10 @@ export default function ProcessDetails() {
                   <ListItemText primary={processShow?.advise_professor.user.name || ''} className={classes.data} />
                 </ListItem>
                 <Divider light />
-                <ListItem >
+               {/* <ListItem >
                   <ListItemText primary="Áreas de Conhecimento" className={classes.dataTitle} />
                   <ListItemText primary="" className={classes.data} >oi teste</ListItemText>
-                </ListItem>
+               </ListItem>*/}
                 <Divider light />
                 <ListItem >
                   <ListItemText primary="Semestre" className={classes.dataTitle} />
@@ -575,14 +575,14 @@ export default function ProcessDetails() {
               >
                 Finalizar Projeto
               </Button>}
-              <Button
+              {/*<Button
                 href='workplan'
                 variant='contained'
                 color='primary'
                 className={classes.margin}
               >
                 Plano de Trabalho
-              </Button>
+              </Button>*/}
               <Button
                 href={`/unidocs/process/documents/${id}`}
                 variant='contained'

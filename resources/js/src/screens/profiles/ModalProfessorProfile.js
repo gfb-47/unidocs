@@ -299,9 +299,12 @@ export default function ProfessorProfile() {
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
   return (
+    
     <div className={classes.divCard}>
       <Card className={classes.card}>
+        
         <CardContent >
+          {/*
           <div className={classes.schoolIcon}>
             <SchoolIcon style={{ color: grey[600], fontSize: 40 }} />
           </div>
@@ -445,8 +448,9 @@ export default function ProfessorProfile() {
               </div>
             </CardActions>
           </div>
-        </CardContent>
+              */}
+        </CardContent> 
       </Card>
-    </div>
+    </div>         
   )
 };

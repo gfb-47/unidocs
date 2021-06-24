@@ -28,7 +28,6 @@ export default function KnowladgeAreaBadge(props) {
           Em Desenvolvimento
         </Typography>
       </div>
-
       <Typography className={classes.title} variant="h6">
         {props.title}
       </Typography>

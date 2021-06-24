@@ -23,10 +23,11 @@ export default function ProcessCardKnowladgeArea(props) {
 
   return (
     <div className={classes.wrapper}>
+      {/*
       <Typography className={classes.typography}>
         Áreas de Conhecimento
       </Typography>
-
+      */}
       <div className={classes.chips}>
         {/*Fazer um Map para preenchimento automatico*/}
         <KnowladgeAreaBadge
