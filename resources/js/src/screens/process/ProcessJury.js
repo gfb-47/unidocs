@@ -6,13 +6,9 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import { blue, grey } from '@material-ui/core/colors';
+import { blue } from '@material-ui/core/colors';
 import SchoolIcon from '@material-ui/icons/School';
-import 'date-fns';
 import FormControl from '@material-ui/core/FormControl';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import Select from '@material-ui/core/Select';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -27,18 +23,16 @@ import { MuiPickersUtilsProvider, KeyboardDatePicker, KeyboardTimePicker } from 
 import Grid from '@material-ui/core/Grid';
 import DateFnsUtils from '@date-io/date-fns';
 import { ptBR } from "date-fns/locale";
-import { Avatar, Chip, Container, TextField, } from '@material-ui/core';
-import { useParams } from 'react-router-dom';
-import api from '../../api/jury';
+import { format } from 'date-fns';
+import { Avatar, Container, TextField, } from '@material-ui/core';
+import { useLocation, useHistory } from 'react-router-dom';
 import apiProfessor from '../../api/professor';
-import professor from '../../api/professor';
-import { type } from 'jquery';
-
-const rows = [
-  // createData('Alex Coelho', 'alex@unitins.br', 'Sistemas de Informação', '', '#F40909'),
-  // createData('Silvano', 'silvano@unitins.br', 'Direito', '', '#E47B09'),
-  // createData('Fredson', 'fredson@unitins.br', 'Agronomia', '', '#358DF5'),
-];
+import api from '../../api/jury';
+import { Controller, useForm } from 'react-hook-form'
+import * as validation from '../../utils/validation';
+import { Context } from '../../components/Store';
+import { setLoading } from '../../utils/actions';
+import { toast } from 'react-toastify';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -67,9 +61,7 @@ function stableSort(array, comparator) {
 }
 
 const headCells = [
-  { id: 'professorName', disablePadding: false, label: 'Professores' },
-  { id: 'course', disablePadding: true, label: 'Curso' },
-  //{ id: 'knowladgeArea', disablePadding: true, label: 'Áreas do Conhecimento' },
+  { id: 'professorName', disablePadding: false, label: 'Professores (Selecione mais 2 para completar a banca)' },
 ];
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -81,7 +73,7 @@ const useStyles = makeStyles((theme) => ({
   root: {
     '& .MuiTextField-root': {
       margin: theme.spacing(4),
-      width: 322,
+      width: '100%',
       marginLeft: 10,
     },
   },
@@ -106,19 +98,18 @@ const useStyles = makeStyles((theme) => ({
     marginTop: 10,
     marginBottom: -15,
   },
+  divForm: {
+    display: 'flex',
+    justifyContent: 'space-between'
+  },
   divButton: {
     position: "relative",
-    marginTop: 180,
     marginLeft: 188,
   },
-  divEsquerdaBanca: {
-    width: '65%',
-    marginTop: 20,
-    marginLeft: 70,
-  },
   divDireitaBanca: {
-    marginLeft: 855,
-    marginTop: -423,
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-end'
   },
   textField: {
     marginLeft: theme.spacing(1),
@@ -126,9 +117,10 @@ const useStyles = makeStyles((theme) => ({
     width: 200,
   },
   formControl: {
-    margin: theme.spacing(1),
-    marginTop: 30,
+    marginTop: 15,
     minWidth: 322,
+    padding: 8,
+    'width': '100% !important'
   },
 
   userCell: {
@@ -153,7 +145,7 @@ const useStyles = makeStyles((theme) => ({
     width: 1,
   },
   divTimePicker: {
-    marginTop: -45,
+    width: '100% !important'
   },
   header: {
     display: 'flex',
@@ -185,13 +177,7 @@ function EnhancedTableHead(props) {
     <TableHead>
       <TableRow>
         <TableCell padding="checkbox">
-          <Checkbox
-            indeterminate={numSelected > 0 && numSelected < rowCount}
-            checked={rowCount > 0 && numSelected === rowCount}
-            onChange={onSelectAllClick}
-            style={{ color: blue[600] }}
-            inputProps={{ 'aria-label': 'select all desserts' }}
-          />
+
         </TableCell>
         {headCells.map((headCell) => (
           <TableCell
@@ -232,29 +218,7 @@ EnhancedTableHead.propTypes = {
 
 export default function ProfessorProfile() {
 
-  const [jury, setJury] = React.useState([]);
 
-  const fetchJury = async () => {
-    const result = await api.getAllJury();
-    setJury(result.data.data);
-  };
-  React.useEffect(() => {
-    fetchJury();
-    
-  }, []);
-
-  const [professors, setProfessors] = React.useState([]);
-
-  const fetchProfessors = () => {
-    apiProfessor.getAllProfessors().then(res => {
-      const result = res.data.data;
-      setProfessors(result);
-
-    });
-  };
-  React.useEffect(() => {
-    fetchProfessors();
-  }, []);
 
   const classes = useStyles();
 
@@ -284,13 +248,38 @@ export default function ProfessorProfile() {
 
   };
 
+
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const location = useLocation();
+  const [professors, setProfessors] = React.useState([]);
+  const [defaultProfessor, setDefaultProfessor] = React.useState(null);
+  const { professor } = location.state;
+  const { id } = location.state;
+  const { handleSubmit, control, reset } = useForm();
+  const [, dispatch] = React.useContext(Context);
+  const history = useHistory();
 
+
+  const fetchProfessors = () => {
+    apiProfessor.getAllProfessors().then(res => {
+      const result = res.data.data;
+      setProfessors(result);
+
+    });
+  };
+  React.useEffect(() => {
+    fetchProfessors();
+
+    const professors = [professor];
+    setSelected(professors);
+
+    setDefaultProfessor(professor)
+  }, []);
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
@@ -299,42 +288,21 @@ export default function ProfessorProfile() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = rows.map((n) => n.name);
+      const newSelecteds = professors.map((n) => n.name);
       setSelected(newSelecteds);
       return;
     }
     setSelected([]);
   };
 
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
-    let newSelected = [];
-    verifyProfessor(jury, professors);
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
-    }
-     else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1),
-      );
-    }
-
-    setSelected(newSelected);
-  };
   const verifyProfessor = () => {
-    console.log(typeof jury.professors);
-  
-      jury.forEach((item) => {
+
+    jury.forEach((item) => {
       if (item.id == professor.id) {
 
-        
+
       }
-      });
+    });
   }
 
   const handleChangePage = (event, newPage) => {
@@ -352,10 +320,43 @@ export default function ProfessorProfile() {
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
 
-  const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
+  const emptyRows = rowsPerPage - Math.min(rowsPerPage, professors.length - page * rowsPerPage);
+  const onSubmit = async (data) => {
+    const parsedData = {
+      ...data,
+      date: format(data.date, "yyyy-MM-dd"),
+      hour: format(data.hour, 'hh:mm:ss'),
+      process_id: id
+    }
+    try {
+      dispatch(setLoading(true))
+      await api.addJury(parsedData);
+      toast.success('👍 Banca definida com Sucesso', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      history.push(`/unidocs/process/details/${id}`);
+
+    } catch (e) {
+      toast.error('❌ Erro ao definir Banca', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    }
+  }
 
   return (
-    
+
     <div>
       <Container className={classes.container}>
         <Card className={classes.card}>
@@ -373,176 +374,232 @@ export default function ProfessorProfile() {
                 </Typography>
               </div>
             </div>
-            
-            <div className={classes.divEsquerdaBanca}>
-              <Paper className={classes.paper}>
-                <TableContainer>
-                  <Table
-                    className={classes.table}
-                    aria-labelledby="tableTitle"
-                    size={dense ? 'small' : 'medium'}
-                    aria-label="enhanced table"
-                  >
-                    <EnhancedTableHead
-                      classes={classes}
-                      numSelected={selected.length}
-                      order={order}
-                      orderBy={orderBy}
-                      onSelectAllClick={handleSelectAllClick}
-                      onRequestSort={handleRequestSort}
-                      rowCount={rows.length}
-                    />
-                    <TableBody>
-                      {stableSort(professors, getComparator(order, orderBy))
-                        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                        .map((row, index) => {
-                          const isItemSelected = isSelected(row.name);
-                          const labelId = `enhanced-table-checkbox-${index}`;
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <div className={classes.divForm}>
+                <div className={classes.divEsquerdaBanca}>
+                  <Paper className={classes.paper}>
+                    {defaultProfessor && (<Controller
+                      name="professors"
+                      control={control}
+                      defaultValue={[defaultProfessor]}
+                      rules={validation.juryValidation}
+                      render={({ field: { onChange, value }, fieldState: { error } }) => {
+                        const handleClick = (event, name) => {
+                          let selecteds = [];
+                          if (value.includes(name)) {
+                            selecteds = value.filter(i => i !== name);
+                          } else if (value.length < 3) {
+                            selecteds = [...value, name]
+                          } else {
+                            selecteds = [...value]
+                          }
 
-                          verifyProfessor;
-                          return (
-                            <TableRow
-                              hover
-                              onClick={(event) => handleClick(event, row.name)}
-                              role="checkbox"
-                              aria-checked={isItemSelected}
-                              tabIndex={-1}
-                              key={row.name}
-                              selected={isItemSelected}
-                            >
-                              <TableCell padding="checkbox">
-                                <Checkbox
-                                  checked={isItemSelected}
-                                  inputProps={{ 'aria-labelledby': labelId }}
-                                  style={{ color: blue[600] }}
-                                />
-                              </TableCell>
+                          onChange(selecteds);
+                        };
+                        return (<TableContainer>
+                          <div style={{ color: 'red', textDecoration: 'underline' }}>{error?.message}</div>
+                          <Table
+                            className={classes.table}
+                            aria-labelledby="tableTitle"
+                            size={dense ? 'small' : 'medium'}
+                            aria-label="enhanced table"
+                          >
+                            <EnhancedTableHead
+                              classes={classes}
+                              numSelected={selected.length}
+                              order={order}
+                              orderBy={orderBy}
+                              onSelectAllClick={handleSelectAllClick}
+                              onRequestSort={handleRequestSort}
+                              rowCount={professors.length}
+                            />
+                            <TableBody>
+                              {stableSort(professors, getComparator(order, orderBy))
+                                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                .map((row, index) => {
+                                  const isItemSelected = value.includes(row.id);
 
-                              <TableCell component="th" id={labelId} align="left" scope="row" padding="none">
-                                <div className={classes.userCell}>
-                                  <Avatar
-                                    style={{
-                                      marginRight: "1rem",
-                                      color: `${row.color}`,
-                                      backgroundColor: `${row.color}50`,
-                                    }}
-                                  >
-                                    {row.name[0]}
-                                  </Avatar>
+                                  const labelId = `enhanced-table-checkbox-${index}`;
 
-                                  <div>
-                                    <b>{row.name}</b> <br />
-                                    <span className={classes.subItem}>{row.email}</span>
-                                  </div>
-                                </div>
-                              </TableCell>
 
-                              <TableCell align="left">
-                                {row.course}
-                              </TableCell>
-                               {/* 
-                              <TableCell align="left">
-                                <Chip
-                                  label="Inteligência Artificial"
-                                  variant="outlined"
-                                  style={{
-                                    fontWeight: 600,
-                                    borderRadius: 4,
-                                    color: '#f44336',
-                                    border: '1px solid #f4433666',
-                                    margin: '4px',
-                                  }}
-                                />
-                                <Chip
-                                  label="Java"
-                                  variant="outlined"
-                                  style={{
-                                    fontWeight: 600,
-                                    borderRadius: 4,
-                                    color: '#E038FF',
-                                    border: '1px solid #812094',
-                                    margin: '4px',
-                                  }}
-                                />
-                                </TableCell>*/}
+                                  return (
+                                    <TableRow
+                                      hover
+                                      onClick={(e) => {
+                                        row.id !== professor && handleClick(e, row.id)
+                                      }}
+                                      role="checkbox"
+                                      aria-checked={isItemSelected}
+                                      tabIndex={-1}
+                                      key={row.id}
+                                      selected={isItemSelected}
+                                    >
+                                      <TableCell padding="checkbox">
+                                        <Checkbox
+                                          checked={isItemSelected}
+                                          disabled={row.id === professor}
+                                          inputProps={{ 'aria-labelledby': labelId }}
+                                          style={{ color: blue[600] }}
+                                        />
+                                      </TableCell>
 
-                            </TableRow>
-                          );
-                        })}
-                      {emptyRows > 0 && (
-                        <TableRow style={{ height: (dense ? 33 : 53) * emptyRows }}>
-                          <TableCell colSpan={6} />
-                        </TableRow>
-                      )}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-                <TablePagination
-                  rowsPerPageOptions={[10, 15, 20]}
-                  component="div"
-                  count={rows.length}
-                  rowsPerPage={rowsPerPage}
-                  page={page}
-                  onChangePage={handleChangePage}
-                  onChangeRowsPerPage={handleChangeRowsPerPage}
-                />
-              </Paper>
-            </div>
-            
-            <div className={classes.divDireitaBanca}>
-              <MuiPickersUtilsProvider utils={DateFnsUtils} locale={ptBR}>
-                <Grid container justify="space-around">
-                  <FormControl className={classes.root}>
-                    <KeyboardDatePicker
-                      variant="inline"
-                      inputVariant="outlined"
-                      format="dd/MM/yyyy"
-                      minDate={new Date()}
-                      id="standard-required"
-                      label="Data da Banca"
-                      value={selectedDate}
-                      onChange={handleDateChange}
-                      KeyboardButtonProps={{
-                        'aria-label': 'change date',
+                                      <TableCell component="th" id={labelId} align="left" scope="row" padding="none">
+                                        <div className={classes.userCell}>
+                                          <Avatar
+                                            style={{
+                                              marginRight: "1rem",
+                                              color: `${row.color}`,
+                                              backgroundColor: `${row.color}50`,
+                                            }}
+                                          >
+                                            {row.name[0]}
+                                          </Avatar>
+
+                                          <div>
+                                            <b>{row.name}</b> <br />
+                                            <span className={classes.subItem}>{row.email}</span>
+                                          </div>
+                                        </div>
+                                      </TableCell>
+
+                                    </TableRow>
+                                  );
+                                })}
+                              {emptyRows > 0 && (
+                                <TableRow style={{ height: (dense ? 33 : 53) * emptyRows }}>
+                                  <TableCell colSpan={6} />
+                                </TableRow>
+                              )}
+                            </TableBody>
+                          </Table>
+                        </TableContainer>)
                       }}
+                    />)}
+                    <TablePagination
+                      rowsPerPageOptions={[10, 15, 20]}
+                      component="div"
+                      count={professors.length}
+                      rowsPerPage={rowsPerPage}
+                      page={page}
+                      onChangePage={handleChangePage}
+                      onChangeRowsPerPage={handleChangeRowsPerPage}
                     />
-                    <div className={classes.divTimePicker}>
-                      <KeyboardTimePicker
-                        margin="normal"
-                        inputVariant="outlined"
-                        variant="inline"
-                        id="time-picker"
-                        ampm={false}
-                        label="Horário da Banca"
-                        value={selectedDate}
-                        onChange={handleDateChange}
-                        KeyboardButtonProps={{
-                          'aria-label': 'change time',
-                        }}
-                      />
-                    </div>
-                  </FormControl>
-                </Grid>
-              </MuiPickersUtilsProvider>
-              <div className={classes.divTimePicker}>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <TextField
-                    variant="outlined"
-                    id="local"
-                    fullWidth
-                    name="Local"
-                    label="Local"
-                  />
-                </FormControl>
-              </div>
-              <CardActions>
-                <div className={classes.divButton}>
-                  <Button variant="contained" color="primary" className={classes.typography}>
-                    Fechar Banca
-                  </Button>
+                  </Paper>
                 </div>
-              </CardActions>
-            </div>
+
+                <div className={classes.divDireitaBanca}>
+                  <Grid container>
+                    <MuiPickersUtilsProvider utils={DateFnsUtils} locale={ptBR}>
+                      <FormControl className={classes.formControl}>
+                        <Controller
+                          name="date"
+                          control={control}
+                          defaultValue={null}
+                          rules={validation.dateValidation}
+                          render={({ field: { onChange, value }, fieldState: { error } }) => (
+                            <KeyboardDatePicker
+                              variant="inline"
+                              inputVariant="outlined"
+                              format="dd/MM/yyyy"
+                              minDate={new Date()}
+                              id="standard-required"
+                              label="Data da Banca"
+                              value={value}
+                              onChange={onChange}
+                              error={!!error}
+                              helperText={error ? error.message : null}
+                              KeyboardButtonProps={{
+                                'aria-label': 'change date',
+                              }}
+                            />
+                          )}
+                        />
+                        <div className={classes.divTimePicker}>
+                          <Controller
+                            name="hour"
+                            control={control}
+                            defaultValue={null}
+                            rules={validation.hourValidation}
+                            render={({ field: { onChange, value }, fieldState: { error } }) => (
+                              <KeyboardTimePicker
+                                margin="normal"
+                                style={{ width: '100%' }}
+                                inputVariant="outlined"
+                                variant="inline"
+                                id="time-picker"
+                                ampm={false}
+                                label="Horário da Banca"
+                                error={!!error}
+                                helperText={error ? error.message : null}
+                                value={value}
+                                onChange={onChange}
+                                KeyboardButtonProps={{
+                                  'aria-label': 'change time',
+                                }}
+                              />
+                            )}
+                          />
+
+                        </div>
+                      </FormControl>
+                    </MuiPickersUtilsProvider>
+                    <div className={classes.divTimePicker}>
+                      <FormControl variant="outlined" className={classes.formControl}>
+                        <Controller
+                          name="local"
+                          control={control}
+                          defaultValue=""
+                          rules={validation.localValidation}
+                          render={({ field: { onChange, value }, fieldState: { error } }) => (
+                            <TextField
+                              variant="outlined"
+                              id="local"
+                              fullWidth
+                              error={!!error}
+                              helperText={error ? error.message : null}
+                              name="Local"
+                              label="Local"
+                              value={value}
+                              onChange={onChange}
+                            />
+                          )}
+                        />
+                      </FormControl>
+                      <FormControl variant="outlined" className={classes.formControl}>
+                        <Controller
+                          name="note"
+                          control={control}
+                          defaultValue=""
+                          rules={validation.localValidation}
+                          render={({ field: { onChange, value }, fieldState: { error } }) => (
+                            <TextField
+                              id="content"
+                              label="Descrição"
+                              fullWidth
+                              multiline
+                              rows={12}
+                              error={!!error}
+                              helperText={error ? error.message : null}
+                              value={value}
+                              onChange={onChange}
+                              variant="outlined"
+                            />
+
+                          )}
+                        />
+                      </FormControl>
+                    </div>
+                  </Grid>
+                  <CardActions>
+                    <div className={classes.divButton}>
+                      <Button variant="contained" color="primary" type="submit" className={classes.typography}>
+                        Fechar Banca
+                      </Button>
+                    </div>
+                  </CardActions>
+                </div>
+              </div>
+            </form>
           </CardContent>
         </Card>
       </Container>

@@ -44,6 +44,18 @@ export const titleValidation = {
   required: 'O campo título não pode ficar vazio.'
 }
 
+export const localValidation = {
+  required: 'O campo local não pode ficar vazio.'
+}
+
+export const noteValidation = {
+  required: 'O campo local não pode ficar vazio.'
+}
+
+export const juryValidation = {
+  validate: (arr) => !(arr.length < 3) || "Voce precisa selecionar 3 professores" ,
+}
+
 export const autoCompleteValidation = {
   required: 'Por favor efetue a pesquisa e selecione uma opção'
 }

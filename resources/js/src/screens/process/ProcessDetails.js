@@ -132,15 +132,15 @@ export default function ProcessDetails() {
 
     });
   }
-  
+
   React.useEffect(() => {
     fetchProcessDetails()
   }, []);
-  
+
   const history = useHistory();
-  const redirectJury = (id) => {
-    
-    history.push(`/unidocs/process/jury/${id}`);
+  const redirectJury = (id, professor) => {
+
+    history.push(`/unidocs/proccess/jury`, { id, professor });
   };
 
   const [chipData, setChipData] = React.useState([
@@ -390,7 +390,7 @@ export default function ProcessDetails() {
     }
   }
 
-  
+
 
   return (
     <div className={classes.container}>
@@ -420,10 +420,10 @@ export default function ProcessDetails() {
                   Dados do Projeto
                 </Typography>
 
-                { is("estudante | administrador") && processShow?.status !== 6 && 
+                {is("estudante | administrador") && processShow?.status !== 6 &&
                   <IconButton color="primary" onClick={() => showProcess()}>
-                  <CreateIcon />
-                </IconButton>
+                    <CreateIcon />
+                  </IconButton>
                 }
               </div>
 
@@ -433,7 +433,7 @@ export default function ProcessDetails() {
                   <ListItemText primary={processShow?.advise_professor.user.name || ''} className={classes.data} />
                 </ListItem>
                 <Divider light />
-               {/* <ListItem >
+                {/* <ListItem >
                   <ListItemText primary="Áreas de Conhecimento" className={classes.dataTitle} />
                   <ListItemText primary="" className={classes.data} >oi teste</ListItemText>
                </ListItem>*/}
@@ -563,7 +563,7 @@ export default function ProcessDetails() {
                 Indicar Orientador
               </Button>}
               {is('administrador | professor_orientador') && processShow?.status == 4 && processShow?.jury == null && <Button
-                onClick={() => redirectJury(process.id)}
+                onClick={() => redirectJury(processShow?.id, processShow?.advise_professor_id)}
                 variant='contained'
                 color='primary'
                 className={classes.margin}
@@ -578,14 +578,6 @@ export default function ProcessDetails() {
               >
                 Finalizar Projeto
               </Button>}
-              {/*<Button
-                href='workplan'
-                variant='contained'
-                color='primary'
-                className={classes.margin}
-              >
-                Plano de Trabalho
-              </Button>*/}
               <Button
                 href={`/unidocs/process/documents/${id}`}
                 variant='contained'

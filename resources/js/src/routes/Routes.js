@@ -140,7 +140,7 @@ const App = () => {
                                 <ProcessDocuments />
                             </Route>
 
-                            <Route exact path={`${Path}/process/jury/:id`}>
+                            <Route exact path={`${Path}/proccess/jury`}>
                                 <ProcessJury />
                             </Route>
 
