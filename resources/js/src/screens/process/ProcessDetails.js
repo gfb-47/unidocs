@@ -132,10 +132,16 @@ export default function ProcessDetails() {
 
     });
   }
-
+  
   React.useEffect(() => {
     fetchProcessDetails()
   }, []);
+  
+  const history = useHistory();
+  const redirectJury = (id) => {
+    
+    history.push(`/unidocs/process/jury/${id}`);
+  };
 
   const [chipData, setChipData] = React.useState([
     { key: 0, label: 'Angular', color: '#673ab7' },
@@ -384,10 +390,7 @@ export default function ProcessDetails() {
     }
   }
 
-  const history = useHistory();
-  const showProcess = () => {
-    history.push(`/unidocs/process/edit/${id}`);
-  };
+  
 
   return (
     <div className={classes.container}>
@@ -560,7 +563,7 @@ export default function ProcessDetails() {
                 Indicar Orientador
               </Button>}
               {is('administrador | professor_orientador') && processShow?.status == 4 && processShow?.jury == null && <Button
-                href='jury'
+                onClick={() => redirectJury(process.id)}
                 variant='contained'
                 color='primary'
                 className={classes.margin}

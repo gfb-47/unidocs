@@ -13,9 +13,11 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import IconButton from '@material-ui/core/IconButton';
+import { useHistory } from 'react-router'
 import MenuIcon from '@material-ui/icons/Menu';
 import { Avatar, Container, Menu, MenuItem } from '@material-ui/core';
 import Brightness1Icon from '@material-ui/icons/Brightness1';
+import api from '../../api/jury';
 
 //Sessão 1 - Area de Criação de Dados para preechimento. Será subistituido pela API do banco - NÃO SERÁ MANTIDO
 //Para os testes, mude as variaveis abaixo para o numero de variaveis que haverão na sua tabela.
@@ -111,6 +113,7 @@ function EnhancedTableHead(props) {
   );
 }
 
+
 EnhancedTableHead.propTypes = {
   classes: PropTypes.object.isRequired,
   onRequestSort: PropTypes.func.isRequired,
@@ -198,6 +201,7 @@ const useStyles = makeStyles((theme) => ({
 //COMPONENTE QUE SERÁ RENDENIZADO, ou seja, aqui o bagulho é serio.
 export default function SemesterJury() {
   {/* Variaveis sendo inicializadas */ }
+  const history = useHistory();
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -230,9 +234,25 @@ export default function SemesterJury() {
   const handleClose = () => {
     setAnchorEl(null);
   };
+  const [jury, setJury] = React.useState([]);
+  
+  const fetchJury = () => {
+    api.getAllJury().then(res => {
+      const result = res.data.data;
+      setJury(result);
+
+    });
+  };
+  React.useEffect(() => {
+    fetchJury();
+  }, []);
 
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
+  const showProcess = (id) => {
+    history.push(`/unidocs/process/jury/${id}`);
+  };
+  
   {/* Return que envia o HTML com os componentes */ }
   return (
     <div className={classes.root}>
@@ -259,7 +279,7 @@ export default function SemesterJury() {
                             <TableCell/> dentro de <TableRoll/> para que eles se 
                             alinhem com a listagem que voce gostaria de fazer */}
               <TableBody>
-                {stableSort(rows, getComparator(order, orderBy))
+                {stableSort(jury, getComparator(order, orderBy))
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) => {
                     const labelId = `enhanced-table-checkbox-${index}`;
@@ -268,7 +288,7 @@ export default function SemesterJury() {
                       <TableRow
                         hover
                         tabIndex={-1}
-                        key={row.studentName}
+                        key={row.id}
                       >
 
                         {/* Não mexa nesse TableCell*/}
@@ -281,16 +301,16 @@ export default function SemesterJury() {
                             <Avatar
                               style={{
                                 marginRight: "1rem",
-                                color: `${row.studentColor}`,
-                                backgroundColor: `${row.studentColor}50`,
+                                color: `${row.color}`,
+                                backgroundColor: `${row.color}50`,
                               }}
                             >
-                              {row.studentName[0]}
+                              {row.name[0]}
                             </Avatar>
 
                             <div>
-                              <b>{row.studentName}</b> <br />
-                              <span className={classes.subItem}>{row.studentEmail}</span>
+                              <b>{row.name}</b> <br />
+                              <span className={classes.subItem}>{row.email}</span>
                             </div>
                           </div>
                         </TableCell>
@@ -298,7 +318,7 @@ export default function SemesterJury() {
                           <span>{row.title}</span>
                         </TableCell>
                         <TableCell align="left">
-                          <span>{row.members}</span>
+                          <span>{row.professors}</span>
                         </TableCell>
                         <TableCell align="left">
                           <span>{row.date}</span>
@@ -307,7 +327,7 @@ export default function SemesterJury() {
                           <span>{row.hour}</span>
                         </TableCell>
                         <TableCell align="left">
-                          <span>{row.createdAt}</span>
+                          <span>{row.created_at}</span>
                         </TableCell>
 
                         {/* Esse <TableCell/> representa o <IconButton/> 
@@ -333,7 +353,7 @@ export default function SemesterJury() {
                             open={open}
                             onClose={handleClose}
                           >
-                            <MenuItem onClick={handleClose}>Vizualizar Processo</MenuItem>
+                            <MenuItem  onClick={() => showProcess(row.id)}>Visualizar Processo</MenuItem>
                           </Menu>
                         </TableCell>
                       </TableRow>
@@ -361,5 +381,6 @@ export default function SemesterJury() {
       </Container>
     </div>
   );
+  
 }
 //----FIM DA Sessão 5----

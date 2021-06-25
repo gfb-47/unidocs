@@ -28,15 +28,16 @@ import Grid from '@material-ui/core/Grid';
 import DateFnsUtils from '@date-io/date-fns';
 import { ptBR } from "date-fns/locale";
 import { Avatar, Chip, Container, TextField, } from '@material-ui/core';
-
-function createData(name, professorEmail, course,knowladgeArea, color) {
-  return { name, professorEmail, course,knowladgeArea, color };
-}
+import { useParams } from 'react-router-dom';
+import api from '../../api/jury';
+import apiProfessor from '../../api/professor';
+import professor from '../../api/professor';
+import { type } from 'jquery';
 
 const rows = [
-  createData('Alex Coelho', 'alex@unitins.br', 'Sistemas de Informação', '', '#F40909'),
-  createData('Silvano', 'silvano@unitins.br', 'Direito', '', '#E47B09'),
-  createData('Fredson', 'fredson@unitins.br', 'Agronomia', '', '#358DF5'),
+  // createData('Alex Coelho', 'alex@unitins.br', 'Sistemas de Informação', '', '#F40909'),
+  // createData('Silvano', 'silvano@unitins.br', 'Direito', '', '#E47B09'),
+  // createData('Fredson', 'fredson@unitins.br', 'Agronomia', '', '#358DF5'),
 ];
 
 function descendingComparator(a, b, orderBy) {
@@ -178,6 +179,8 @@ function EnhancedTableHead(props) {
     onRequestSort(event, property);
   };
 
+
+
   return (
     <TableHead>
       <TableRow>
@@ -226,7 +229,33 @@ EnhancedTableHead.propTypes = {
   rowCount: PropTypes.number.isRequired,
 };
 
+
 export default function ProfessorProfile() {
+
+  const [jury, setJury] = React.useState([]);
+
+  const fetchJury = async () => {
+    const result = await api.getAllJury();
+    setJury(result.data.data);
+  };
+  React.useEffect(() => {
+    fetchJury();
+    
+  }, []);
+
+  const [professors, setProfessors] = React.useState([]);
+
+  const fetchProfessors = () => {
+    apiProfessor.getAllProfessors().then(res => {
+      const result = res.data.data;
+      setProfessors(result);
+
+    });
+  };
+  React.useEffect(() => {
+    fetchProfessors();
+  }, []);
+
   const classes = useStyles();
 
   const [selectedDate, setSelectedDate] = React.useState(new Date());
@@ -260,7 +289,7 @@ export default function ProfessorProfile() {
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -280,10 +309,11 @@ export default function ProfessorProfile() {
   const handleClick = (event, name) => {
     const selectedIndex = selected.indexOf(name);
     let newSelected = [];
-
+    verifyProfessor(jury, professors);
     if (selectedIndex === -1) {
       newSelected = newSelected.concat(selected, name);
-    } else if (selectedIndex === 0) {
+    }
+     else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
       newSelected = newSelected.concat(selected.slice(0, -1));
@@ -296,6 +326,16 @@ export default function ProfessorProfile() {
 
     setSelected(newSelected);
   };
+  const verifyProfessor = () => {
+    console.log(typeof jury.professors);
+  
+      jury.forEach((item) => {
+      if (item.id == professor.id) {
+
+        
+      }
+      });
+  }
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -353,12 +393,13 @@ export default function ProfessorProfile() {
                       rowCount={rows.length}
                     />
                     <TableBody>
-                      {stableSort(rows, getComparator(order, orderBy))
+                      {stableSort(professors, getComparator(order, orderBy))
                         .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                         .map((row, index) => {
                           const isItemSelected = isSelected(row.name);
                           const labelId = `enhanced-table-checkbox-${index}`;
 
+                          verifyProfessor;
                           return (
                             <TableRow
                               hover
@@ -391,7 +432,7 @@ export default function ProfessorProfile() {
 
                                   <div>
                                     <b>{row.name}</b> <br />
-                                    <span className={classes.subItem}>{row.professorEmail}</span>
+                                    <span className={classes.subItem}>{row.email}</span>
                                   </div>
                                 </div>
                               </TableCell>
@@ -437,7 +478,7 @@ export default function ProfessorProfile() {
                   </Table>
                 </TableContainer>
                 <TablePagination
-                  rowsPerPageOptions={[5, 10, 25]}
+                  rowsPerPageOptions={[10, 15, 20]}
                   component="div"
                   count={rows.length}
                   rowsPerPage={rowsPerPage}
@@ -498,7 +539,7 @@ export default function ProfessorProfile() {
                 <div className={classes.divButton}>
                   <Button variant="contained" color="primary" className={classes.typography}>
                     Fechar Banca
-                      </Button>
+                  </Button>
                 </div>
               </CardActions>
             </div>
