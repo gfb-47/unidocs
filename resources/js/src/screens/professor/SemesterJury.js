@@ -18,7 +18,10 @@ import MenuIcon from '@material-ui/icons/Menu';
 import { Avatar, Container, Menu, MenuItem } from '@material-ui/core';
 import Brightness1Icon from '@material-ui/icons/Brightness1';
 import api from '../../api/jury';
-
+import { formatDistance, format } from 'date-fns';
+import ptBR from 'date-fns/locale/pt-BR';
+import { setLoading } from '../../utils/actions';
+import { Context } from '../../components/Store';
 //Sessão 1 - Area de Criação de Dados para preechimento. Será subistituido pela API do banco - NÃO SERÁ MANTIDO
 //Para os testes, mude as variaveis abaixo para o numero de variaveis que haverão na sua tabela.
 // function createData(studentName, studentEmail, studentColor, title, members, date, hour, createdAt, lastCreated) {
@@ -210,6 +213,7 @@ export default function SemesterJury() {
   const [jury, setJury] = React.useState([]);
   const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef([]);
+  const [, dispatch] = React.useContext(Context);
 
   {/* Metodos */ }
   const handleRequestSort = (event, property) => {
@@ -228,15 +232,17 @@ export default function SemesterJury() {
   };
 
 
- 
+
   const handleClose = () => {
     setOpen(false);
   };
 
   const fetchJury = () => {
+    dispatch(setLoading(true));
     api.getAllJury().then(res => {
       const result = res.data.data;
       setJury(result);
+      dispatch(setLoading(false));
 
     });
   };
@@ -248,10 +254,16 @@ export default function SemesterJury() {
     setOpen(index);
   };
 
+  const formatDate = (date) => {
+    return format(new Date(date), 'PPP', { locale: ptBR })
+  }
+  const formatHour = (hour) => {
+    return format(hour, 'hh:mm:ss')
+  }
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, jury.length - page * rowsPerPage);
 
   const showProcess = (id) => {
-    history.push(`/unidocs/process/jury/${id}`);
+    history.push(`/unidocs/process/details/${id}`);
   };
 
   {/* Return que envia o HTML com os componentes */ }
@@ -306,29 +318,36 @@ export default function SemesterJury() {
                                 backgroundColor: `${row.color}50`,
                               }}
                             >
-                              {row.name[0]}
+                              {row.studentName[0]}
                             </Avatar>
 
                             <div>
-                              <b>{row.name}</b> <br />
+                              <b>{row.studentName}</b> <br />
                               <span className={classes.subItem}>{row.email}</span>
                             </div>
                           </div>
                         </TableCell>
                         <TableCell align="left">
-                          <span>{row.title}</span>
+                          <span>{row.proccess.title}</span>
                         </TableCell>
                         <TableCell align="left">
-                          <span>{row.professors}</span>
+                          <span>{row?.professors.map((item, index) => {
+                            let member = item.user.name + ', ';
+                            if (row.professors[row?.professors?.length - 1] == row.professors[index]) {
+                              member = item.user.name;
+                            }
+                            return member
+
+                          })}</span>
                         </TableCell>
                         <TableCell align="left">
-                          <span>{row.date}</span>
+                          <span>{formatDate(row.date)}</span>
                         </TableCell>
                         <TableCell align="left">
                           <span>{row.hour}</span>
                         </TableCell>
                         <TableCell align="left">
-                          <span>{row.created_at}</span>
+                          <span>{formatDistance(new Date(row.updated_at), new Date(), { locale: ptBR })}</span>
                         </TableCell>
 
                         {/* Esse <TableCell/> representa o <IconButton/> 
@@ -356,7 +375,7 @@ export default function SemesterJury() {
                             open={open === index}
                             onClose={handleClose}
                           >
-                            <MenuItem onClick={() => showProcess(row.id)}>Visualizar Processo</MenuItem>
+                            <MenuItem onClick={() => showProcess(row.proccess.id)}>Visualizar Processo</MenuItem>
                           </Menu>
                         </TableCell>
                       </TableRow>
