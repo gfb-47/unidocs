@@ -213,6 +213,8 @@ export default function ModalAdvisor({ professor, handleProfessorChange = () => 
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
   const [selected, setSelected] = React.useState(null);
+  const [inputFilter, setInputFilter] = React.useState("");
+  const [filteredList, setFilteredList] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
@@ -225,6 +227,7 @@ export default function ModalAdvisor({ professor, handleProfessorChange = () => 
     api.getAllProfessors().then(res => {
       const result = res.data.data;
       setProfessors(result);
+      setFilteredList(result)
       dispatch(setLoading(false));
 
     });
@@ -234,6 +237,13 @@ export default function ModalAdvisor({ professor, handleProfessorChange = () => 
     fetchProfessors();
     setSelected(professor)
   }, []);
+
+  React.useEffect(() => {
+    const filteredProfessor = professors.filter((p) => {
+      return p.name.toLowerCase().includes(inputFilter.toLowerCase());
+    });
+    setFilteredList(filteredProfessor);
+  }, [inputFilter])
 
   const handleClick = (event, name) => {
 
@@ -256,7 +266,7 @@ export default function ModalAdvisor({ professor, handleProfessorChange = () => 
 
   const isSelected = (name) => selected === name;
 
-  const emptyRows = rowsPerPage - Math.min(rowsPerPage, professors.length - page * rowsPerPage);
+  const emptyRows = rowsPerPage - Math.min(rowsPerPage, filteredList.length - page * rowsPerPage);
 
   return (
     <div className={classes.root}>
@@ -269,6 +279,8 @@ export default function ModalAdvisor({ professor, handleProfessorChange = () => 
         >
           <TextField
             id="standard-helperText"
+            value={inputFilter}
+            onChange={(e) => setInputFilter(e.target.value)}
             label="Nome do Professor"
             helperText="Filtre o professor pelo nome"
           />
@@ -285,7 +297,7 @@ export default function ModalAdvisor({ professor, handleProfessorChange = () => 
           >
 
             <TableBody>
-              {stableSort(professors, getComparator(order, orderBy))
+              {stableSort(filteredList, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
                   const isItemSelected = isSelected(row.id);
@@ -347,7 +359,7 @@ export default function ModalAdvisor({ professor, handleProfessorChange = () => 
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={professors.length}
+          count={filteredList.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onChangePage={handleChangePage}

@@ -85,6 +85,11 @@ const useStyles = makeStyles((theme) => ({
     fontSize: '0.75rem',
     fontWeight: 400,
   },
+  members: {
+    fontSize: '0.75rem',
+    marginLeft: '4rem',
+    fontWeight: 400,
+  },
   descriptionWrapper: {
     paddingLeft: theme.spacing(2),
   },
@@ -442,11 +447,7 @@ export default function ProcessDetails() {
                   <ListItemText primary="Semestre" className={classes.dataTitle} />
                   <ListItemText primary={processShow?.semester.name || ''} className={classes.data} />
                 </ListItem>
-                <Divider light />
-                <ListItem >
-                  <ListItemText primary="Nota" className={classes.dataTitle} />
-                  <ListItemText primary={processShow?.rating} className={classes.data} />
-                </ListItem>
+
                 <Divider light />
               </List>
             </div>
@@ -459,31 +460,29 @@ export default function ProcessDetails() {
                 <Typography variant="h5">
                   Dados da Banca
                 </Typography>
-
-                <IconButton color="primary">
-                  <CreateIcon />
-                </IconButton>
               </div>
 
               <List component="nav">
                 <ListItem >
                   <ListItemText primary="Membros" className={classes.dataTitle} />
-                  <ListItemText primary="123@123.com" className={classes.data} />
-                </ListItem>
-                <Divider light />
-                <ListItem >
-                  <ListItemText primary="Áreas de Conhecimento" className={classes.dataTitle} />
-                  <ListItemText primary="" className={classes.data} >oi teste</ListItemText>
+                  <ListItemText primary={processShow?.jury.professors.map((item, index) => {
+                    let member = item.user.name + ', ';
+                    if (processShow?.jury.professors[processShow?.jury.professors.length - 1] == processShow?.jury.professors[index]) {
+                      member = item.user.name;
+                    }
+                    return member
+
+                  })} className={classes.members} />
                 </ListItem>
                 <Divider light />
                 <ListItem >
                   <ListItemText primary="Semestre" className={classes.dataTitle} />
-                  <ListItemText primary="2021.1/TCC" className={classes.data} />
+                  <ListItemText primary={processShow?.semester.name} className={classes.data} />
                 </ListItem>
                 <Divider light />
                 <ListItem >
                   <ListItemText primary="Nota" className={classes.dataTitle} />
-                  <ListItemText primary="-" className={classes.data} />
+                  <ListItemText primary={processShow?.rating || "-"} className={classes.data} />
                 </ListItem>
                 <Divider light />
               </List>
@@ -529,7 +528,7 @@ export default function ProcessDetails() {
               >
                 Aceitar Orientação
               </Button>}
-              {is('administrador | professor_disciplina') && processShow?.status == 4 && processShow?.jury != null && <Button
+              {is('administrador | professor_disciplina | professor_orientador') && processShow?.status >= 4 && processShow?.jury != null && <Button
                 href={`/report/minute/${id}`}
                 target="_blank"
                 variant='contained'
@@ -768,7 +767,7 @@ export default function ProcessDetails() {
         <DialogTitle id="form-dialog-title">Selecionar Professor Orientador</DialogTitle>
         <DialogContent>
 
-          <ModalAdvisor professor={processShow?.professor_id} handleProfessorChange={onOrientationSubmit} />
+          <ModalAdvisor professor={processShow?.advise_professor_id} handleProfessorChange={onOrientationSubmit} />
         </DialogContent>
       </Dialog>
     </div>

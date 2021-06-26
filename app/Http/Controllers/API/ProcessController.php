@@ -52,7 +52,7 @@ class ProcessController extends BaseController
         $user = User::with('student', 'professor')->find(auth()->id());
 
         $item = Process::select("processes.*", "semesters.professor_id")
-            ->with('adviseProfessor.user', 'semester', 'knowledgeAreas', 'jury')
+            ->with('adviseProfessor.user', 'semester', 'knowledgeAreas', 'jury.professors.user')
             ->join('semesters', 'semesters.id', '=', 'processes.semester_id')
             ->orderBy("processes.title")
             ->where('processes.id', $id)
