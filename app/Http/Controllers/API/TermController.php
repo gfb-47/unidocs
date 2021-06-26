@@ -4,8 +4,8 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\BaseController as BaseController;
 use App\Models\Process;
+use App\Models\SignedTerm;
 use App\Models\Term;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -60,6 +60,12 @@ class TermController extends BaseController
     public function sendDocument(Request $request)
     {
 
+        $validate = Validator::make($request->all(), [
+            'file' => 'file|mimes:pdf,doc,docx,dot|max:2048',
+        ]);
+        if ($validate->fails()) {
+            return $this->sendError('Error on validating', $validate->errors(), 400);
+        }
         try {
             DB::beginTransaction();
             $process = Process::find($request->process_id);
@@ -77,6 +83,37 @@ class TermController extends BaseController
 
             return $this->sendError($e->getMessage());
 
+        }
+    }
+
+    public function reset($id, Request $request)
+    {
+        try {
+            $item = Term::with('sign')->findOrFail($id);
+            if ($item->file_directory) {
+                Storage::disk('public')->delete($item->file_directory);
+                $item->fill(['file_directory' => null])->save();
+                foreach ($item->sign as $key => $signer) {
+                    SignedTerm::find($signer->pivot->id)->delete();
+                }
+            }
+
+            return $this->sendResponse([], 'Arquivo resetado com sucesso! (✌🏼 Dois)');
+        } catch (\Exception $e) {
+            return $this->sendError($e->getMessage());
+        }
+    }
+
+    public function destroy($id)
+    {
+        try {
+            $item = Term::findOrFail($id);
+            Storage::disk('public')->delete($item->link);
+            $item->delete();
+
+            return $this->sendResponse([], 'Arquivo deletado com sucesso! (😜 Poze)');
+        } catch (\Exception $e) {
+            return $this->sendError($e->getMessage());
         }
     }
 }

@@ -8,6 +8,10 @@ export default {
 
   getTerms: (id) => axios.get(`${BASE_URL}/process/terms/${id}`),
 
+  resetTerms: (id, data) => axios.post(`${BASE_URL}/process/terms/${id}/reset`, data),
+
+  destroyTerms: (id) => axios.delete(`${BASE_URL}/process/terms/${id}/destroy`),
+
   showProcess: (id) => axios.get(`${BASE_URL}/process/${id}`),
 
   addProcess: (post) => axios.post(`${BASE_URL}/process`, post),

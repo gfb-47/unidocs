@@ -23,12 +23,13 @@ import MenuList from '@material-ui/core/MenuList';
 import MenuIcon from '@material-ui/icons/Menu';
 import DescriptionIcon from '@material-ui/icons/Description';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-import { useParams, useHistory } from 'react-router-dom';
+import { useParams, useHistory, useLocation } from 'react-router-dom';
 import api from '../../api/process';
 import { setLoading } from '../../utils/actions';
 import { Context } from '../../components/Store';
 import { formatDistance, format } from 'date-fns';
 import ptBR from 'date-fns/locale/pt-BR';
+import { is } from '../../utils/permissions';
 import axios from 'axios';
 
 
@@ -201,8 +202,10 @@ export default function ProcessDocuments() {
   const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef([]);
   const history = useHistory();
+  const location = useLocation();
   const [, dispatch] = React.useContext(Context);
   const username = getUsername();
+  const { status } = location.state
   const fetchDocuments = async () => {
     try {
       dispatch(setLoading(true));
@@ -283,7 +286,8 @@ export default function ProcessDocuments() {
           Documentos
         </Typography>
         <input
-          accept="application/pdf"
+          accept="application/pdf,application/msword,
+          application/vnd.openxmlformats-officedocument.wordprocessingml.document"
           className={classes.input}
           id="contained-button-file"
           multiple
@@ -315,6 +319,37 @@ export default function ProcessDocuments() {
   }
 
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, terms.length - page * rowsPerPage);
+
+  const show = (url) => {
+    window.open(url)
+  }
+  const reset = async (id, process_id) => {
+    try {
+      dispatch(setLoading(true));
+
+      await api.resetTerms(id, { process_id })
+
+    } catch (error) {
+      console.log(error)
+    } finally {
+      fetchDocuments()
+      dispatch(setLoading(false));
+
+    }
+  }
+  const destroy = async (id) => {
+    try {
+      dispatch(setLoading(true));
+
+      await api.destroyTerms(id)
+    } catch (error) {
+      console.log(error)
+    } finally {
+      fetchDocuments()
+      dispatch(setLoading(false));
+
+    }
+  }
 
   return (
     <div className={classes.root}>
@@ -398,10 +433,11 @@ export default function ProcessDocuments() {
                                 <Paper>
                                   <ClickAwayListener onClickAway={handleClose}>
                                     <MenuList autoFocusItem={open !== false} id="menu-list-grow" onKeyDown={handleListKeyDown}>
-                                      <MenuItem onClick={() => sign(row.file_directory || row.original_directory, row.name, id, row.id, username)}>Assinar</MenuItem>
-                                      <MenuItem onClick={handleClose}>Desativar</MenuItem>
+                                      <MenuItem onClick={() => show(row.full_link)}>Visualizar</MenuItem>
+                                      {status < 6 && <MenuItem onClick={() => sign(row.file_directory || row.original_directory, row.name, id, row.id, username)}>Assinar</MenuItem>}
                                       <Divider light />
-                                      <MenuItem onClick={handleClose}>Excluir</MenuItem>
+                                      {status < 6 && is('administrador | professor_disciplina | professor_orientador') && <MenuItem onClick={() => reset(row.id, row.process_id)}>Resetar</MenuItem>}
+                                      {status < 6 && is('administrador | professor_disciplina | professor_orientador') && <MenuItem onClick={() => destroy(row.id)}>Excluir</MenuItem>}
                                     </MenuList>
                                   </ClickAwayListener>
                                 </Paper>

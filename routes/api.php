@@ -50,6 +50,8 @@ Route::group(['prefix' => 'v1', 'namespace' => 'API'], function () {
             Route::put('changestatus/{id}/ratingprocess', 'StatusController@ratingProcess');
             Route::put('changestatus/{id}/finalizeprocess', 'StatusController@finalizeProcess');
             Route::get('terms/{process_id}', 'TermController@index');
+            Route::post('terms/{id}/reset', 'TermController@reset');
+            Route::delete('terms/{id}/destroy', 'TermController@destroy');
             Route::post('documentsign/document', 'TermController@signDocument');
             Route::post('documentsend/file', 'TermController@sendDocument');
         });

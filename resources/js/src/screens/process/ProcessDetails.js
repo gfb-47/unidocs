@@ -403,6 +403,11 @@ export default function ProcessDetails() {
   const showProcess = () => {
     history.push(`/unidocs/process/edit/${id}`);
   };
+
+  const showDocuments = (id) => {
+    history.push(`/unidocs/process/documents/${id}`, { status: processShow?.status });
+
+  }
   return (
     <div className={classes.container}>
       <Paper className={classes.card}>
@@ -579,7 +584,7 @@ export default function ProcessDetails() {
                 Finalizar Projeto
               </Button>}
               <Button
-                href={`/unidocs/process/documents/${id}`}
+                onClick={() => showDocuments(id)}
                 variant='contained'
                 color='primary'
                 className={classes.margin}

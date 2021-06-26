@@ -12,7 +12,8 @@ class Term extends Model
 
     public function getFullLinkAttribute()
     {
-        return asset('storage/' . $this->directory);
+        $directory = $this->file_directory == null ? $this->original_directory : $this->file_directory;
+        return asset('storage/' . $directory);
     }
     public function process()
     {
@@ -22,6 +23,7 @@ class Term extends Model
     public function sign()
     {
         return $this->belongsToMany(User::class, 'signed_terms', 'term_id', 'user_id')
+            ->withPivot('id')
             ->withTimestamps();
     }
 }
