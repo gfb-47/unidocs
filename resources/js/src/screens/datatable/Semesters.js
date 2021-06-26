@@ -306,7 +306,7 @@ export default function Semesters() {
                                                     align="left"
                                                     className={row.active == 1 ? classes.itemActive : classes.itemInactive}
                                                 >
-                                                    <span>{row.active == 1 ? 'ativo' : 'inativo'}</span>
+                                                    <span>{row.active == 1 ? 'Ativo' : 'Inativo'}</span>
                                                 </TableCell>
 
                                                 {/* Esse <TableCell/> representa o <IconButton/> 
