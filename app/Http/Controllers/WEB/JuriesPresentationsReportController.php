@@ -17,18 +17,18 @@ class JuriesPresentationsReportController extends Controller
     public function __invoke(Request $request)
     {
         $inputs = $request->all();
-        $data = Jury::info()->select('juries.*')
-        ->with('professors.user')
-        ->join('processes', 'processes.id', '=', 'juries.process_id')
-        ->join('students', 'processes.student_id', '=', 'students.id')
-        ->join('users', 'students.user_id', '=', 'users.id')
-        ->orderBy('juries.hour', 'asc')
-        ->whereBetween('juries.date', $inputs)
-        ->get();
+        $data = Jury::select('juries.*', 'processes.title', 'users.name')
+            ->with('professors.user')
+            ->join('processes', 'processes.id', '=', 'juries.process_id')
+            ->join('students', 'processes.student_id', '=', 'students.id')
+            ->join('users', 'students.user_id', '=', 'users.id')
+            ->orderBy('juries.hour', 'asc')
+            ->whereBetween('juries.date', $inputs)
+            ->get();
 
         return PDF::loadView('pdf.juries_presentations_report', compact('data'))
             ->setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true, 'tempDir' => public_path(), 'chroot' => public_path()])
-            ->setPaper('a4', 'portrat')
+            ->setPaper('a4', 'landscape')
             ->stream();
     }
 }
