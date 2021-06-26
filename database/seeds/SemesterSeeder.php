@@ -18,7 +18,6 @@ class SemesterSeeder extends Seeder
             'subject_id' => 1,
             'course_id' => 4,
             'professor_id' => 2,
-            'active' => false,
         ]);
 
         $desactivedSemesterStudents = Student::where('id', '<', '25')->get();
