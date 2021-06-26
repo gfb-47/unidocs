@@ -400,7 +400,9 @@ export default function ProcessDetails() {
   const formatDate = (date) => {
     return format(new Date(date), 'PPP', { locale: ptBR })
   }
-
+  const showProcess = () => {
+    history.push(`/unidocs/process/edit/${id}`);
+  };
   return (
     <div className={classes.container}>
       <Paper className={classes.card}>

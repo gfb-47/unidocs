@@ -70,9 +70,9 @@ export default function ProcessEdit() {
   const [options, setOptions] = React.useState([]);
   const loading = open && options.length === 0;
   const { handleSubmit, control, reset, setValue } = useForm();
-  const [, dispatch] = React.useContext(Context);
   const { id } = useParams();
   const [processShow, setProcess] = React.useState(null);
+  const [, dispatch] = React.useContext(Context);
 
   const [state, setState] = React.useState({
     gilad: true,
@@ -89,7 +89,7 @@ export default function ProcessEdit() {
 
   async function fetchProcessDetails() {
     try {
-      setLoading(true)
+      dispatch(setLoading(true));
 
       const { data } = await api.showProcess(id);
       setProcess(data.data);
@@ -98,7 +98,7 @@ export default function ProcessEdit() {
 
       Object.entries(data.data).forEach(([key, value]) => setValue(key, value))
     } finally {
-      setLoading(false)
+      dispatch(setLoading(false));
     }
   }
 
