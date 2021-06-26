@@ -38,6 +38,9 @@ const useStyles = makeStyles((theme) => ({
   title: {
     fontSize: 15,
   },
+  container: {
+    marginBottom: 300,
+  },
   margin: {
     margin: theme.spacing(1),
   },
@@ -139,7 +142,8 @@ export default function Report() {
 
   return (
     <div>
-      <Container>
+      <Container className={classes.container} >
+  
         <div className={classes.tabs} >
           <ToggleButtonGroup
             value={alignment}

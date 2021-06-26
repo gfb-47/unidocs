@@ -107,9 +107,9 @@ export default function Section(props) {
             <Card className={classes.card}>
                 <CardHeader
                     title="Dados Pessoais"
-                    subheader={formatDistance(props.updated
+                    subheader={"Última Atualização: " + formatDistance(props.updated
                         ? new Date(props.updated)
-                        : new Date(), new Date(), { locale: ptBR })}
+                        : new Date(), new Date(), { locale: ptBR })+" atrás"}
                 />
                 <CardContent className={classes.cardContent}>
                     <div className={classes.userData}>
