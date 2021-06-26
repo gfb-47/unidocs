@@ -17,7 +17,7 @@ class JuriesPresentationsReportController extends Controller
     public function __invoke(Request $request)
     {
         $inputs = $request->all();
-        $data = Jury::info()
+        $data = Jury::info()->select('juries.*')
         ->with('professors.user')
         ->join('processes', 'processes.id', '=', 'juries.process_id')
         ->join('students', 'processes.student_id', '=', 'students.id')
