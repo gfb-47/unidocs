@@ -53,7 +53,7 @@
     </main>
     <script>
         function asset(path) {
-            let base_path = '{{asset('')}}' || '';
+            let base_path = '{{ asset('') }}' || '';
             return base_path + path;
         }
 
@@ -61,6 +61,9 @@
             return document.getElementById("baseurl").value;
         }
 
+        function getUsername() {
+            return document.head.querySelector('meta[name="username"]').content;
+        }
     </script>
     @stack('js')
 </body>

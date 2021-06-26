@@ -30,6 +30,8 @@ import Input from '@material-ui/core/Input';
 import * as validation from '../../utils/validation';
 import { toast } from 'react-toastify';
 import { useHistory } from 'react-router'
+import { formatDistance, format } from 'date-fns';
+import ptBR from 'date-fns/locale/pt-BR';
 
 const useStyles = makeStyles((theme) => ({
   margin: {
@@ -395,7 +397,9 @@ export default function ProcessDetails() {
     }
   }
 
-
+  const formatDate = (date) => {
+    return format(new Date(date), 'PPP', { locale: ptBR })
+  }
 
   return (
     <div className={classes.container}>
@@ -411,7 +415,7 @@ export default function ProcessDetails() {
             {processShow?.title || ''}
           </Typography>
           <Typography className={classes.subtitle}>
-            Última atualização: September 14, 2016
+            {processShow?.updated_at && `Última atualização: ${formatDate(processShow?.updated_at)}`}
           </Typography>
         </div>
 
@@ -437,11 +441,6 @@ export default function ProcessDetails() {
                   <ListItemText primary="Orientador" className={classes.dataTitle} />
                   <ListItemText primary={processShow?.advise_professor.user.name || ''} className={classes.data} />
                 </ListItem>
-                <Divider light />
-                {/* <ListItem >
-                  <ListItemText primary="Áreas de Conhecimento" className={classes.dataTitle} />
-                  <ListItemText primary="" className={classes.data} >oi teste</ListItemText>
-               </ListItem>*/}
                 <Divider light />
                 <ListItem >
                   <ListItemText primary="Semestre" className={classes.dataTitle} />

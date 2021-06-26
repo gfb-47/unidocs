@@ -203,13 +203,13 @@ export default function SemesterJury() {
   {/* Variaveis sendo inicializadas */ }
   const history = useHistory();
   const classes = useStyles();
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const open = Boolean(anchorEl);
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('active');
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [jury, setJury] = React.useState([]);
+  const [open, setOpen] = React.useState(false);
+  const anchorRef = React.useRef([]);
 
   {/* Metodos */ }
   const handleRequestSort = (event, property) => {
@@ -228,12 +228,9 @@ export default function SemesterJury() {
   };
 
 
-  const handleMenu = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
+ 
   const handleClose = () => {
-    setAnchorEl(null);
+    setOpen(false);
   };
 
   const fetchJury = () => {
@@ -246,6 +243,10 @@ export default function SemesterJury() {
   React.useEffect(() => {
     fetchJury();
   }, []);
+
+  const handleMenu = (index) => {
+    setOpen(index);
+  };
 
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, jury.length - page * rowsPerPage);
 
@@ -334,13 +335,15 @@ export default function SemesterJury() {
                             que todas as linhas precisam ter */}
                         <TableCell align="right">
                           <IconButton
-                            onClick={handleMenu}
+                            ref={ref => anchorRef.current[index] = ref}
+                            onClick={() => handleMenu(index)}
+
                           >
                             <MenuIcon />
                           </IconButton>
                           <Menu
                             id="item-menu"
-                            anchorEl={anchorEl}
+                            anchorEl={anchorRef.current[index]}
                             anchorOrigin={{
                               vertical: 'top',
                               horizontal: 'right',
@@ -350,7 +353,7 @@ export default function SemesterJury() {
                               vertical: 'top',
                               horizontal: 'right',
                             }}
-                            open={open}
+                            open={open === index}
                             onClose={handleClose}
                           >
                             <MenuItem onClick={() => showProcess(row.id)}>Visualizar Processo</MenuItem>

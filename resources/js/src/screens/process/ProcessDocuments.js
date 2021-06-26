@@ -145,36 +145,9 @@ const useToolbarStyles = makeStyles((theme) => ({
 }));
 
 
-const EnhancedTableToolbar = ({ onFileChanged }) => {
-  const classes = useToolbarStyles();
 
-  return (
-    <Toolbar
-      className={classes.root}
-    >
-      <Typography className={classes.title} variant="h6" id="tableTitle" component="div">
-        Documentos
-      </Typography>
-      <input
-        accept="application/pdf"
-        className={classes.input}
-        id="contained-button-file"
-        multiple
-        onChange={onFileChanged}
-        type="file"
-      />
-      <label htmlFor="contained-button-file">
-        <IconButton color="secondary" className={classes.button} component="span">
-          <AddIcon />
-        </IconButton>
-      </label>
-      <IconButton color="secondary" className={classes.button}>
-        <ArrowBackIcon />
-      </IconButton>
 
-    </Toolbar>
-  );
-};
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -221,7 +194,6 @@ export default function ProcessDocuments() {
   /**@type {{id:number}} */
   const { id } = useParams();
   const [terms, setTerms] = React.useState([]);
-  const [username, setUsername] = React.useState('');
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('active');
   const [page, setPage] = React.useState(0);
@@ -230,14 +202,12 @@ export default function ProcessDocuments() {
   const anchorRef = React.useRef([]);
   const history = useHistory();
   const [, dispatch] = React.useContext(Context);
-
+  const username = getUsername();
   const fetchDocuments = async () => {
     try {
       dispatch(setLoading(true));
-      const username = await api.getUserName();
       const terms = await api.getTerms(id);
       setTerms(terms.data.data);
-      setUsername(username.data.name);
     } catch (err) {
       console.log(err)
     } finally {
@@ -297,6 +267,41 @@ export default function ProcessDocuments() {
       fetchDocuments()
     }
   }
+
+  const goBackNavigation = (e) => {
+    history.goBack()
+  }
+
+  const EnhancedTableToolbar = ({ onFileChanged }) => {
+    const classes = useToolbarStyles();
+
+    return (
+      <Toolbar
+        className={classes.root}
+      >
+        <Typography className={classes.title} variant="h6" id="tableTitle" component="div">
+          Documentos
+        </Typography>
+        <input
+          accept="application/pdf"
+          className={classes.input}
+          id="contained-button-file"
+          multiple
+          onChange={onFileChanged}
+          type="file"
+        />
+        <label htmlFor="contained-button-file">
+          <IconButton color="secondary" className={classes.button} component="span">
+            <AddIcon />
+          </IconButton>
+        </label>
+        <IconButton color="secondary" className={classes.button}>
+          <ArrowBackIcon onClick={() => goBackNavigation()} />
+        </IconButton>
+
+      </Toolbar>
+    );
+  };
 
   // return focus to the button when we transitioned from !open -> open
   React.useEffect(() => {
