@@ -21,14 +21,14 @@ import api from '../../api/jury';
 
 //Sessão 1 - Area de Criação de Dados para preechimento. Será subistituido pela API do banco - NÃO SERÁ MANTIDO
 //Para os testes, mude as variaveis abaixo para o numero de variaveis que haverão na sua tabela.
-function createData(studentName, studentEmail, studentColor, title, members, date, hour, createdAt, lastCreated) {
-  return { studentName, studentEmail, studentColor, title, members, date, hour, createdAt, lastCreated };
-}
+// function createData(studentName, studentEmail, studentColor, title, members, date, hour, createdAt, lastCreated) {
+//   return { studentName, studentEmail, studentColor, title, members, date, hour, createdAt, lastCreated };
+// }
 
 //Preencha a função createData() com o mesmo numero de variaveis que voce colocou acima.
-const rows = [
-  createData('AlunoNome', 'AlunoEmail', '#ff0077', 'Os diferentes usos para o paralax e como ele altera o campo de trabalho de CSS e HTML', 'Alex, Janio., Jocivan', '31/12/2021', '12:00', '16 de Novembro, 2019', '2 days ago'),
-];
+// const rows = [
+//   createData('AlunoNome', 'AlunoEmail', '#ff0077', 'Os diferentes usos para o paralax e como ele altera o campo de trabalho de CSS e HTML', 'Alex, Janio., Jocivan', '31/12/2021', '12:00', '16 de Novembro, 2019', '2 days ago'),
+// ];
 //----FIM DA Sessão 1----
 
 //Sessão 2 - Aqui será definidas quais serãos as Colunas dos dados. Vincule os nomes com seus dados para facilitar o entendimento
@@ -209,6 +209,7 @@ export default function SemesterJury() {
   const [orderBy, setOrderBy] = React.useState('active');
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [jury, setJury] = React.useState([]);
 
   {/* Metodos */ }
   const handleRequestSort = (event, property) => {
@@ -234,8 +235,7 @@ export default function SemesterJury() {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const [jury, setJury] = React.useState([]);
-  
+
   const fetchJury = () => {
     api.getAllJury().then(res => {
       const result = res.data.data;
@@ -247,12 +247,12 @@ export default function SemesterJury() {
     fetchJury();
   }, []);
 
-  const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
+  const emptyRows = rowsPerPage - Math.min(rowsPerPage, jury.length - page * rowsPerPage);
 
   const showProcess = (id) => {
     history.push(`/unidocs/process/jury/${id}`);
   };
-  
+
   {/* Return que envia o HTML com os componentes */ }
   return (
     <div className={classes.root}>
@@ -271,7 +271,7 @@ export default function SemesterJury() {
                 order={order}
                 orderBy={orderBy}
                 onRequestSort={handleRequestSort}
-                rowCount={rows.length}
+                rowCount={jury.length}
               />
 
               {/* Dentro do TableBody é preenchido atraves de um .map
@@ -353,7 +353,7 @@ export default function SemesterJury() {
                             open={open}
                             onClose={handleClose}
                           >
-                            <MenuItem  onClick={() => showProcess(row.id)}>Visualizar Processo</MenuItem>
+                            <MenuItem onClick={() => showProcess(row.id)}>Visualizar Processo</MenuItem>
                           </Menu>
                         </TableCell>
                       </TableRow>
@@ -370,7 +370,7 @@ export default function SemesterJury() {
           <TablePagination
             rowsPerPageOptions={[5, 10, 15, 25]}
             component="div"
-            count={rows.length}
+            count={jury.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onChangePage={handleChangePage}
@@ -381,6 +381,6 @@ export default function SemesterJury() {
       </Container>
     </div>
   );
-  
+
 }
 //----FIM DA Sessão 5----

@@ -19,10 +19,7 @@ class JuryController extends BaseController
     public function index(Request $request)
     {
         $data = Jury::with('professors.user')
-        ->join('processes', 'processes.id', '=', 'juries.process_id')
-        ->join('students', 'processes.student_id', '=', 'students.id')
-        ->join('users', 'students.user_id', '=', 'users.id')
-        ->get();
+            ->get();
         return $this->sendResponse($data);
     }
 
