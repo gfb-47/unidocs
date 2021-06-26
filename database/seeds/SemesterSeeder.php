@@ -14,7 +14,7 @@ class SemesterSeeder extends Seeder
     public function run()
     {
         $semester = Semester::create([
-            'name' => '2020.2 PCC',
+            'name' => '2021.2 PCC',
             'subject_id' => 1,
             'course_id' => 4,
             'professor_id' => 2,
@@ -27,7 +27,7 @@ class SemesterSeeder extends Seeder
         }
 
         $semester2 = Semester::create([
-            'name' => '2021.1',
+            'name' => '2021.2 TCC',
             'subject_id' => 2,
             'course_id' => 7,
             'professor_id' => 2,

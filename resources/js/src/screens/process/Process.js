@@ -268,8 +268,8 @@ export default function Process(props) {
                       <MenuItem value="">
                         <em>Selecione</em>
                       </MenuItem>
-                      <MenuItem value={1}>2020.2 PCC</MenuItem>
-                      <MenuItem value={2}>2021.1</MenuItem>
+                      <MenuItem value={1}>2021.2 PCC</MenuItem>
+                      <MenuItem value={2}>2021.2 TCC</MenuItem>
                     </TextField>
 
                   )}

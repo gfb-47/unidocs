@@ -15,7 +15,7 @@ class UserSeed extends Seeder
     public function run()
     {
         $user = User::create([
-            'name' => 'Admin',
+            'name' => 'Rogério Carvalho',
             'email' => 'unitins@unitins.br',
             'color' => '#673ab7',
             'cpf' => '000.000.000-00',
@@ -33,7 +33,7 @@ class UserSeed extends Seeder
 
         ////////////////////////////////////////////////////////////
         $student = User::create([
-            'name' => 'Estutante',
+            'name' => 'Antony Martins de Souza',
             'email' => 'estudante@unitins.br',
             'color' => '#673ab7',
             'cpf' => '000.000.000-01',
@@ -47,7 +47,7 @@ class UserSeed extends Seeder
 
         ////////////////////////////////////////////////////////////
         $professor_disciplina = User::create([
-            'name' => 'Disciplina',
+            'name' => 'Daniel Roberto Pires',
             'email' => 'disciplina@unitins.br',
             'color' => '#673ab7',
             'phone' => '(63) 66666-9999',
@@ -61,7 +61,7 @@ class UserSeed extends Seeder
 
         ////////////////////////////////////////////////////////////
         $professor_orientador = User::create([
-            'name' => 'Orientador',
+            'name' => 'Olavo Luiz Pimentel',
             'email' => 'orientador@unitins.br',
             'color' => '#673ab7',
             'cpf' => '000.000.000-03',
