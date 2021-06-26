@@ -9,6 +9,7 @@ use App\Models\Term;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Validator;
 
 class TermController extends BaseController
 {
