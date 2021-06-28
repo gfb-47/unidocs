@@ -9,14 +9,18 @@ class Process extends Model
     protected $table = 'processes';
 
     protected $fillable = [
-        'title', 'content', 'status', 'rating', 'student_id', 'advise_professor_id', 'semester_id',
+        'title', 'content', 'status', 'rating', 'student_id', 'advise_professor_id', 'semester_id', 'folder',
     ];
 
-    protected $appends = ['all_status'];
+    protected $appends = ['status_name'];
 
     public function student()
     {
         return $this->belongsTo(Student::class, 'student_id');
+    }
+    public function jury()
+    {
+        return $this->hasOne(Jury::class);
     }
     public function adviseProfessor()
     {
@@ -35,7 +39,7 @@ class Process extends Model
         return $this->hasMany(Term::class);
     }
 
-    public function getAllStatusAttribute()
+    public function getStatusNameAttribute()
     {
         return $this->allStatus()[$this->status];
     }
@@ -46,8 +50,9 @@ class Process extends Model
             1 => 'Sob Análise do Responsável da Disciplina',
             'Sob Análise do Orientador',
             'Em desenvolvimento',
-            'Aprovado',
-            'Reprovado',
+            'Apto para Defesa',
+            'Sob Correção',
+            'Finalizado',
         ];
     }
 

@@ -16,7 +16,8 @@ class CreateTermsTable extends Migration
         Schema::create('terms', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('directory');
+            $table->string('original_directory');
+            $table->string('file_directory')->nullable();
             $table->bigInteger('process_id')->unsigned();
             $table->foreign('process_id')->references('id')->on('processes')->onDelete('cascade');
             $table->timestamps();

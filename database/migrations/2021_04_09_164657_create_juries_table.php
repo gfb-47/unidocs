@@ -18,7 +18,6 @@ class CreateJuriesTable extends Migration
             $table->string('local');
             $table->date('date');
             $table->time('hour');
-            $table->float('rating')->nullable();
             $table->boolean('approved')->nullable();
             $table->text('note')->nullable();   
             $table->bigInteger('process_id')->unique()->unsigned();

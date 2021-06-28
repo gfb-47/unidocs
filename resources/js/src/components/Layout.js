@@ -10,8 +10,10 @@ import IconButton from '@material-ui/core/IconButton';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import { Link } from "react-router-dom";
 import { Button, ClickAwayListener, Grow, MenuItem, MenuList, Paper, Popper } from '@material-ui/core';
+import { is } from '../utils/permissions';
 
-
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const useStyles = makeStyles((theme) => ({
     root: {
 
@@ -51,14 +53,20 @@ const useStyles = makeStyles((theme) => ({
         left: 0,
         bottom: 0,
         width: '100%',
-    }
+    },
+    menuItem: {
+        textDecoration: "none",
+        '&:hover': {
+            color: "black !important"
+        }
+    },
 }));
 
 export default function Layout({ children }) {
     const classes = useStyles();
     const [topBar, setTopBar] = React.useState(false);
     const [bottomBarGerenciar, setBottomBarGerenciar] = React.useState(false);
-    const [bottomBarProjetos, setBottomBarProjetos] = React.useState(false);
+    const [bottomBarProcessos, setBottomBarProcessos] = React.useState(false);
     const [open, setOpen] = React.useState(false);
     const anchorRef = React.useRef(null);
 
@@ -80,7 +88,6 @@ export default function Layout({ children }) {
             setOpen(false);
         }
     }
-
     // return focus to the button when we transitioned from !open -> open
     const prevOpen = React.useRef(open);
     React.useEffect(() => {
@@ -97,18 +104,18 @@ export default function Layout({ children }) {
 
     const handleBottomBarGerenciar = (event, newValue) => {
         setBottomBarGerenciar(newValue);
-        setBottomBarProjetos(false);
+        setBottomBarProcessos(false);
     };
 
-    const handleBottomBarProjetos = (event, newValue) => {
-        setBottomBarProjetos(newValue);
+    const handleBottomBarProcessos = (event, newValue) => {
+        setBottomBarProcessos(newValue);
         setBottomBarGerenciar(false);
     };
 
 
     function renderTabs(handleTopBar) {
         switch (handleTopBar) {
-            case 0:
+            case 1:
                 return (
                     <Tabs
                         variant="fullWidth"
@@ -119,24 +126,24 @@ export default function Layout({ children }) {
                         <Tab label="Aluno" to='/unidocs/students' component={Link} />
                         <Tab label="Professor" to='/unidocs/professors' component={Link} />
                         <Tab label="Semestre" to='/unidocs/semesters' component={Link} />
-                        <Tab label="Áreas do Conhecimento" to='/unidocs/knowladgeareas' component={Link} />
+                        {/* <Tab label="Áreas do Conhecimento" to='/unidocs/knowladgeareas' component={Link} /> */}
                         <Tab label="Disciplina" to='/unidocs/subjects' component={Link} />
                         <Tab label="Curso" to='/unidocs/courses' component={Link} />
                     </Tabs>
                 )
 
-            case 1:
+            case 2:
                 return (
                     <Tabs
                         variant="fullWidth"
-                        value={bottomBarProjetos}
-                        onChange={handleBottomBarProjetos}
+                        value={bottomBarProcessos}
+                        onChange={handleBottomBarProcessos}
                         className={classes.tabs}
                     >
-                        <Tab label="Bancas" to='/unidocs/professor/semesterjury' component={Link} />
-                        <Tab label="Meus Projetos" to='/unidocs/student/processes' component={Link} />
-                        <Tab label="Projetos Vinculados" to='/unidocs/professor/processes' component={Link} />
-                        <Tab label="Semestre Ativo" to='/unidocs/professor/semesterprocesses' component={Link} />
+                        {is('administrador | professor_disciplina') && <Tab label="Bancas" to='/unidocs/professor/semesterjury' component={Link} />}
+                        {is('administrador | estudante') && <Tab label="Meus Processos" to='/unidocs/student/processes' component={Link} />}
+                        {is('administrador | professor_orientador | professor_disciplina') && <Tab label="Processos Vinculados" to='/unidocs/professor/processes' component={Link} />}
+                        {is('administrador | professor_disciplina') && <Tab label="Semestre Ativo" to='/unidocs/professor/semesterprocesses' component={Link} />}
                     </Tabs>
                 )
             default:
@@ -186,9 +193,9 @@ export default function Layout({ children }) {
                         onChange={handleTopBar}
                         centered
                     >
-                        <Tab label="Gerenciar" />
-                        <Tab label="Projetos" />
-                        <Tab label="Relatórios" to='/unidocs/professor/reports' component={Link} />
+                        {is('administrador') && <Tab label="Gerenciar" value={1} />}
+                        <Tab label="Processos" value={2} />
+                        {is('administrador | professor_orientador | professor_disciplina') && <Tab label="Relatórios" to='/unidocs/professor/reports' component={Link} value={3} />}
                     </Tabs>
 
 
@@ -198,7 +205,7 @@ export default function Layout({ children }) {
                         aria-haspopup="true"
                         onClick={handleToggle}
                     >
-                        <AccountCircleIcon fontSize="large" className={classes.icon}/>
+                        <AccountCircleIcon fontSize="large" className={classes.icon} />
                     </IconButton>
                     <Popper className={classes.menu} open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
                         {({ TransitionProps, placement }) => (
@@ -209,9 +216,22 @@ export default function Layout({ children }) {
                                 <Paper >
                                     <ClickAwayListener onClickAway={handleClose}>
                                         <MenuList autoFocusItem={open} id="menu-list-grow" onKeyDown={handleListKeyDown}>
-                                            <MenuItem onClick={handleClose}>Profile</MenuItem>
-                                            <MenuItem onClick={handleClose}>My account</MenuItem>
-                                            <MenuItem onClick={handleClose}>Logout</MenuItem>
+                                            <MenuItem
+                                                className={classes.menuItem}
+                                                onClick={handleClose}
+                                                to='/unidocs/profile'
+                                                component={Link}
+                                            >
+                                                Perfil
+                                            </MenuItem>
+                                            <MenuItem
+                                                className={classes.menuItem}
+                                                onClick={handleClose}
+                                                href='/logout'
+                                                component="a"
+                                            >
+                                                Sair
+                                            </MenuItem>
                                         </MenuList>
                                     </ClickAwayListener>
                                 </Paper>
@@ -240,6 +260,17 @@ export default function Layout({ children }) {
                     </Toolbar>
                 </AppBar>
             </div>
+            <ToastContainer
+                position="top-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+            />
         </div>
     );
 }

@@ -19,6 +19,7 @@ class CreateProcessesTable extends Migration
             $table->text('content');
             $table->bigInteger('status')->default(1);
             $table->float('rating')->nullable();
+            $table->string('folder')->nullable();
             $table->bigInteger('student_id')->unsigned();
             $table->foreign('student_id')->references('id')->on('students')->onDelete('cascade');
             $table->bigInteger('advise_professor_id')->unsigned();

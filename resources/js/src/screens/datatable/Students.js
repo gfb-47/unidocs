@@ -17,6 +17,8 @@ import api from '../../api/student';
 import { formatDistance, format } from 'date-fns';
 import ptBR from 'date-fns/locale/pt-BR';
 import IconDropdown from '../../components/IconDropdown'
+import { setLoading } from '../../utils/actions';
+import { Context } from '../../components/Store';
 
 //Sessão 2 - Aqui será definidas quais serãos as Colunas dos dados. Vincule os nomes com seus dados para facilitar o entendimento
 //id = identificador da variavel, label = nome da coluna na tabela
@@ -189,12 +191,18 @@ export default function Students() {
     const [orderBy, setOrderBy] = React.useState('active');
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
+    const [, dispatch] = React.useContext(Context);
+
     //BUSCANDO NO BANCO DE DADOS
     const [students, setStudents] = React.useState([]);
     const fetchStudents = () => {
+        dispatch(setLoading(true));
+
         api.getAllStudents().then(res => {
             const result = res.data.data;
             setStudents(result);
+            dispatch(setLoading(false));
+
         });
     };
     React.useEffect(() => {
@@ -290,7 +298,7 @@ export default function Students() {
                                                 {/* Esse <TableCell/> representa o <IconButton/> 
                                                 que todas as linhas precisam ter */}
                                                 <TableCell align="right">
-                                                    <IconDropdown />
+                                                    <IconDropdown id={row.id} onClose={fetchStudents} type="student" />
                                                 </TableCell>
                                             </TableRow>
                                         );

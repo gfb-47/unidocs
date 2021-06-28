@@ -119,7 +119,7 @@ export default function ProfessorSection(props) {
                     <Divider orientation="vertical" flexItem />
 
                     <div className={classes.knowladgeAreas}>
-
+                {/*
                         <Typography variant="h5" align="center">
                             Areas de Conhecimento
                         </Typography>
@@ -137,6 +137,7 @@ export default function ProfessorSection(props) {
                                 }}
                             />
                         </div>
+                            */}
                     </div>
 
                 </CardContent>

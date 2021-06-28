@@ -13,9 +13,9 @@ return [
     |
     | To learn more: https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
     |
-    */
+     */
 
-    'paths' => ['api/*'],
+    'paths' => ['api/*', 'storage/*', 'pdfsign/*'],
 
     'allowed_methods' => ['*'],
 

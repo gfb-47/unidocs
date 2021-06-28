@@ -17,25 +17,25 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function ProcessCard(props) {
+export default function ProcessCard({ userProcess }) {
   const classes = useStyles();
-
+  
   return (
     <>
       <Paper elevation={1} className={classes.projectPaper}>
         <Grid container>
           <Grid item xs={8}>
 
-            <ProcessCardTitle 
-              title="Os diferentes usos para o paralax e como ele altera o campo de trabalho de CSS e HTML"
+            <ProcessCardTitle
+              title={userProcess.title}
             />
 
             <Divider />
 
-            <ProcessCardInfo 
-              advisor="Alex Coelho"
-              semester="2021.1/TCC"
-              student="Caio Cézar"
+            <ProcessCardInfo
+              advisor={userProcess.advise_professor.user.name}
+              semester={userProcess.semester.name}
+              student={userProcess.student.user.name}
             />
 
           </Grid>
@@ -43,9 +43,9 @@ export default function ProcessCard(props) {
           <Divider orientation="vertical" flexItem />
 
           <Grid item xs={3}>
-            
-            <ProcessCardKnowladgeArea 
-            
+
+            <ProcessCardKnowladgeArea
+
             />
 
           </Grid>

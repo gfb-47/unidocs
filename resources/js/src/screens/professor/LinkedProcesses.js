@@ -14,9 +14,13 @@ import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
-import { Avatar, Container, Menu, MenuItem } from '@material-ui/core';
+import { Avatar, Chip, Container, Menu, MenuItem, Button } from '@material-ui/core';
 import Brightness1Icon from '@material-ui/icons/Brightness1';
 import { deepPurple } from '@material-ui/core/colors';
+import api from '../../api/process';
+import { useHistory } from 'react-router'
+import { setLoading } from '../../utils/actions';
+import { Context } from '../../components/Store';
 
 //Sessão 1 - Area de Criação de Dados para preechimento. Será subistituido pela API do banco - NÃO SERÁ MANTIDO
 //Para os testes, mude as variaveis abaixo para o numero de variaveis que haverão na sua tabela.
@@ -26,15 +30,16 @@ function createData(name, email, title, semester, status, color) {
 
 //Preencha a função createData() com o mesmo numero de variaveis que voce colocou acima.
 const rows = [
-  createData('Bruno Richard', 'brich@unitins.br', 'O ensino básico através dos jogos', '2021.1/TCC', 'Em Desenvolvimento','#9c27b0'),
+  createData('Bruno Richard', 'brich@unitins.br', 'O ensino básico através dos jogos', '2021.1/TCC', 'Em Desenvolvimento', '#9c27b0'),
 ];
 //----FIM DA Sessão 1----
 
 //Sessão 2 - Aqui será definidas quais serãos as Colunas dos dados. Vincule os nomes com seus dados para facilitar o entendimento
 //id = identificador da variavel, label = nome da coluna na tabela
+
 const headCells = [
-  { id: 'name', label: 'Aluno' },
   { id: 'title', label: 'Título' },
+  { id: 'student', label: 'Aluno' },
   { id: 'semester', label: 'Semestre' },
   { id: 'status', label: 'Status' },
 ];
@@ -78,8 +83,6 @@ function EnhancedTableHead(props) {
   return (
     <TableHead>
       <TableRow>
-        <TableCell padding="default">
-        </TableCell>
 
         {headCells.map((headCell) => (
           <TableCell
@@ -198,17 +201,33 @@ const useStyles = makeStyles((theme) => ({
 export default function LinkedProcesses() {
   {/* Variaveis sendo inicializadas */ }
   const classes = useStyles();
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const open = Boolean(anchorEl);
+  const anchorRef = React.useRef([]);
+  const [open, setOpen] = React.useState(false);
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('active');
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [, dispatch] = React.useContext(Context);
+
+  const [processes, setProcesses] = React.useState([]);
+  const history = useHistory();
+
+  const fetchProcesses = () => {
+    dispatch(setLoading(true));
+    api.getProcesses().then(res => {
+      const result = res.data.data;
+      setProcesses(result);
+      dispatch(setLoading(false));
+
+    });
+  };
+  React.useEffect(() => {
+    fetchProcesses();
+  }, []);
 
   {/* Metodos */ }
   const handleRequestSort = (event, property) => {
-    const isAsc = orderBy === property && order === 'asc';
-    setOrder(isAsc ? 'desc' : 'asc');
+    setOrder(order.reverse());
     setOrderBy(property);
   };
 
@@ -222,17 +241,22 @@ export default function LinkedProcesses() {
   };
 
 
-  const handleMenu = (event) => {
-    setAnchorEl(event.currentTarget);
+  const handleMenu = (index) => {
+    setOpen(index);
   };
 
   const handleClose = () => {
-    setAnchorEl(null);
+    setOpen(false);
   };
 
-  const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
+  const showProcess = (id) => {
+    history.push(`/unidocs/process/details/${id}`);
+  };
+
+  const emptyRows = rowsPerPage - Math.min(rowsPerPage, processes.length - page * rowsPerPage);
 
   {/* Return que envia o HTML com os componentes */ }
+
   return (
     <div className={classes.root}>
       <Container>
@@ -250,7 +274,7 @@ export default function LinkedProcesses() {
                 order={order}
                 orderBy={orderBy}
                 onRequestSort={handleRequestSort}
-                rowCount={rows.length}
+                rowCount={processes.length}
               />
 
               {/* Dentro do TableBody é preenchido atraves de um .map
@@ -258,66 +282,58 @@ export default function LinkedProcesses() {
                             <TableCell/> dentro de <TableRoll/> para que eles se 
                             alinhem com a listagem que voce gostaria de fazer */}
               <TableBody>
-                {stableSort(rows, getComparator(order, orderBy))
+                {stableSort(processes, getComparator(order[0], orderBy))
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) => {
                     const labelId = `enhanced-table-checkbox-${index}`;
-
                     return (
                       <TableRow
                         hover
                         tabIndex={-1}
-                        key={row.name}
+                        key={row.title}
                       >
-
-                        {/* Não mexa nesse TableCell*/}
-                        <TableCell padding="default">
+                        <TableCell align="left">
+                          <span>{row.title}</span>
                         </TableCell>
-                        {/* Não mexa nesse TableCell*/}
-
                         <TableCell component="th" id={labelId} align="left" scope="row" padding="none">
                           <div className={classes.userCell}>
                             <Avatar
                               style={{
                                 marginRight: "1rem",
-                                color: `${row.color}`,
-                                backgroundColor: `${row.color}50`,
+                                color: `${row.student.user.color}`,
+                                backgroundColor: `${row.student.user.color}50`,
                               }}
                             >
-                              {row.name[0]}
+                              {row.student.user.name[0]}
                             </Avatar>
 
                             <div>
-                              <b>{row.name}</b> <br />
-                              <span className={classes.subItem}>{row.email}</span>
+                              <b>{row.student.user.name}</b> <br />
+                              <span className={classes.subItem}>{row.student.user.email}</span>
                             </div>
                           </div>
                         </TableCell>
                         <TableCell align="left">
-                          <span>{row.title}</span>
-                        </TableCell>
-                        <TableCell align="left">
-                          <span>{row.semester}</span>
+                          <span>{row.semester.name}</span>
                         </TableCell>
                         <TableCell
                           align="left"
-                          className={row.status == 'ativo' ? classes.itemActive : classes.itemInactive}
+                          className={row.status == 1 ? classes.itemActive : classes.itemInactive}
                         >
-                         { /*<Brightness1Icon fontSize="small" style={{ color: `${row.color}`}} /> */}
-                          <span>{row.status}</span>
+                          <span>{row.status_name}</span>
                         </TableCell>
-
                         {/* Esse <TableCell/> representa o <IconButton/> 
-                            que todas as linhas precisam ter */}
+                         que todas as linhas precisam ter */}
                         <TableCell align="right">
                           <IconButton
-                            onClick={handleMenu}
+                            onClick={() => handleMenu(index)}
+                            ref={ref => anchorRef.current[index] = ref}
                           >
                             <MenuIcon />
                           </IconButton>
                           <Menu
                             id="item-menu"
-                            anchorEl={anchorEl}
+                            anchorEl={anchorRef.current[index]}
                             anchorOrigin={{
                               vertical: 'top',
                               horizontal: 'right',
@@ -327,11 +343,10 @@ export default function LinkedProcesses() {
                               vertical: 'top',
                               horizontal: 'right',
                             }}
-                            open={open}
-                            onClose={handleClose}
+                            open={open === index}
+                            onClose={() => handleClose()}
                           >
-                            <MenuItem onClick={handleClose}>Profile</MenuItem>
-                            <MenuItem onClick={handleClose}>My account</MenuItem>
+                            <MenuItem onClick={() => showProcess(row.id)}>Visualizar Processo</MenuItem>
                           </Menu>
                         </TableCell>
                       </TableRow>
@@ -348,7 +363,7 @@ export default function LinkedProcesses() {
           <TablePagination
             rowsPerPageOptions={[5, 10, 15, 25]}
             component="div"
-            count={rows.length}
+            count={processes.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onChangePage={handleChangePage}

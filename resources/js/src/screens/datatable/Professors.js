@@ -18,6 +18,8 @@ import api from '../../api/professor';
 import { formatDistance, format } from 'date-fns';
 import ptBR from 'date-fns/locale/pt-BR';
 import IconDropdown from '../../components/IconDropdown'
+import { Context } from '../../components/Store';
+import { setLoading } from '../../utils/actions';
 
 //Sessão 2 - Aqui será definidas quais serãos as Colunas dos dados. Vincule os nomes com seus dados para facilitar o entendimento
 //id = identificador da variavel, label = nome da coluna na tabela
@@ -25,7 +27,7 @@ const headCells = [
   { id: 'name', label: 'Professores' },
   { id: 'updatedAtDate', label: 'Última Alteração' },
   { id: 'course', label: 'Cursos' },
-  { id: 'knowladgeArea', label: 'Áreas do Conhecimento' },
+  //{ id: 'knowladgeArea', label: 'Áreas do Conhecimento' },
   { id: 'active', label: 'Status' },
 ];
 //----FIM DA Sessão 2----
@@ -167,6 +169,7 @@ const useStyles = makeStyles((theme) => ({
     width: 1,
   },
   userCell: {
+    marginLeft: theme.spacing(2),
     display: 'flex',
   },
   subItem: {
@@ -189,12 +192,18 @@ export default function Professors() {
   const [orderBy, setOrderBy] = React.useState('active');
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [, dispatch] = React.useContext(Context);
+
   //BUSCANDO NO BANCO DE DADOS
   const [professors, setProfessors] = React.useState([]);
+  
   const fetchProfessors = () => {
+    dispatch(setLoading(true));
     api.getAllProfessors().then(res => {
       const result = res.data.data;
       setProfessors(result);
+      dispatch(setLoading(false));
+
     });
   };
   React.useEffect(() => {
@@ -242,8 +251,8 @@ export default function Professors() {
               />
 
               {/* Dentro do TableBody é preenchido atraves de um .map
-                            todos os dados que apareceram na tabela. Altere os 
-                            <TableCell/> dentro de <TableRoll/> para que eles se 
+                            todos os dados que apareceram na tabela. Altere os
+                            <TableCell/> dentro de <TableRoll/> para que eles se
                             alinhem com a listagem que voce gostaria de fazer */}
               <TableBody>
                 {stableSort(professors, getComparator(order, orderBy))
@@ -282,7 +291,7 @@ export default function Professors() {
                         <TableCell align="left">
                           <span>{row.course}</span>
                         </TableCell>
-                        <TableCell align="left">
+                        {/*<TableCell align="left">
                           <Chip
                             label="Inteligência Artificial"
                             variant="outlined"
@@ -294,7 +303,7 @@ export default function Professors() {
                               margin: '4px',
                             }}
                           />
-                        </TableCell>
+                          </TableCell>*/}
                         <TableCell
                           align="left"
                           className={row.active == 1 ? classes.itemActive : classes.itemInactive}
@@ -302,10 +311,10 @@ export default function Professors() {
                           <span>{row.active == 1 ? 'ativo' : 'inativo'}</span>
                         </TableCell>
 
-                        {/* Esse <TableCell/> representa o <IconButton/> 
+                        {/* Esse <TableCell/> representa o <IconButton/>
                          que todas as linhas precisam ter */}
                         <TableCell align="right">
-                          <IconDropdown />
+                          <IconDropdown id={row.user_id} onClose={fetchProfessors} type='professor' />
                         </TableCell>
                       </TableRow>
                     );

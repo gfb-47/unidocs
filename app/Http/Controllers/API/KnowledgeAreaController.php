@@ -64,7 +64,7 @@ class KnowledgeAreaController extends BaseController
         DB::transaction(function () use ($id) {
             $k_area = KnowledgeArea::findOrFail($id);
             $k_area->delete();
-            
+
         });
         return $this->sendResponse([], 'Removed with success!');
     }

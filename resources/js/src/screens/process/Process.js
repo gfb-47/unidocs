@@ -3,6 +3,15 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Avatar, Button, Checkbox, Chip, Container, FormControl, FormControlLabel, FormGroup, FormHelperText, FormLabel, Grid, IconButton, InputLabel, MenuItem, Paper, Select, TextField, Typography } from '@material-ui/core';
 import SchoolIcon from '@material-ui/icons/School';
 import AddIcon from '@material-ui/icons/Add';
+import { Controller, useForm } from 'react-hook-form'
+import * as validation from '../../utils/validation';
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import api from '../../api/process';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import { useHistory } from 'react-router'
+import { toast } from 'react-toastify';
+import { Context } from '../../components/Store';
+import { setLoading } from '../../utils/actions';
 
 const useStyles = makeStyles((theme) => ({
   margin: {
@@ -29,10 +38,6 @@ const useStyles = makeStyles((theme) => ({
   headerTitle: {
     paddingLeft: 16,
   },
-  knowladgeArea: {
-    display: 'flex',
-    alignItems: 'center',
-  },
   chips: {
     borderStyle: 'solid',
     borderWidth: 1,
@@ -56,27 +61,53 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Process(props) {
   const classes = useStyles();
+  const [open, setOpen] = React.useState(false);
+  const [options, setOptions] = React.useState([]);
+  const loading = open && options.length === 0;
+  const { handleSubmit, control, reset } = useForm();
   const [professor, setProfessor] = React.useState('');
   const [semester, setSemester] = React.useState('');
+  const [, dispatch] = React.useContext(Context);
+
   const [state, setState] = React.useState({
     gilad: true,
     jason: false,
     antoine: false,
   });
 
-  const handleChange = (event) => {
-    setState({ ...state, [event.target.name]: event.target.checked });
-  };
+  const history = useHistory();
+
+  React.useEffect(() => {
+    let active = true;
+
+    if (!loading) {
+      return undefined;
+    }
+
+    (async () => {
+      const response = await fetch(`${getUrl()}/api/v1/public/search/professor`);
+      const professors = await response.json();
+      if (active) {
+        setOptions(Object.values(professors).map(data => data));
+      }
+    })();
+
+    return () => {
+      active = false;
+    };
+  }, [loading]);
+
+  React.useEffect(() => {
+    if (!open) {
+      setOptions([]);
+    }
+  }, [open]);
+
+  
 
   const { termAcceptance, termPlagiarism, termReponsability } = state;
 
-  const handleSemester = (event) => {
-    setSemester(event.target.value);
-  };
-
-  const handleProfessor = (event) => {
-    setProfessor(event.target.value);
-  };
+ 
 
   const [chipData, setChipData] = React.useState([
     { key: 0, label: 'Angular', color: '#673ab7' },
@@ -90,6 +121,42 @@ export default function Process(props) {
     setChipData((chips) => chips.filter((chip) => chip.key !== chipToDelete.key));
   };
 
+  const onSubmit = async data => {
+    try {
+      dispatch(setLoading(true))
+      await api.addProcess(data);
+      toast.success('👍 Cadastrado Com Sucesso', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      reset({
+        title: '',
+        advise_professor_id: undefined,
+        semester_id: '',
+        content: '',
+      });
+      history.push('student/processes');
+    } catch (e) {
+      toast.error('❌ Erro ao Salvar o Processo', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    } finally {
+      dispatch(setLoading(false))
+
+    }
+  };
+
   return (
     <div>
 
@@ -101,134 +168,187 @@ export default function Process(props) {
             </Avatar>
             <div className={classes.headerTitle}>
               <Typography variant="h4">
-                Criar Novo Projeto
+                Criar Novo Processo
               </Typography>
               <Typography variant="subtitle1">
                 Preencha os campos abaixo
               </Typography>
             </div>
           </div>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <Grid container spacing={3}>
+              <Grid item xs={12}>
+                <Controller
+                  name="title"
+                  control={control}
+                  defaultValue=""
+                  rules={validation.titleValidation}
+                  render={({ field: { onChange, value }, fieldState: { error } }) => (
+                    <TextField
+                      variant="outlined"
+                      id="title"
+                      fullWidth
+                      error={!!error}
+                      helperText={error ? error.message : null}
+                      name="Título"
+                      label="Título"
+                      value={value}
+                      onChange={onChange}
+                    />
+                  )}
+                />
 
-          <Grid container spacing={3}>
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                id="title"
-                name="Título"
-                label="Título"
-                fullWidth
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <FormControl variant="outlined" className={classes.formControl}>
-                <InputLabel id="professor">Professor Orientador</InputLabel>
-                <Select
-                  labelId="professor"
-                  id="professor"
-                  value={professor}
-                  onChange={handleProfessor}
-                  label="Professor Responsável"
-                >
-                  <MenuItem value="">
-                    <em>Selecione</em>
-                  </MenuItem>
-                  <MenuItem value={10}>janio12</MenuItem>
-                  <MenuItem value={20}>Alex</MenuItem>
-                  <MenuItem value={30}>Fred</MenuItem>
-                </Select>
-              </FormControl>
-            </Grid>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <Controller
+                  name="advise_professor_id"
+                  control={control}
+                  defaultValue=""
+                  rules={validation.autoCompleteValidation}
+                  render={({ field: { onChange }, fieldState: { error } }) => (
+                    <Autocomplete
+                      id="asynchronous-demo"
+                      open={open}
+                      onOpen={() => {
+                        setOpen(true);
+                      }}
+                      onClose={() => {
+                        setOpen(false);
+                      }}
+                      onChange={(e, options) => options ? onChange(options.id) : onChange(undefined)}
+                      getOptionSelected={(option, value) => option.name === value.name}
+                      getOptionLabel={(option) => option.name}
+                      options={options}
+                      loading={loading}
+                      renderInput={(params) => (
 
-            <Grid item xs={12} sm={6}>
-              <FormControl variant="outlined" className={classes.formControl}>
-                <InputLabel id="demo-simple-select-outlined-label">Semestre</InputLabel>
-                <Select
-                  labelId="semester"
-                  id="semester"
-                  value={semester}
-                  onChange={handleSemester}
-                  label="Semestre"
-                >
-                  <MenuItem value="">
-                    <em>Selecione</em>
-                  </MenuItem>
-                  <MenuItem value={10}>2021/1-TCC</MenuItem>
-                  <MenuItem value={20}>2021/1-PCC</MenuItem>
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                id="description"
-                label="Descrição"
-                multiline
-                rows={4}
-                variant="outlined"
-                fullWidth
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <div className={classes.knowladgeArea}>
-                <Typography className={classes.border} variant="h6">
-                  Areas de Conhecimento
+                        <TextField
+                          {...params}
+                          label="Professores"
+                          variant="outlined"
+                          fullWidth
+                          error={!!error}
+                          helperText={error ? error.message : null}
+
+                          InputProps={{
+                            ...params.InputProps,
+                            endAdornment: (
+                              <React.Fragment>
+                                {loading ? <CircularProgress color="inherit" size={20} /> : null}
+                                {params.InputProps.endAdornment}
+                              </React.Fragment>
+                            ),
+                          }}
+                        />
+                      )}
+                    />
+                  )}
+                />
+              </Grid>
+
+              <Grid item xs={12} sm={6}>
+                <Controller
+                  name="semester_id"
+                  control={control}
+                  defaultValue=""
+                  rules={validation.descriptionValidation}
+                  render={({ field: { onChange, value }, fieldState: { error } }) => (
+                    <TextField
+                      id="content"
+                      label="Semestre"
+                      fullWidth
+                      select
+                      rows={4}
+                      error={!!error}
+                      helperText={error ? error.message : null}
+                      value={value}
+                      onChange={onChange}
+                      variant="outlined"
+                    >
+                      <MenuItem value="">
+                        <em>Selecione</em>
+                      </MenuItem>
+                      <MenuItem value={1}>2021.2 PCC</MenuItem>
+                      <MenuItem value={2}>2021.2 TCC</MenuItem>
+                    </TextField>
+
+                  )}
+                />
+
+              </Grid>
+              <Grid item xs={12}>
+                <Controller
+                  name="content"
+                  control={control}
+                  defaultValue=""
+                  rules={validation.descriptionValidation}
+                  render={({ field: { onChange, value }, fieldState: { error } }) => (
+                    <TextField
+                      id="content"
+                      label="Descrição"
+                      fullWidth
+                      multiline
+                      rows={12}
+                      error={!!error}
+                      helperText={error ? error.message : null}
+                      value={value}
+                      onChange={onChange}
+                      variant="outlined"
+                    />
+
+                  )}
+                />
+
+
+              </Grid>
+              {/* 
+              <Grid item xs={12}>
+                <div className={classes.knowladgeArea}>
+                  <Typography className={classes.border} variant="h6">
+                    Areas de Conhecimento
                 </Typography>
 
-                <IconButton className={classes.border} color="primary">
-                  <AddIcon />
-                </IconButton>
-              </div>
-              <div className={classes.chips}>
-                {chipData.map((data) => {
-                  return (
-                    <Chip
-                      key={data.key}
-                      label={data.label}
-                      variant="outlined"
-                      onDelete={handleDelete(data)}
-                      style={{
-                        fontWeight: 600,
-                        borderRadius: 4,
-                        color: `${data.color}`,
-                        border: '1px solid',
-                        borderColor: `${data.color}66`,
-                        margin: '4px',
-                      }}
-                    />
-                  );
-                })}
-              </div>
+                  <IconButton className={classes.border} color="primary">
+                    <AddIcon />
+                  </IconButton>
+                </div>
+                <div className={classes.chips}>
+                  {chipData.map((data) => {
+                    return (
+                      <Chip
+                        key={data.key}
+                        label={data.label}
+                        variant="outlined"
+                        onDelete={handleDelete(data)}
+                        style={{
+                          fontWeight: 600,
+                          borderRadius: 4,
+                          color: `${data.color}`,
+                          border: '1px solid',
+                          borderColor: `${data.color}66`,
+                          margin: '4px',
+                        }}
+                      />
+                    );
+                  })}
+                </div>
+              </Grid>
+            */}
             </Grid>
-            <Grid item xs={12}>
-              <FormControl component="fieldset">
-                <FormGroup>
-                  <FormControlLabel
-                    control={<Checkbox color="primary" checked={termAcceptance} onChange={handleChange} name="termoDeAceite" />}
-                    label="Eu aceito assinar o Termo de Aceite"
-                  />
-                  <FormControlLabel
-                    control={<Checkbox color="primary" checked={termPlagiarism} onChange={handleChange} name="termoDePlagio" />}
-                    label="Eu aceito assinar o Termo de Plagio"
-                  />
-                  <FormControlLabel
-                    control={<Checkbox color="primary" checked={termReponsability} onChange={handleChange} name="termoDeResponsabilidade" />}
-                    label="Eu aceito assinar o Termo de Responsabilidade"
-                  />
-                </FormGroup>
-              </FormControl>
-            </Grid>
-          </Grid>
-          <div className={classes.footer}>
-            <Button 
-              className={classes.button} 
-              variant="contained" 
-              color="primary"
-              href="/unidocs/process/details"
-            >
-              Criar Projeto
+            <div className={classes.footer}>
+              <Button
+                type="submit"
+                className={classes.button}
+                variant="contained"
+                color="primary"
+              >
+                Criar Processo
             </Button>
-          </div>
+            </div>
+          </form>
         </Paper>
       </Container>
+
     </div>
   )
 }

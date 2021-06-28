@@ -17,6 +17,8 @@ import api from '../../api/course';
 import IconDropdown from '../../components/IconDropdown'
 import { formatDistance, format } from 'date-fns';
 import ptBR from 'date-fns/locale/pt-BR';
+import { Context } from '../../components/Store';
+import { setLoading } from '../../utils/actions';
 
 //Sessão 2 - Aqui será definidas quais serãos as Colunas dos dados. Vincule os nomes com seus dados para facilitar o entendimento
 //id = identificador da variavel, label = nome da coluna na tabela
@@ -192,12 +194,17 @@ export default function Courses() {
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
     //BUSCANDO NO BANCO DE DADOS
     const [courses, setCourses] = React.useState([]);
+    const [, dispatch] = React.useContext(Context);
     const fetchCourses = () => {
+        dispatch(setLoading(true));
+
         api.getAllCourses().then(res => {
             const result = res.data.data;
             setCourses(result);
+            dispatch(setLoading(false))
         });
     };
+
     React.useEffect(() => {
         fetchCourses();
     }, []);
@@ -226,7 +233,7 @@ export default function Courses() {
     const handleClose = () => {
         setAnchorEl(null);
     };
-    
+
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, courses.length - page * rowsPerPage);
 
     {/* Return que envia o HTML com os componentes */ }
@@ -265,10 +272,10 @@ export default function Courses() {
                                                 tabIndex={-1}
                                                 key={row.id}
                                             >
-                                                
-                                              
 
-                                               
+
+
+
                                                 <TableCell align="left">
                                                     <span>{row.name}</span>
                                                 </TableCell>

@@ -15,18 +15,11 @@ import Paper from '@material-ui/core/Paper';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import AddIcon from '@material-ui/icons/Add';
-import { Avatar, Chip, Container, Menu, MenuItem } from '@material-ui/core';
-
-//Sessão 1 - Area de Criação de Dados para preechimento. Será subistituido pela API do banco - NÃO SERÁ MANTIDO
-//Para os testes, mude as variaveis abaixo para o numero de variaveis que haverão na sua tabela.
-function createData(title, professorName, professorEmail, knowladgeArea, semester, status, color) {
-  return { title, professorName, professorEmail, knowladgeArea, semester, status, color };
-}
-
-//Preencha a função createData() com o mesmo numero de variaveis que voce colocou acima.
-const rows = [
-  createData('Os diferentes usos para o paralax e como ele altera o campo de trabalho de CSS e HTML', 'Alex Coelho', 'alex@email.br', '', '2021.1/TCC', 'Em Desenvolvimento', '#0E4DA4'),
-];
+import { Avatar, Chip, Container, Menu, MenuItem, Button } from '@material-ui/core';
+import api from '../../api/process';
+import { useHistory } from 'react-router'
+import { Context } from '../../components/Store';
+import { setLoading } from '../../utils/actions';
 //----FIM DA Sessão 1----
 
 //Sessão 2 - Aqui será definidas quais serãos as Colunas dos dados. Vincule os nomes com seus dados para facilitar o entendimento
@@ -34,7 +27,7 @@ const rows = [
 const headCells = [
   { id: 'title', label: 'Título' },
   { id: 'professorSemester', label: 'Professor Responsável' },
-  { id: 'knowladgeArea', label: 'Áreas do Conhecimento' },
+  //{ id: 'knowladgeArea', label: 'Áreas do Conhecimento' },
   { id: 'semester', label: 'Semestre' },
   { id: 'status', label: 'Status' },
 ];
@@ -70,6 +63,7 @@ function stableSort(array, comparator) {
 
 //Sessão 4 - Aqui é criado o cabeçalho da tabela. Normalmente, não haverá necessidade de alterar nada.
 function EnhancedTableHead(props) {
+
   const { classes, order, orderBy, onRequestSort } = props;
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
@@ -86,17 +80,17 @@ function EnhancedTableHead(props) {
             key={headCell.id}
             align='left'
             padding='default'
-            sortDirection={orderBy === headCell.id ? order : false}
+            sortDirection={orderBy === headCell.id ? order[0] : false}
           >
             <TableSortLabel
               active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : 'asc'}
+              direction={orderBy === headCell.id ? order[0] : 'asc'}
               onClick={createSortHandler(headCell.id)}
             >
               {headCell.label}
               {orderBy === headCell.id ? (
                 <span className={classes.visuallyHidden}>
-                  {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
+                  {order[0] === 'desc' ? 'sorted descending' : 'sorted ascending'}
                 </span>
               ) : null}
             </TableSortLabel>
@@ -104,7 +98,7 @@ function EnhancedTableHead(props) {
         ))}
         <TableCell align='right' padding='default'>
           Ações
-                </TableCell>
+        </TableCell>
       </TableRow>
     </TableHead>
   );
@@ -113,7 +107,7 @@ function EnhancedTableHead(props) {
 EnhancedTableHead.propTypes = {
   classes: PropTypes.object.isRequired,
   onRequestSort: PropTypes.func.isRequired,
-  order: PropTypes.oneOf(['asc', 'desc']).isRequired,
+  order: PropTypes.array.isRequired,
   orderBy: PropTypes.string.isRequired,
   rowCount: PropTypes.number.isRequired,
 };
@@ -137,6 +131,13 @@ const useToolbarStyles = makeStyles((theme) => ({
   title: {
     flex: '1 1 100%',
   },
+  button: {
+    color: "#0d47a1 !important",
+    '&:hover': {
+      color: "white !important",
+      backgroundColor: "#0d47a1 !important",
+    }
+  }
 }));
 //----FIM DA Sessão 4----
 
@@ -151,7 +152,7 @@ const EnhancedTableToolbar = (props) => {
       <Typography className={classes.title} variant="h6" id="tableTitle" component="div">
         Meus Processos
       </Typography>
-      <IconButton color="primary" href="/unidocs/process">
+      <IconButton color="secondary" className={classes.button} href="/unidocs/process">
         <AddIcon />
       </IconButton>
     </Toolbar>
@@ -200,18 +201,33 @@ const useStyles = makeStyles((theme) => ({
 //COMPONENTE QUE SERÁ RENDENIZADO, ou seja, aqui o bagulho é serio.
 export default function StudentProcesses() {
   {/* Variaveis sendo inicializadas */ }
+  const [processes, setProcesses] = React.useState([]);
+  const history = useHistory();
+  const [, dispatch] = React.useContext(Context);
+
+  const fetchProcesses = () => {
+    dispatch(setLoading(true));
+    api.getProcesses().then(res => {
+      const result = res.data.data;
+      setProcesses(result);
+      dispatch(setLoading(false));
+    });
+
+  };
+  React.useEffect(() => {
+    fetchProcesses();
+  }, []);
   const classes = useStyles();
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const open = Boolean(anchorEl);
-  const [order, setOrder] = React.useState('asc');
+  const [open, setOpen] = React.useState(false);
+  const [order, setOrder] = React.useState(['desc', 'asc']);
   const [orderBy, setOrderBy] = React.useState('active');
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const anchorRef = React.useRef([]);
 
   {/* Metodos */ }
   const handleRequestSort = (event, property) => {
-    const isAsc = orderBy === property && order === 'asc';
-    setOrder(isAsc ? 'desc' : 'asc');
+    setOrder(order.reverse());
     setOrderBy(property);
   };
 
@@ -225,15 +241,19 @@ export default function StudentProcesses() {
   };
 
 
-  const handleMenu = (event) => {
-    setAnchorEl(event.currentTarget);
+  const handleMenu = (index) => {
+    setOpen(index);
   };
 
   const handleClose = () => {
-    setAnchorEl(null);
+    setOpen(false);
   };
 
-  const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
+  const showProcess = (id) => {
+    history.push(`/unidocs/process/details/${id}`);
+  };
+
+  const emptyRows = rowsPerPage - Math.min(rowsPerPage, processes.length - page * rowsPerPage);
 
   {/* Return que envia o HTML com os componentes */ }
   return (
@@ -253,19 +273,14 @@ export default function StudentProcesses() {
                 order={order}
                 orderBy={orderBy}
                 onRequestSort={handleRequestSort}
-                rowCount={rows.length}
+                rowCount={processes.length}
               />
 
-              {/* Dentro do TableBody é preenchido atraves de um .map
-                            todos os dados que apareceram na tabela. Altere os 
-                            <TableCell/> dentro de <TableRoll/> para que eles se 
-                            alinhem com a listagem que voce gostaria de fazer */}
               <TableBody>
-                {stableSort(rows, getComparator(order, orderBy))
+                {stableSort(processes, getComparator(order[0], orderBy))
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) => {
                     const labelId = `enhanced-table-checkbox-${index}`;
-
                     return (
                       <TableRow
                         hover
@@ -287,53 +302,40 @@ export default function StudentProcesses() {
                             <Avatar
                               style={{
                                 marginRight: "1rem",
-                                color: `${row.color}`,
-                                backgroundColor: `${row.color}50`,
+                                color: `${row.advise_professor.user.color}`,
+                                backgroundColor: `${row.advise_professor.user.color}50`,
                               }}
                             >
-                              {row.professorName[0]}
+                              {row.advise_professor.user.name[0]}
                             </Avatar>
 
                             <div>
-                              <b>{row.professorName}</b> <br />
-                              <span className={classes.subItem}>{row.professorEmail}</span>
+                              <b>{row.advise_professor.user.name}</b> <br />
+                              <span className={classes.subItem}>{row.advise_professor.user.email}</span>
                             </div>
                           </div>
                         </TableCell>
+                       
                         <TableCell align="left">
-                          <Chip
-                            label="Inteligência Artificial"
-                            variant="outlined"
-                            style={{
-                              fontWeight: 600,
-                              borderRadius: 4,
-                              color: '#f44336',
-                              border: '1px solid #f4433666',
-                              margin: '4px',
-                            }}
-                          />
-                        </TableCell>
-                        <TableCell align="left">
-                          <span>{row.semester}</span>
+                          <span>{row.semester.name}</span>
                         </TableCell>
                         <TableCell
                           align="left"
-                          className={row.status == 'ativo' ? classes.itemActive : classes.itemInactive}
+                          className={row.status == 1 ? classes.itemActive : classes.itemInactive}
                         >
-                          <span>{row.status}</span>
+                          <span>{row.status_name}</span>
                         </TableCell>
-
-                        {/* Esse <TableCell/> representa o <IconButton/> 
-                         que todas as linhas precisam ter */}
+                       
                         <TableCell align="right">
                           <IconButton
-                            onClick={handleMenu}
+                            ref={ref => anchorRef.current[index] = ref}
+                            onClick={() => handleMenu(index)}
                           >
                             <MenuIcon />
                           </IconButton>
                           <Menu
                             id="item-menu"
-                            anchorEl={anchorEl}
+                            anchorEl={anchorRef.current[index]}
                             anchorOrigin={{
                               vertical: 'top',
                               horizontal: 'right',
@@ -343,11 +345,10 @@ export default function StudentProcesses() {
                               vertical: 'top',
                               horizontal: 'right',
                             }}
-                            open={open}
+                            open={open === index}
                             onClose={handleClose}
                           >
-                            <MenuItem onClick={handleClose}>Profile</MenuItem>
-                            <MenuItem onClick={handleClose}>My account</MenuItem>
+                            <MenuItem onClick={() => showProcess(row.id)}>Visualizar Processo</MenuItem>
                           </Menu>
                         </TableCell>
                       </TableRow>
@@ -364,7 +365,7 @@ export default function StudentProcesses() {
           <TablePagination
             rowsPerPageOptions={[5, 10, 15, 25]}
             component="div"
-            count={rows.length}
+            count={processes.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onChangePage={handleChangePage}

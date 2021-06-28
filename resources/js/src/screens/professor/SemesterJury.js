@@ -13,20 +13,25 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import IconButton from '@material-ui/core/IconButton';
+import { useHistory } from 'react-router'
 import MenuIcon from '@material-ui/icons/Menu';
 import { Avatar, Container, Menu, MenuItem } from '@material-ui/core';
 import Brightness1Icon from '@material-ui/icons/Brightness1';
-
+import api from '../../api/jury';
+import { formatDistance, format } from 'date-fns';
+import ptBR from 'date-fns/locale/pt-BR';
+import { setLoading } from '../../utils/actions';
+import { Context } from '../../components/Store';
 //Sessão 1 - Area de Criação de Dados para preechimento. Será subistituido pela API do banco - NÃO SERÁ MANTIDO
 //Para os testes, mude as variaveis abaixo para o numero de variaveis que haverão na sua tabela.
-function createData(studentName, studentEmail, studentColor, title, members, date, hour, createdAt, lastCreated) {
-  return { studentName, studentEmail, studentColor, title, members, date, hour, createdAt, lastCreated };
-}
+// function createData(studentName, studentEmail, studentColor, title, members, date, hour, createdAt, lastCreated) {
+//   return { studentName, studentEmail, studentColor, title, members, date, hour, createdAt, lastCreated };
+// }
 
 //Preencha a função createData() com o mesmo numero de variaveis que voce colocou acima.
-const rows = [
-  createData('AlunoNome', 'AlunoEmail', '#ff0077', 'Os diferentes usos para o paralax e como ele altera o campo de trabalho de CSS e HTML', 'Alex, Janio., Jocivan', '31/12/2021', '12:00', '16 de Novembro, 2019', '2 days ago'),
-];
+// const rows = [
+//   createData('AlunoNome', 'AlunoEmail', '#ff0077', 'Os diferentes usos para o paralax e como ele altera o campo de trabalho de CSS e HTML', 'Alex, Janio., Jocivan', '31/12/2021', '12:00', '16 de Novembro, 2019', '2 days ago'),
+// ];
 //----FIM DA Sessão 1----
 
 //Sessão 2 - Aqui será definidas quais serãos as Colunas dos dados. Vincule os nomes com seus dados para facilitar o entendimento
@@ -110,6 +115,7 @@ function EnhancedTableHead(props) {
     </TableHead>
   );
 }
+
 
 EnhancedTableHead.propTypes = {
   classes: PropTypes.object.isRequired,
@@ -198,13 +204,16 @@ const useStyles = makeStyles((theme) => ({
 //COMPONENTE QUE SERÁ RENDENIZADO, ou seja, aqui o bagulho é serio.
 export default function SemesterJury() {
   {/* Variaveis sendo inicializadas */ }
+  const history = useHistory();
   const classes = useStyles();
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const open = Boolean(anchorEl);
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('active');
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [jury, setJury] = React.useState([]);
+  const [open, setOpen] = React.useState(false);
+  const anchorRef = React.useRef([]);
+  const [, dispatch] = React.useContext(Context);
 
   {/* Metodos */ }
   const handleRequestSort = (event, property) => {
@@ -223,15 +232,39 @@ export default function SemesterJury() {
   };
 
 
-  const handleMenu = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
 
   const handleClose = () => {
-    setAnchorEl(null);
+    setOpen(false);
   };
 
-  const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
+  const fetchJury = () => {
+    dispatch(setLoading(true));
+    api.getAllJury().then(res => {
+      const result = res.data.data;
+      setJury(result);
+      dispatch(setLoading(false));
+
+    });
+  };
+  React.useEffect(() => {
+    fetchJury();
+  }, []);
+
+  const handleMenu = (index) => {
+    setOpen(index);
+  };
+
+  const formatDate = (date) => {
+    return format(new Date(date), 'PPP', { locale: ptBR })
+  }
+  const formatHour = (hour) => {
+    return format(hour, 'hh:mm:ss')
+  }
+  const emptyRows = rowsPerPage - Math.min(rowsPerPage, jury.length - page * rowsPerPage);
+
+  const showProcess = (id) => {
+    history.push(`/unidocs/process/details/${id}`);
+  };
 
   {/* Return que envia o HTML com os componentes */ }
   return (
@@ -251,7 +284,7 @@ export default function SemesterJury() {
                 order={order}
                 orderBy={orderBy}
                 onRequestSort={handleRequestSort}
-                rowCount={rows.length}
+                rowCount={jury.length}
               />
 
               {/* Dentro do TableBody é preenchido atraves de um .map
@@ -259,7 +292,7 @@ export default function SemesterJury() {
                             <TableCell/> dentro de <TableRoll/> para que eles se 
                             alinhem com a listagem que voce gostaria de fazer */}
               <TableBody>
-                {stableSort(rows, getComparator(order, orderBy))
+                {stableSort(jury, getComparator(order, orderBy))
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) => {
                     const labelId = `enhanced-table-checkbox-${index}`;
@@ -268,7 +301,7 @@ export default function SemesterJury() {
                       <TableRow
                         hover
                         tabIndex={-1}
-                        key={row.studentName}
+                        key={row.id}
                       >
 
                         {/* Não mexa nesse TableCell*/}
@@ -281,8 +314,8 @@ export default function SemesterJury() {
                             <Avatar
                               style={{
                                 marginRight: "1rem",
-                                color: `${row.studentColor}`,
-                                backgroundColor: `${row.studentColor}50`,
+                                color: `${row.color}`,
+                                backgroundColor: `${row.color}50`,
                               }}
                             >
                               {row.studentName[0]}
@@ -290,37 +323,46 @@ export default function SemesterJury() {
 
                             <div>
                               <b>{row.studentName}</b> <br />
-                              <span className={classes.subItem}>{row.studentEmail}</span>
+                              <span className={classes.subItem}>{row.email}</span>
                             </div>
                           </div>
                         </TableCell>
                         <TableCell align="left">
-                          <span>{row.title}</span>
+                          <span>{row.proccess.title}</span>
                         </TableCell>
                         <TableCell align="left">
-                          <span>{row.members}</span>
+                          <span>{row?.professors.map((item, index) => {
+                            let member = item.user.name + ', ';
+                            if (row.professors[row?.professors?.length - 1] == row.professors[index]) {
+                              member = item.user.name;
+                            }
+                            return member
+
+                          })}</span>
                         </TableCell>
                         <TableCell align="left">
-                          <span>{row.date}</span>
+                          <span>{formatDate(row.date)}</span>
                         </TableCell>
                         <TableCell align="left">
                           <span>{row.hour}</span>
                         </TableCell>
                         <TableCell align="left">
-                          <span>{row.createdAt}</span>
+                          <span>{formatDistance(new Date(row.updated_at), new Date(), { locale: ptBR })}</span>
                         </TableCell>
 
                         {/* Esse <TableCell/> representa o <IconButton/> 
                             que todas as linhas precisam ter */}
                         <TableCell align="right">
                           <IconButton
-                            onClick={handleMenu}
+                            ref={ref => anchorRef.current[index] = ref}
+                            onClick={() => handleMenu(index)}
+
                           >
                             <MenuIcon />
                           </IconButton>
                           <Menu
                             id="item-menu"
-                            anchorEl={anchorEl}
+                            anchorEl={anchorRef.current[index]}
                             anchorOrigin={{
                               vertical: 'top',
                               horizontal: 'right',
@@ -330,11 +372,10 @@ export default function SemesterJury() {
                               vertical: 'top',
                               horizontal: 'right',
                             }}
-                            open={open}
+                            open={open === index}
                             onClose={handleClose}
                           >
-                            <MenuItem onClick={handleClose}>Profile</MenuItem>
-                            <MenuItem onClick={handleClose}>My account</MenuItem>
+                            <MenuItem onClick={() => showProcess(row.proccess.id)}>Visualizar Processo</MenuItem>
                           </Menu>
                         </TableCell>
                       </TableRow>
@@ -351,7 +392,7 @@ export default function SemesterJury() {
           <TablePagination
             rowsPerPageOptions={[5, 10, 15, 25]}
             component="div"
-            count={rows.length}
+            count={jury.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onChangePage={handleChangePage}
@@ -362,5 +403,6 @@ export default function SemesterJury() {
       </Container>
     </div>
   );
+
 }
 //----FIM DA Sessão 5----
